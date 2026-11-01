@@ -1,0 +1,2551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoffeeJeV 咖啡快判官 · 气雾栽培咖啡全栈判断智能体 v1.0</title>
+<meta name="description" content="CoffeeJeV：面向气雾栽培（雾培）+ 组培咖啡的全栈判断智能体设计规格与可交互演示。14 个决策节点、7 层架构、3 个在线判断器、成本推导阈值、校准与人在环复核。">
+<style>
+:root{
+  --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
+  --line:#232931; --line2:#313945;
+  --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+  --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
+  --amber:#e0a24e; --coffee:#c08552; --amber-dk:rgba(224,162,78,.12);
+  --cyan:#3b9ef7; --violet:#8b6cff; --red:#ff5d6e; --yellow:#ffc83d;
+  --r:16px; --r2:12px;
+  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(0,196,140,.28)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0b0d10}
+::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#3a434f}
+b,strong{font-weight:700;color:#fff}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- 布局 ---------- */
+.app{display:grid;grid-template-columns:250px minmax(0,1fr)}
+.nav{position:sticky;top:0;height:100vh;padding:18px 14px 26px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;background:linear-gradient(180deg,#0a0c0f,#08090b 60%)}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 18px}
+.brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,196,140,.05) inset}
+.brand .mark svg{width:22px;height:22px}
+.brand .txt b{display:block;font-size:15.5px;letter-spacing:.2px;line-height:1.25}
+.brand .txt span{display:block;font-size:10.5px;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;font-family:var(--mono)}
+.navlabel{font-size:10.5px;letter-spacing:1.3px;color:var(--dim2);text-transform:uppercase;padding:8px 10px 6px;font-family:var(--mono)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;color:var(--dim);font-size:13.5px;cursor:pointer;border:1px solid transparent;background:none;text-align:left;width:100%;font-family:inherit;transition:.15s}
+.navitem:hover{background:rgba(255,255,255,.045);color:var(--tx)}
+.navitem .n{font-family:var(--mono);font-size:11px;color:var(--dim2);width:16px;flex-shrink:0}
+.navitem.active{background:rgba(0,196,140,.1);border-color:rgba(0,196,140,.28);color:#fff;font-weight:600}
+.navitem.active .n{color:var(--green)}
+.navfoot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--dim2);line-height:1.7}
+.navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 8px var(--green)}
+
+main{min-width:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 44px}
+@media (max-width:1080px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .nav{position:static;height:auto;flex-direction:column;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;min-width:0;width:100%}
+  .navlabel,.navfoot{display:none}
+  .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;min-width:0;width:100%}
+  .navlist::-webkit-scrollbar{display:none}
+  .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
+  .navitem .n{display:none}
+  .brand{padding-bottom:10px}
+  .wrap{padding:0 20px}
+  main{min-width:0}
+  .lab>*,.explorer>*,.api>*,.econ>*,.grid2>*,.grid3>*,.chain>*,.lab,.explorer,.api,.econ,.ndgrid,.ldgrid{min-width:0}
+  .panel,.ldetail,.nodedetail,.card{min-width:0;max-width:100%}
+  .json,.tblscroll,.code,.outs,.verdict{max-width:100%}
+  .verdict .vd{overflow-wrap:anywhere}
+}
+@media (max-width:620px){.wrap{padding:0 14px}}
+
+/* ---------- 页首 ---------- */
+.hero{padding:52px 0 44px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -10% auto -10%;height:520px;background:
+  radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.16),transparent 62%),
+  radial-gradient(620px 300px at 92% -20%,rgba(224,162,78,.13),transparent 62%),
+  radial-gradient(520px 260px at 55% 10%,rgba(59,158,247,.07),transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:16px}
+.eyebrow .sep{color:var(--dim2)}
+.eyebrow .mut{color:var(--dim)}
+h1.title{font-size:clamp(30px,4.6vw,50px);line-height:1.1;letter-spacing:-1.2px;font-weight:850;margin-bottom:8px}
+h1.title em{font-style:normal;background:linear-gradient(96deg,#00c48c 8%,#7fe0b6 46%,#e0a24e 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .zh{font-size:clamp(16px,2.2vw,21px);color:var(--dim);font-weight:600;letter-spacing:.4px;margin-bottom:20px}
+.lede{font-size:16.5px;color:#c3cbd6;max-width:76ch;line-height:1.75}
+.lede b{color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
+.chip .k{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase}
+.chip.g{border-color:rgba(0,196,140,.32);background:rgba(0,196,140,.07);color:#a9f3d8}
+.chip.a{border-color:rgba(224,162,78,.32);background:rgba(224,162,78,.07);color:#f0d3a5}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:10px;margin-top:30px}
+.tile{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:14px;padding:14px 15px}
+.tile .k{font-size:11.5px;color:var(--dim);letter-spacing:.3px}
+.tile .v{font-size:24px;font-weight:800;letter-spacing:-.6px;margin-top:4px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:12px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:2px}
+.tile .s{font-size:11px;color:var(--dim2);margin-top:2px;overflow-wrap:anywhere}
+
+/* ---------- 区块 ---------- */
+.sec{padding:56px 0 24px;border-top:1px solid var(--line);scroll-margin-top:12px}
+.sechead{margin-bottom:26px}
+.sechead .num{font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:2px;margin-bottom:9px}
+.sechead h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;line-height:1.2;font-weight:800}
+.sechead .zh{font-size:14px;color:var(--dim);font-weight:600;margin-top:5px;letter-spacing:.5px}
+.sechead p{margin-top:14px;color:#b9c2ce;max-width:88ch;font-size:15px}
+h3.sub{font-size:16.5px;font-weight:750;margin:30px 0 12px;letter-spacing:-.2px;display:flex;align-items:center;gap:9px}
+h3.sub::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--green);display:inline-block}
+h3.sub .mut{font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:0}
+
+/* ---------- 卡片 ---------- */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px}
+.card.soft{background:var(--card2)}
+.card h4{font-size:15px;font-weight:750;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.8px;color:#b4bdc9;line-height:1.7}
+.card p+p{margin-top:8px}
+.card ul{margin:8px 0 0 0;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:6px}
+.card ul li{font-size:13.4px;color:#b4bdc9;padding-left:16px;position:relative;line-height:1.6}
+.card ul li::before{content:"";position:absolute;left:3px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--line2)}
+.card.note{border-left:2px solid var(--amber);background:linear-gradient(90deg,rgba(224,162,78,.07),transparent 55%)}
+.card.good{border-left:2px solid var(--green);background:linear-gradient(90deg,rgba(0,196,140,.07),transparent 55%)}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;border:1px solid;white-space:nowrap}
+.pill.ok{color:var(--green2);border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.1)}
+.pill.warn{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.pill.bad{color:#ff8f9b;border-color:rgba(255,93,110,.45);background:rgba(255,93,110,.1)}
+.pill.info{color:#8ec7ff;border-color:rgba(59,158,247,.45);background:rgba(59,158,247,.1)}
+.pill.gray{color:var(--dim);border-color:var(--line2);background:rgba(255,255,255,.03)}
+.pill.vio{color:#c0adff;border-color:rgba(139,108,255,.45);background:rgba(139,108,255,.12)}
+
+/* ---------- 缺口卡 ---------- */
+.gaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:11px}
+.gap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px 13px;position:relative;transition:.18s}
+.gap:hover{border-color:var(--line2);background:var(--card2);transform:translateY(-1px)}
+.gap .gh{display:flex;align-items:flex-start;gap:9px;margin-bottom:7px}
+.gap .gid{font-family:var(--mono);font-size:10.5px;color:var(--dim2);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;flex-shrink:0;margin-top:2px}
+.gap h4{font-size:14px;font-weight:750;line-height:1.4;flex:1}
+.gap .why{font-size:13px;color:#aab4c1;line-height:1.62}
+.gap .fix{font-size:13px;color:#8ef0cd;line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line2)}
+.gap .fix b{color:var(--green2);font-weight:700}
+.gap .fix::before{content:"v1.0 对策 → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.4px}
+.sev{position:absolute;top:0;right:0;width:34px;height:3px;border-radius:0 14px 0 3px}
+.sev.hi{background:var(--red)}.sev.mid{background:var(--amber)}.sev.lo{background:var(--dim2)}
+
+/* ---------- 表格 ---------- */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13.2px;margin:10px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.tbl th{background:rgba(255,255,255,.035);text-align:left;padding:10px 12px;font-size:11.5px;letter-spacing:.5px;color:var(--dim);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:1px solid rgba(35,41,49,.75);vertical-align:top;color:#bcc5d0;line-height:1.55}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.022)}
+.tbl td b{color:#fff}
+.tbl code,.inline-code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;color:#cfe0ee;white-space:nowrap}
+.tbl td code{white-space:normal;overflow-wrap:anywhere}
+.tblscroll{overflow-x:auto;border-radius:var(--r)}
+
+/* ---------- 架构探针 ---------- */
+.explorer{display:grid;grid-template-columns:302px minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:900px){.explorer{grid-template-columns:1fr}}
+.layers{display:flex;flex-direction:column;gap:7px}
+.layer{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:11px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;transition:.16s;width:100%}
+.layer:hover{background:var(--card2);border-color:var(--line2)}
+.layer .lidx{font-family:var(--mono);font-size:11px;color:var(--dim2);border:1px solid var(--line2);border-radius:6px;padding:2px 0;text-align:center}
+.layer .lname{font-size:13.6px;font-weight:650;color:#dbe2ea}
+.layer .lname small{display:block;font-size:10.5px;color:var(--dim2);font-weight:500;letter-spacing:.4px;font-family:var(--mono)}
+.layer .lms{font-family:var(--mono);font-size:10.5px;color:var(--dim2);white-space:nowrap}
+.layer.active{background:linear-gradient(90deg,rgba(0,196,140,.13),rgba(0,196,140,.02));border-color:rgba(0,196,140,.4)}
+.layer.active .lidx{color:var(--green);border-color:rgba(0,196,140,.45)}
+.layer.active .lms{color:var(--green2)}
+.ldetail{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line2);border-radius:var(--r);padding:20px 20px 18px;min-height:360px}
+.ldetail .ldh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.ldetail .ldh h4{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.ldetail .ldsub{font-size:12.5px;color:var(--dim);margin-bottom:15px}
+.ldgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.ldblock{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.ldblock .bk{font-size:10.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim2);font-family:var(--mono);margin-bottom:7px}
+.ldblock ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.ldblock li{font-size:12.8px;color:#b8c1cd;line-height:1.55;padding-left:12px;position:relative}
+.ldblock li::before{content:"·";position:absolute;left:2px;color:var(--green);font-weight:900}
+.ldblock.warn{border-color:rgba(255,93,110,.3);background:rgba(255,93,110,.05)}
+.ldblock.warn li::before{color:var(--red)}
+.ldblock.wide{grid-column:span 2}
+@media (max-width:820px){.ldblock.wide{grid-column:span 1}}
+
+/* ---------- 决策链 ---------- */
+.chain{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:6px}
+@media (max-width:1120px){.chain{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:820px){.chain{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.chain{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.node{position:relative;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 12px 10px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;transition:.16s;display:flex;flex-direction:column;gap:4px}
+.node:hover{border-color:var(--line2);background:var(--card2);transform:translateY(-1px)}
+.node .ni{font-family:var(--mono);font-size:10px;color:var(--dim2)}
+.node .nt{font-size:13.2px;font-weight:700;color:#e2e8ef;line-height:1.35}
+.node .nj{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px}
+.node.star{border-color:rgba(224,162,78,.34);background:linear-gradient(160deg,rgba(224,162,78,.09),var(--card) 65%)}
+.node.active{border-color:rgba(0,196,140,.55);background:linear-gradient(160deg,rgba(0,196,140,.14),var(--card) 70%);box-shadow:0 0 0 1px rgba(0,196,140,.2)}
+.node .dot{position:absolute;top:10px;right:10px;width:6px;height:6px;border-radius:50%;background:var(--line2)}
+.node.active .dot{background:var(--green);box-shadow:0 0 7px var(--green)}
+.nodedetail{margin-top:12px;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line2);border-radius:var(--r);padding:18px}
+.nodedetail .ndh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.nodedetail .ndh h4{font-size:16.5px;font-weight:800}
+.ndgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px;margin-top:12px}
+.ndcell{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.ndcell .nk{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--dim2);font-family:var(--mono);margin-bottom:5px}
+.ndcell .nv{font-size:12.8px;color:#c2cbd6;line-height:1.6}
+.ndcell.full{grid-column:1/-1}
+
+/* ---------- 实验室 ---------- */
+.lab{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:960px){.lab{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.panel .ph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px;flex-wrap:wrap}
+.panel .ph h4{font-size:14.5px;font-weight:750}
+.ctl{margin-bottom:13px}
+.ctl .ch{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:3px}
+.ctl .cl{font-size:12.6px;color:#b6c0cc}
+.ctl .cl small{color:var(--dim2);font-size:11px;margin-left:4px}
+.ctl .cv{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--green2);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:3px;background:#2a323d;outline:none;accent-color:var(--green)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:linear-gradient(180deg,#5ff0c4,#00c48c);border:2px solid #08110e;cursor:pointer;box-shadow:0 0 0 3px rgba(0,196,140,.14)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#00c48c;border:2px solid #08110e;cursor:pointer}
+input[type=number],input[type=text],select,textarea{background:#0c1015;border:1px solid var(--line2);border-radius:8px;padding:7px 9px;color:var(--tx);font-family:var(--mono);font-size:12.5px;width:100%;outline:none;transition:.15s}
+input[type=number]:focus,textarea:focus,select:focus{border-color:rgba(0,196,140,.55);box-shadow:0 0 0 3px rgba(0,196,140,.08)}
+textarea{resize:vertical;line-height:1.6}
+.seg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.seg button{flex:1;min-width:86px;padding:7px 9px;border-radius:8px;border:1px solid var(--line2);background:#0c1015;color:var(--dim);font-size:12.2px;font-weight:650;cursor:pointer;font-family:inherit;transition:.15s}
+.seg button:hover{color:var(--tx);border-color:#3d4652}
+.seg button.on{background:rgba(0,196,140,.13);border-color:rgba(0,196,140,.45);color:#a9f3d8}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 15px;border-radius:9px;border:1px solid var(--line2);background:var(--card2);color:var(--tx);font-size:13px;font-weight:650;cursor:pointer;font-family:inherit;transition:.15s}
+.btn:hover{background:var(--card3);border-color:#3d4652}
+.btn.primary{background:linear-gradient(180deg,#12d69b,#00a878);border-color:rgba(0,196,140,.6);color:#04120d;font-weight:800}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:5px 11px;font-size:12px;border-radius:7px}
+.btn:active{transform:translateY(1px)}
+
+.outs{display:flex;flex-direction:column;gap:12px}
+.verdict{background:linear-gradient(150deg,rgba(0,196,140,.12),rgba(0,196,140,.02) 60%);border:1px solid rgba(0,196,140,.32);border-radius:var(--r);padding:15px 16px}
+.verdict.warn{background:linear-gradient(150deg,rgba(224,162,78,.13),rgba(224,162,78,.02) 60%);border-color:rgba(224,162,78,.34)}
+.verdict.bad{background:linear-gradient(150deg,rgba(255,93,110,.13),rgba(255,93,110,.02) 60%);border-color:rgba(255,93,110,.34)}
+.verdict .vh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.verdict .vd{font-family:var(--mono);font-size:19px;font-weight:800;letter-spacing:-.4px;color:#fff}
+.verdict .vsub{font-size:12.6px;color:#a8b3c0;line-height:1.6}
+.probbar{position:relative;height:26px;border-radius:7px;overflow:hidden;margin:12px 0 6px;background:#151a21;border:1px solid var(--line);display:flex}
+.probbar .z{height:100%}
+.probbar .z1{background:linear-gradient(90deg,rgba(0,196,140,.34),rgba(0,196,140,.2))}
+.probbar .z2{background:linear-gradient(90deg,rgba(224,162,78,.3),rgba(224,162,78,.18))}
+.probbar .z3{background:linear-gradient(90deg,rgba(255,93,110,.32),rgba(255,93,110,.2))}
+.probbar .mk{position:absolute;top:-3px;width:2px;height:32px;background:#fff;box-shadow:0 0 7px rgba(255,255,255,.75);transition:left .25s}
+.probbar .zt{position:absolute;top:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,.55);letter-spacing:.5px;white-space:nowrap}
+.pb-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim2);margin-top:2px}
+
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric{background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.metric .mk{font-size:10.5px;color:var(--dim2);letter-spacing:.3px}
+.metric .mv{font-size:17px;font-weight:800;font-family:var(--mono);margin-top:1px;letter-spacing:-.4px}
+.metric .mv small{font-size:10.5px;color:var(--dim2);font-weight:600}
+.subs{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.sub{display:grid;grid-template-columns:96px 1fr 38px;align-items:center;gap:9px;font-size:12.2px}
+.sub .sn{color:#a9b3bf;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sub .st{height:6px;border-radius:4px;background:#1d232c;overflow:hidden}
+.sub .sf{height:100%;border-radius:4px;background:linear-gradient(90deg,#0b8f68,#3fe0b0);transition:width .3s}
+.sub.gate .sf{background:linear-gradient(90deg,#9a6b1f,#e0a24e)}
+.sub .sv{font-family:var(--mono);font-size:11.5px;color:#d3dbe4;text-align:right;font-variant-numeric:tabular-nums}
+
+.json{background:#0a0d11;border:1px solid var(--line2);border-radius:12px;padding:13px 14px;font-family:var(--mono);font-size:12px;line-height:1.72;overflow-x:auto;white-space:pre;color:#c9d4e0;tab-size:2}
+.json .k{color:#7fb8ff}
+.json .s{color:#9fe3b8}
+.json .n{color:#ffcf7a}
+.json .b{color:#c0a6ff}
+.json .nl{color:#ff8f9b}
+.json .cm{color:#5d6773;font-style:italic}
+
+/* ---------- 接口 ---------- */
+.api{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:960px){.api{grid-template-columns:1fr}}
+.endpoint{display:flex;align-items:center;gap:9px;background:#0c1015;border:1px solid var(--line2);border-radius:11px;padding:9px 12px;margin-bottom:11px;flex-wrap:wrap}
+.endpoint .m{font-family:var(--mono);font-size:10.5px;font-weight:800;color:#04120d;background:var(--green);padding:2px 7px;border-radius:5px;letter-spacing:.4px}
+.endpoint .p{font-family:var(--mono);font-size:12.8px;color:#dbe3ec}
+.endpoint .h{font-family:var(--mono);font-size:10.5px;color:var(--dim2);margin-left:auto}
+.respmeta{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--mono);font-size:10.5px;color:var(--dim2);margin-bottom:8px}
+.respmeta .rm{background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:5px;padding:1px 7px}
+.respmeta .rm.ok{color:var(--green2);border-color:rgba(0,196,140,.35)}
+.respmeta .rm.warn{color:#ffbe72;border-color:rgba(224,162,78,.35)}
+
+/* ---------- 审计 ---------- */
+.audit{display:flex;flex-direction:column;gap:6px;max-height:330px;overflow-y:auto;padding-right:3px}
+.arow{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;background:#0c1015;border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-family:var(--mono);font-size:11px;color:#a9b4c1}
+.arow .aid{color:var(--dim2)}
+.arow .adec{color:#e3eaf2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .ah{color:var(--dim2);font-size:10px}
+.arow .badge2{font-size:9.5px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--dim)}
+.empty{font-size:12.5px;color:var(--dim2);padding:16px;text-align:center;border:1px dashed var(--line2);border-radius:10px}
+
+/* ---------- 经济性 ---------- */
+.econ{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:900px){.econ{grid-template-columns:1fr}}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11.8px;color:var(--dim);margin-bottom:3px}
+.econout{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.eo{background:linear-gradient(180deg,rgba(0,196,140,.1),rgba(0,196,140,.02));border:1px solid rgba(0,196,140,.26);border-radius:12px;padding:12px 13px}
+.eo.a{background:linear-gradient(180deg,rgba(224,162,78,.1),rgba(224,162,78,.02));border-color:rgba(224,162,78,.26)}
+.eo .ek{font-size:11px;color:var(--dim)}
+.eo .ev{font-size:21px;font-weight:850;font-family:var(--mono);letter-spacing:-.6px;margin-top:3px}
+.eo .es{font-size:10.5px;color:var(--dim2);margin-top:1px}
+
+/* ---------- 甘特 ---------- */
+.gantt{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.grow{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:center}
+@media (max-width:700px){.grow{grid-template-columns:1fr}}
+.grow .gn{font-size:12.4px;color:#b8c1cd;font-weight:600}
+.gtrack{position:relative;height:26px;background:#0d1116;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.gbar{position:absolute;top:3px;bottom:3px;border-radius:5px;display:flex;align-items:center;padding:0 8px;font-family:var(--mono);font-size:10px;font-weight:700;color:#04120d;white-space:nowrap;overflow:hidden}
+.gbar.g1{background:linear-gradient(90deg,#0fb98a,#57e6bb)}
+.gbar.g2{background:linear-gradient(90deg,#3b9ef7,#8ec7ff)}
+.gbar.g3{background:linear-gradient(90deg,#e0a24e,#f5cf95)}
+.gbar.g4{background:linear-gradient(90deg,#8b6cff,#c0adff)}
+.gaxis{display:grid;grid-template-columns:118px 1fr;gap:10px;margin-top:4px}
+@media (max-width:700px){.gaxis{grid-template-columns:1fr}.gaxis .gl{display:none}}
+.gscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim2)}
+.gscale span{flex:1;text-align:center;border-left:1px dashed rgba(255,255,255,.08);padding:2px 0}
+.gscale span:first-child{border-left:none}
+
+/* ---------- 代码/提示词 ---------- */
+.code{position:relative;background:#0a0d11;border:1px solid var(--line2);border-radius:12px;overflow:hidden}
+.code .ch2{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.5px}
+.code pre{margin:0;padding:13px 14px;overflow-x:auto;font-family:var(--mono);font-size:12px;line-height:1.72;color:#c9d4e0;white-space:pre}
+.code .cp{cursor:pointer;background:none;border:1px solid var(--line2);color:var(--dim);border-radius:5px;padding:1px 7px;font-size:10px;font-family:inherit}
+.code .cp:hover{color:var(--green2);border-color:rgba(0,196,140,.4)}
+.promptbox{background:linear-gradient(180deg,rgba(139,108,255,.09),rgba(139,108,255,.02));border:1px solid rgba(139,108,255,.3);border-radius:14px;padding:17px 18px;font-size:14px;line-height:1.85;color:#d5dae2}
+.promptbox b{color:#c9b6ff}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:12.8px}
+.kv dt{color:var(--dim2);font-family:var(--mono);font-size:11.5px;padding-top:2px}
+.kv dd{color:#c0c9d5}
+
+.foot{border-top:1px solid var(--line);margin-top:50px;padding:26px 0 60px;font-size:12.2px;color:var(--dim2);line-height:1.8}
+.foot b{color:var(--dim)}
+.tagline{font-size:15px;color:#cfd7e2;line-height:1.75;max-width:80ch;padding:16px 18px;border-left:2px solid var(--green);background:linear-gradient(90deg,rgba(0,196,140,.08),transparent 60%);border-radius:0 12px 12px 0;margin-top:8px}
+.hr{height:1px;background:var(--line);margin:26px 0}
+.fadein{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+.fadein.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.fadein{opacity:1;transform:none}}
+@media print{.nav{display:none}.app{grid-template-columns:1fr}.sec{page-break-inside:avoid}body{background:#fff;color:#111}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="nav">
+  <div class="brand">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.6" stroke-linecap="round">
+        <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/><path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/>
+        <path d="M8 21h8" stroke-opacity=".55"/><circle cx="12" cy="4.2" r="1.1" fill="#3fe0b0" stroke="none" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="txt"><b>CoffeeJeV</b><span>咖啡快判官 v1.0</span></div>
+  </div>
+  <div class="navlabel">设计规格</div>
+  <nav class="navlist" id="navlist">
+    <button class="navitem" data-sec="review"><span class="n">01</span>设计评审</button>
+    <button class="navitem" data-sec="arch"><span class="n">02</span>全栈架构</button>
+    <button class="navitem" data-sec="chain"><span class="n">03</span>决策地图</button>
+    <button class="navitem" data-sec="lab"><span class="n">04</span>判断器实验室</button>
+    <button class="navitem" data-sec="api"><span class="n">05</span>接口契约</button>
+    <button class="navitem" data-sec="hitl"><span class="n">06</span>人工复核</button>
+    <button class="navitem" data-sec="learn"><span class="n">07</span>学习闭环</button>
+    <button class="navitem" data-sec="kpi"><span class="n">08</span>指标与经济性</button>
+    <button class="navitem" data-sec="roadmap"><span class="n">09</span>90 天路线图</button>
+    <button class="navitem" data-sec="risk"><span class="n">10</span>风险与治理</button>
+    <button class="navitem" data-sec="appendix"><span class="n">11</span>附录</button>
+  </nav>
+  <div class="navfoot">
+    <div><span class="dot"></span>交互式规格文档</div>
+    <div style="margin-top:6px">本页数值为<b style="color:#aab3bf">设计目标 / 可调假设</b>，非实测结果。</div>
+  </div>
+</aside>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow"><span>CoffeeJeV</span><span class="sep">/</span><span>Full-stack decision layer</span><span class="sep">/</span><span class="mut">v0.1 → v1.0 设计规格</span></div>
+  <h1 class="title">气雾栽培咖啡的<br><em>系统一</em>判断层</h1>
+  <div class="zh">CoffeeJeV · 咖啡快判官 — 从组培到雾培的原子化决策智能体</div>
+  <p class="lede">
+    v0.1 草案的定位是对的：<b>不做聊天机器人，做判断层</b>。但要让它在真实温室里跑起来，还缺四样东西 ——
+    <b>批次谱系</b>（否则隔离半径算不出来）、<b>置信度校准</b>（否则 0.82 没有意义）、<b>执行闭环</b>（否则决策落不到阀门上）、
+    <b>延迟标签管线</b>（否则模型永远学不到东西）。本页把草案补成一套可实施的全栈规格，并附<b>三个可亲手拨动的判断器</b>。
+  </p>
+  <div class="chips">
+    <span class="chip g"><span class="k">定位</span>组培 + 雾培判断副驾</span>
+    <span class="chip"><span class="k">边界</span>关键动作强制人工闸门</span>
+    <span class="chip a"><span class="k">延迟</span>端侧 ≤300ms / 云端 ≤2s</span>
+    <span class="chip"><span class="k">输出</span>决策 + 置信度 + 复核标记</span>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="k">决策节点</div><div class="v">14<small>个</small></div><div class="s">v0.1 的 12 节点 + 隔离/能耗</div></div>
+    <div class="tile"><div class="k">在线判断器</div><div class="v">7<small>个</small></div><div class="s">3 个核心 + 4 个补全</div></div>
+    <div class="tile"><div class="k">架构层</div><div class="v">7<small>层</small></div><div class="s">感知 → 治理</div></div>
+    <div class="tile"><div class="k">端到端时延</div><div class="v">&lt;300<small>ms</small></div><div class="s">端侧图像类判断 p95</div></div>
+    <div class="tile"><div class="k">单次推理成本</div><div class="v">&lt;$0.001</div><div class="s">端侧批量推理的边际成本</div></div>
+    <div class="tile"><div class="k">人工复核率</div><div class="v">&lt;15<small>%</small></div><div class="s">M6 目标，当前基线 100%</div></div>
+  </div>
+</header>
+
+<section class="sec" id="review">
+  <div class="sechead">
+    <div class="num">01 / DESIGN REVIEW</div>
+    <h2>设计评审：v0.1 的判断是对的，工程还差一层</h2>
+    <div class="zh">先把「判断层」这个定位钉死，再补上让它跑得起来的四条腿</div>
+    <p>评审用四个维度切入：<b>可判定性</b>（输入够不够判）、<b>可执行性</b>（判完能不能落地）、<b>可学习性</b>（落地后能不能变强）、<b>可交付性</b>（上线能不能撑住）。v0.1 在「可判定性」上完成度最高，缺口集中在后三项。</p>
+  </div>
+
+  <h3 class="sub">1.1 五条原则 → 五条机制 <span class="mut">原则不落到机制上，就只是一句话</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:120px">原则</th><th>v0.1 的表述</th><th>v1.0 落地机制</th><th style="width:170px">验收信号</th></tr></thead>
+    <tbody>
+      <tr><td><b>决策原子化</b></td><td>拆成是/否、选一、打分三类节点</td><td>14 节点状态机 + 判断器注册表；每个节点<b>只允许</b>一个 <code>jev_type</code>，输出枚举闭合、禁止自由文本</td><td>单节点输出枚举 ≤4 个</td></tr>
+      <tr><td><b>快慢分离</b></td><td>高频快判，低置信度升级专家</td><td>三级路由：端侧快判 → 云端集成 → 专家/慢模型；<b>升级由策略引擎决定</b>，不由模型自述</td><td>快判覆盖率 ≥85%</td></tr>
+      <tr><td><b>结构化输出</b></td><td>只输出决策、分数、置信度、标记</td><td>JSON Schema 强校验 + <code>reason ≤80 字</code> + 强制 <code>evidence_refs</code>（图像/传感器快照哈希）</td><td>无证据的决策直接 400</td></tr>
+      <tr><td><b>低成本高频</b></td><td>事件触发，边缘批量推理</td><td>事件触发 + 微批 + INT8 量化 + 端侧常驻；云端只做争议样本</td><td>单次成本 &lt;$0.001</td></tr>
+      <tr><td><b>反馈校准</b></td><td>用成活率/污染率回流标签</td><td><b>延迟标签表</b>（<code>label_ready_at</code>）+ 校准层 + ECE 监控 + 主动学习队列 + 影子评估</td><td>ECE &lt;0.05，且复核一致率 ↑</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">1.2 十二条缺口 <span class="mut">按「不补会怎样」排序，不按好看程度排序</span></h3>
+  <div class="gaps">
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G01</span><h4>只有 stage，没有批次谱系</h4><span class="pill bad">可执行性</span></div>
+      <div class="why">草案里 <code>stage</code> 是个字符串，但污染一旦发生，真正要回答的是「隔离哪些盘、受影响几层架、哪批母株要停用」。没有 <code>batch_id → 母株 → 托盘 → 架层 → 雾培槽</code> 的谱系图，隔离半径算不出来，只能整温室停摆——这是雾培最贵的失败模式。</div>
+      <div class="fix">谱系图 + 污染事件沿图做 <b>BFS 得隔离半径</b>；把 <code>blast_radius</code> 作为独立候选动作进入 Choice（隔离多少盘本身就是一个决策）。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G02</span><h4>置信度没有定义，也没有校准</h4><span class="pill bad">可交付性</span></div>
+      <div class="why">草案示例里 <code>confidence: 0.82</code> 直接来自模型 softmax。视觉模型在训练分布外普遍<b>过度自信</b>（深度网络 ECE 常在 0.1–0.2），于是 0.82 可能对应真实 0.55 的正确率。用它做阈值，等于用一个没有刻度的仪表盘做手术。</div>
+      <div class="fix"><b>校准层</b>（temperature scaling / isotonic）+ <b>ECE 与可靠性图</b>上线监控 + <b>弃权机制</b>（conformal 预测集：会输出两个候选项时直接升级）。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G03</span><h4>「污染」二元判定太粗，判对了也可能做错</h4><span class="pill bad">可判定性</span></div>
+      <div class="why">细菌性、真菌性、玻璃化、螨害、病毒，行动完全不同：细菌→整盘销毁 + 台面消杀；真菌→隔离 + 降湿 + 换气；玻璃化→降激素 + 增换气；螨→全层处理。二元输出把五种处置压成一个 <code>true</code>，下游只能靠人的记忆补全。</div>
+      <div class="fix">Noul 扩为 <b>5+1 类</b>（5 病类 + 1 非生物胁迫），并输出<b>时间维度</b>（首次可见 → 不可逆的剩余天数），动作模板随类别自动绑定。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G04</span><h4>标签是延迟到达的，管线里没有位置放它</h4><span class="pill bad">可学习性</span></div>
+      <div class="why">污染标签 7–14 天到，移栽成活 30–45 天到。草案说「用成活率回流」，但没有任何组件承接「今天做决策、下个月才知道对错」。结果必然是拿代理标签凑，校准随季节漂移。</div>
+      <div class="fix"><b>延迟标签表</b>（决策事件 + <code>label_ready_at</code> + 回填任务）+ <b>双轨标签</b>：训练用终局标签，监控用代理标签。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G05</span><h4>传感器本身不可信，但没有质量闸门</h4><span class="pill bad">可交付性</span></div>
+      <div class="why">EC/pH 探头一两周就被生物膜糊住；pH 电极在低离子强度营养雾里漂移更快；摄像头进雾结露。一套「相信一切输入」的判断层，会在探头坏掉的那周给出<b>非常自信的错决策</b>。</div>
+      <div class="fix">感知层加 <code>sensor_health</code>（漂移率 / 响应时间 / 双探头交叉校验 / 更换周期），任一 &lt;0.6 → 决策降级为 <code>need_more_info</code> 或弃权，绝不静默使用。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G06</span><h4>「建议调整营养雾」落不到阀门上</h4><span class="pill bad">可执行性</span></div>
+      <div class="why">草案边界写得很对（关键动作人工确认），但没有执行侧的机械设计：指令发出后没人确认执行、执行了没人回读、回读偏了没人回滚。于是「决策」和「现场」永远差一步，归因也就断了。</div>
+      <div class="fix"><b>指令 → 网关 ACK → 30s 后回读实测 → 偏差超限则回滚 + 告警</b>；硬限位（EC/pH/压力/雾化占空比）下沉到 PLC，软件层不可越过。</div>
+    </div>
+
+    <div class="gap"><div class="sev mid"></div>
+      <div class="gh"><span class="gid">G07</span><h4>没有黄金集与回放，改阈值就是赌博</h4><span class="pill mid">可学习性</span></div>
+      <div class="why">阈值从 0.7 调到 0.6，是变好还是变坏？没有历史回放和成本加权混淆矩阵，只能靠「感觉最近污染少了」。这类项目最常见的死法就是<b>无法证明自己在变好</b>。</div>
+      <div class="fix"><b>决策回放</b>（历史传感器 + 图像重跑）+ 成本加权损失 + <b>影子模式</b>；晋级门槛：净收益不降 <b>且</b> ECE 不升。</div>
+    </div>
+
+    <div class="gap"><div class="sev mid"></div>
+      <div class="gh"><span class="gid">G08</span><h4>human_review 是个布尔，没有落地的地方</h4><span class="pill mid">可执行性</span></div>
+      <div class="why">标记为 <code>true</code> 之后呢？谁看、多久内看完、不同意的怎么记？没有队列和理由分类，复核数据等于扔掉——而这恰恰是最贵的标签。</div>
+      <div class="fix"><b>复核队列</b> + 4 类理由（图像不可判 / 超 SOP / 首次场景 / 高价值批次）+ 采纳·改判二值记录 → 直接进训练集。</div>
+    </div>
+
+    <div class="gap"><div class="sev mid"></div>
+      <div class="gh"><span class="gid">G09</span><h4>objective 有权重，但没有成本函数</h4><span class="pill mid">可交付性</span></div>
+      <div class="why">气雾栽培最大的变动成本是<b>电</b>（雾化泵、除湿、补光、水冷）。只优化成活率的 Choice 会收敛到荒谬解：永远开雾、EC 拉到上限。草案的 <code>{survival, cost, quality}</code> 权重有了，但没有东西去度量 cost。</div>
+      <div class="fix">每个候选动作携带 <b>(kWh, 水 L, 营养盐 g, 人工 min)</b> 成本向量；Choice 输出<b>帕累托前沿</b>而非单一标量，由业务场景选点（合约品质 vs 大宗量产）。</div>
+    </div>
+
+    <div class="gap"><div class="sev hi"></div>
+      <div class="gh"><span class="gid">G10</span><h4>新农场/新品种没有冷启动方案</h4><span class="pill bad">可学习性</span></div>
+      <div class="why">草案说「按品种/产区建基线」，但没说怎么建。为每个农场单独训练模型，在只有几批数据的农场里必然过拟合；而一个全球模型又会抹掉产区差异。</div>
+      <div class="fix"><b>层次化部分池化</b>：品种级共享先验 + 农场级偏移（少量样本即可估）；OOD 检测（特征距离 / 能量分数）；新场景强制影子运行 30 天再放开。</div>
+    </div>
+
+    <div class="gap"><div class="sev mid"></div>
+      <div class="gh"><span class="gid">G11</span><h4>合规、审计与数据主权没进架构</h4><span class="pill mid">可交付性</span></div>
+      <div class="why">组培材料牵涉品种权与植物检疫；跨境部署牵涉数据本地化；营养液排放有法规限值。而「这批苗当时为什么被判为可移栽」将来是要拿得出证据的。</div>
+      <div class="fix"><b>追加式哈希链决策账本</b>（决策 + 输入快照哈希 + model_id + SOP 版本）+ 数据分级（原始图像不出境，仅出梯度/统计量）。</div>
+    </div>
+
+    <div class="gap"><div class="sev lo"></div>
+      <div class="gh"><span class="gid">G12</span><h4>0.7 / 80 / 60 这些阈值没有来源</h4><span class="pill gray">可判定性</span></div>
+      <div class="why">「置信度&lt;0.7 升级」「≥80 可移栽」是拍出来的。同样的 0.7，在幼芽期和移栽前意味着完全不同的损失。阈值应该是<b>成本结构的函数</b>，不是常数。</div>
+      <div class="fix">阈值 = 成本比 <code>τ_cost = C_FP /(C_FP + C_FN)</code>，<b>再与运营下限取大</b> <code>τ_hi = max(τ_cost, τ_min)</code>——否则纯成本解会退化成「几乎全部隔离」；三区间（<b>处置 / 复核 / 放行</b>）替代二元；用决策曲线分析看净收益。</div>
+    </div>
+
+  </div>
+
+  <h3 class="sub">1.3 三处必须修正的技术判断 <span class="mut">不是补充，是方向性纠偏</span></h3>
+  <div class="grid3">
+    <div class="card note">
+      <h4>C1 「低置信度才升级」这个规则本身有漏洞 <span class="pill warn">高</span></h4>
+      <p>只按置信度抽样，会系统性漏掉<b>高置信度的错误</b>——那才是真正贵的错误：模型对一整类新出现的螨害很确信地判成「健康」。</p>
+      <p><b>修正：</b>升级策略必须加入与置信度正交的三个维度 —— OOD 分数、<b>每日随机盲复核</b>（抽 20 条高置信度决策）、分品类精度告警。要监控的是<b>静默错误率</b>，不是平均置信度。</p>
+    </div>
+    <div class="card note">
+      <h4>C2 「&lt;300ms」不能作为全系统 SLA <span class="pill warn">中</span></h4>
+      <p>端侧图像判断可以 300ms 内；但一次营养雾 Choice 要融合时序、成本、约束与多目标，云端 p95 就是 1.5–2s；专家复核是小时级。用一个数字承诺全链路，第一次演示就会失信。</p>
+      <p><b>修正：</b>分三级 SLA —— 端侧快判 <b>≤300ms</b>（p95）、云端集成 <b>≤2s</b>（p95）、专家升级 <b>≤24h</b>（SLA 而非时延）。每级独立监控、独立告警。</p>
+    </div>
+    <div class="card note">
+      <h4>C3 「2000 张图像」不足以训练污染判断 <span class="pill warn">高</span></h4>
+      <p>污染是稀有事件（3–8%），2000 张里只有 60–160 个正例，分到 5 个病类后每类十几张——<b>连验证集都撑不住</b>，更别说校准。</p>
+      <p><b>修正：</b>5–8k 图像起步 + 主动学习挑边界样本 + 雾/结露/反光的合成增强 + LIMS 记录做弱监督（「该盘被销毁」也是标签）；顺序上先<b>影子运行 30 天</b>再谈上线。</p>
+    </div>
+  </div>
+
+  <div class="card good" style="margin-top:14px">
+    <h4>保留清单（v0.1 里不该动的东西）</h4>
+    <p><b>①</b> 不做聊天机器人、只做判断层——这个取舍是整个设计里最值钱的一句话。<b>②</b> Noul / Choice / Score 三分法——足够表达 90% 的农艺决策，且天然可校验。<b>③</b> 结构化 JSON 契约——让判断层能被编排、被回放、被审计。<b>④</b> 「关键动作保留人工闸门」——在生物制造场景里，这不是保守，是产品竞争力。</p>
+  </div>
+</section>
+
+<section class="sec" id="arch">
+  <div class="sechead">
+    <div class="num">02 / FULL-STACK ARCHITECTURE</div>
+    <h2>七层全栈：快路径、慢路径、一条账本</h2>
+    <div class="zh">感知 → 边缘 → 骨干 → 判断 → 编排 → 执行 → 学习，外加三条横切能力</div>
+    <p>草案的六层是对的，但把「执行」和「反馈」放在了同一个括号里。真实系统里这是两条不同的物理链路：一条要在 300ms 内落到泵阀上并回读验证，另一条要等 30–45 天标签到齐才能启动。<b>把它们分开设计</b>，是这套架构和草案最大的结构差异。</p>
+  </div>
+
+  <div class="card" style="padding:10px">
+  <svg viewBox="0 0 1016 268" width="100%" role="img" aria-label="CoffeeJeV 全栈数据流">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#4b5563"/>
+      </marker>
+      <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#00c48c"/>
+      </marker>
+      <marker id="ard" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#8b6cff"/>
+      </marker>
+    </defs>
+    <g font-family="-apple-system,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif">
+      <!-- 上排 -->
+      <g>
+        <rect x="14" y="36" width="178" height="66" rx="12" fill="#11141a" stroke="#2f3742"/>
+        <text x="26" y="58" fill="#00c48c" font-size="9.5" letter-spacing="1.4" font-family="monospace">L0 · PERCEPTION</text>
+        <text x="26" y="76" fill="#e9ecf1" font-size="13" font-weight="700">感知与现场</text>
+        <text x="26" y="92" fill="#8d97a5" font-size="10">相机 · EC/pH · VPD · 雾粒径</text>
+      </g>
+      <g>
+        <rect x="216" y="36" width="178" height="66" rx="12" fill="#0f1a17" stroke="#00c48c" stroke-opacity=".45"/>
+        <text x="228" y="58" fill="#00c48c" font-size="9.5" letter-spacing="1.4" font-family="monospace">L1 · EDGE</text>
+        <text x="228" y="76" fill="#e9ecf1" font-size="13" font-weight="700">边缘运行时</text>
+        <text x="228" y="92" fill="#8d97a5" font-size="10">质量闸门 · 快判 · 断网缓存</text>
+      </g>
+      <g>
+        <rect x="418" y="36" width="178" height="66" rx="12" fill="#11141a" stroke="#2f3742"/>
+        <text x="430" y="58" fill="#3b9ef7" font-size="9.5" letter-spacing="1.4" font-family="monospace">L2 · BACKBONE</text>
+        <text x="430" y="76" fill="#e9ecf1" font-size="13" font-weight="700">数据骨干</text>
+        <text x="430" y="92" fill="#8d97a5" font-size="10">MQTT → 流 → 时序 + 对象 + 谱系</text>
+      </g>
+      <g>
+        <rect x="620" y="36" width="178" height="66" rx="12" fill="#141420" stroke="#8b6cff" stroke-opacity=".45"/>
+        <text x="632" y="58" fill="#c0adff" font-size="9.5" letter-spacing="1.4" font-family="monospace">L3 · JUDGMENT</text>
+        <text x="632" y="76" fill="#e9ecf1" font-size="13" font-weight="700">判断服务</text>
+        <text x="632" y="92" fill="#8d97a5" font-size="10">校准 · 集成 · 弃权 · 7 判断器</text>
+      </g>
+      <g>
+        <rect x="822" y="36" width="178" height="66" rx="12" fill="#1a1510" stroke="#e0a24e" stroke-opacity=".45"/>
+        <text x="834" y="58" fill="#e0a24e" font-size="9.5" letter-spacing="1.4" font-family="monospace">L4 · ORCHESTRATION</text>
+        <text x="834" y="76" fill="#e9ecf1" font-size="13" font-weight="700">编排与闸门</text>
+        <text x="834" y="92" fill="#8d97a5" font-size="10">状态机 · 策略 · 复核 · 账本</text>
+      </g>
+      <!-- 下排 -->
+      <g>
+        <rect x="216" y="178" width="178" height="64" rx="12" fill="#11141a" stroke="#2f3742"/>
+        <text x="228" y="200" fill="#8d97a5" font-size="9.5" letter-spacing="1.4" font-family="monospace">L5 · ACTUATION</text>
+        <text x="228" y="218" fill="#e9ecf1" font-size="13" font-weight="700">执行与闭环</text>
+        <text x="228" y="234" fill="#8d97a5" font-size="10">命令 → ACK → 回读 → 回滚</text>
+      </g>
+      <g>
+        <rect x="418" y="178" width="178" height="64" rx="12" fill="#141414" stroke="#2f3742"/>
+        <text x="430" y="200" fill="#8d97a5" font-size="9.5" letter-spacing="1.4" font-family="monospace">LEDGER</text>
+        <text x="430" y="218" fill="#e9ecf1" font-size="13" font-weight="700">决策账本</text>
+        <text x="430" y="234" fill="#8d97a5" font-size="10">哈希链 · 输入快照 · 版本</text>
+      </g>
+      <g>
+        <rect x="620" y="178" width="178" height="64" rx="12" fill="#1a1216" stroke="#ff5d6e" stroke-opacity=".35"/>
+        <text x="632" y="200" fill="#ff8f9b" font-size="9.5" letter-spacing="1.4" font-family="monospace">L5b · HITL</text>
+        <text x="632" y="218" fill="#e9ecf1" font-size="13" font-weight="700">人工复核</text>
+        <text x="632" y="234" fill="#8d97a5" font-size="10">队列 · 理由分类 · 采纳/改判</text>
+      </g>
+      <g>
+        <rect x="822" y="178" width="178" height="64" rx="12" fill="#111420" stroke="#8b6cff" stroke-opacity=".35"/>
+        <text x="834" y="200" fill="#c0adff" font-size="9.5" letter-spacing="1.4" font-family="monospace">L6 · LEARNING</text>
+        <text x="834" y="218" fill="#e9ecf1" font-size="13" font-weight="700">学习与治理</text>
+        <text x="834" y="234" fill="#8d97a5" font-size="10">延迟标签 · 漂移 · 影子 · 联邦</text>
+      </g>
+      <!-- 连线 -->
+      <g stroke="#4b5563" stroke-width="1.2" fill="none" marker-end="url(#ar)">
+        <path d="M192,69 H212"/><path d="M394,69 H414"/><path d="M596,69 H616"/><path d="M798,69 H818"/>
+      </g>
+      <g stroke="#00c48c" stroke-width="1.2" fill="none" marker-end="url(#arg)" stroke-opacity=".75">
+        <path d="M305,102 V174"/>
+      </g>
+      <g stroke="#4b5563" stroke-width="1.2" fill="none" marker-end="url(#ar)" stroke-dasharray="4 3">
+        <path d="M507,102 V174"/><path d="M709,102 V174"/><path d="M394,210 H414"/>
+      </g>
+      <g stroke="#e0a24e" stroke-width="1.2" fill="none" marker-end="url(#arg)" stroke-opacity=".7" stroke-dasharray="5 3">
+        <path d="M930,102 V140 H305 V174"/>
+      </g>
+      <g stroke="#8b6cff" stroke-width="1.2" fill="none" marker-end="url(#ard)" stroke-opacity=".7" stroke-dasharray="5 3">
+        <path d="M1000,210 H1008 V14 H709 V32"/>
+      </g>
+      <g font-family="monospace" font-size="9" fill="#69727e">
+        <text x="196" y="30">事件/30s</text>
+        <text x="398" y="30">MQTT</text>
+        <text x="600" y="30">特征+图像</text>
+        <text x="802" y="30">请求</text>
+        <text x="311" y="130" fill="#00c48c">快判 &lt;300ms</text>
+        <text x="513" y="130">入账</text>
+        <text x="715" y="130" fill="#ff8f9b">human_review</text>
+        <text x="330" y="150" fill="#e0a24e">命令（人工闸门）</text>
+        <text x="400" y="204">结果</text>
+        <text x="742" y="10" fill="#8b6cff">再训练 · 影子 · 晋级</text>
+      </g>
+    </g>
+  </svg>
+  </div>
+
+  <h3 class="sub">2.1 逐层拆解 <span class="mut">点左侧任意一层，看职责、组件、时延预算与失效模式</span></h3>
+  <div class="explorer">
+    <div class="layers" id="layers"></div>
+    <div class="ldetail" id="ldetail"><div class="empty">← 选择一层开始</div></div>
+  </div>
+
+  <h3 class="sub">2.2 端侧时延预算 <span class="mut">「&lt;300ms」需要拆开才可执行</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th>环节</th><th>内容</th><th style="width:110px">预算</th><th>压不下来的原因</th></tr></thead>
+    <tbody>
+      <tr><td>曝光 + 传输</td><td>相机触发、MIPI/USB 取图</td><td class="mono">25 ms</td><td>物理限制；用触发式拍摄避免运动模糊</td></tr>
+      <tr><td>质量闸门</td><td>模糊/结露/过曝/遮挡检测</td><td class="mono">8 ms</td><td>小模型或纯 CV 指标即可，必须在推理前跑</td></tr>
+      <tr><td>预处理</td><td>裁切、白平衡校正、归一化</td><td class="mono">12 ms</td><td>固定 ROI 可省掉检测步骤</td></tr>
+      <tr><td>推理（INT8）</td><td>污染分类 / 根系分割 / 叶色回归</td><td class="mono">45–70 ms</td><td>三个模型串行；并行可降到 70ms 内</td></tr>
+      <tr><td>校准 + 弃权</td><td>温度缩放、conformal 集、OOD 分</td><td class="mono">2 ms</td><td>纯查表与标量运算</td></tr>
+      <tr><td>策略 / 状态机</td><td>阈值、三区间、升级标记</td><td class="mono">5 ms</td><td>规则在本地，不依赖网络</td></tr>
+      <tr><td>回传 + UI</td><td>MQTT 上行 + 控制台刷新</td><td class="mono">40 ms</td><td>局域网内可忽略；跨区域要单独算</td></tr>
+      <tr><td><b>合计</b></td><td><b>p50 ≈ 147ms / p95 ≈ 210ms</b></td><td class="mono"><b>≤300 ms</b></td><td>留 30% 余量给 GC、散热降频、批量排队</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">2.3 技术选型与理由 <span class="mut">给「为什么不用 X」留档，避免半年后重新吵一次</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:132px">能力</th><th style="width:200px">首选</th><th style="width:170px">备选</th><th>选择理由</th></tr></thead>
+    <tbody>
+      <tr><td>边缘盒子</td><td>Jetson Orin Nano 8GB</td><td>RPi5 + Hailo-8L</td><td>要同时跑 2–3 个视觉模型且功耗 &lt;15W；不需要大模型，但需要稳定供货</td></tr>
+      <tr><td>消息与流</td><td>EMQX(MQTT) + Redpanda</td><td>Kafka / NATS</td><td>断网必须能本地缓冲；单机 Kafka 协议兼容，省运维</td></tr>
+      <tr><td>时序库</td><td>TimescaleDB</td><td>InfluxDB</td><td>SQL 能一次 JOIN 气象、根区、批次；连续聚合做降采样方便</td></tr>
+      <tr><td>对象存储</td><td>MinIO（农场本地）</td><td>S3 / OSS</td><td>原始图像不出境，是数据主权的第一道闸</td></tr>
+      <tr><td>谱系与元数据</td><td>Postgres + 递归 CTE</td><td>Neo4j / Apache AGE</td><td>谱系深度 ≤8 层，递归查询足够；不引入第二个数据库</td></tr>
+      <tr><td>推理服务</td><td>Triton</td><td>ONNX Runtime Server</td><td>多模型、动态批处理、INT8/FP16 切换成熟</td></tr>
+      <tr><td>状态机</td><td>Temporal</td><td>自研（Postgres 驱动）</td><td>流程长达 30–45 天，需要持久定时器与重试语义</td></tr>
+      <tr><td>校准存储</td><td>自研 Calibration Store</td><td>—</td><td>每「农场 × 品种 × 判断器」一套温度参数与阈值，无现成组件</td></tr>
+      <tr><td>审计账本</td><td>Postgres 追加表 + 哈希链</td><td>只读对象存储 + 外部时间戳</td><td>可离线验证、可导出交检，不引入区块链</td></tr>
+      <tr><td>联邦学习</td><td>Flower</td><td>自研梯度聚合</td><td>只交换梯度/统计量；真要做时再引入，MVP 不需要</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">2.4 三种部署拓扑 <span class="mut">同一个判断层，三种交付形态</span></h3>
+  <div class="grid3">
+    <div class="card">
+      <h4>T1 单农场 <span class="pill ok">MVP</span></h4>
+      <p>边缘盒子 ×2（主备）+ 农场本地服务器（MinIO + Timescale + 编排）。云只在<b>模型分发</b>时出现，推理与决策全部本地。</p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:8px">代价：无跨场学习；收益：断网可运行 72h、数据零出境、部署一天完成。</p>
+    </div>
+    <div class="card">
+      <h4>T2 区域多农场 <span class="pill info">规模化</span></h4>
+      <p>农场保留采集与快判；区域云承担集成判断、跨场谱系（同一母株库供苗）与集中复核队列。<b>图像留场，特征与决策上云。</b></p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:8px">代价：区域云运维；收益：新农场靠共享先验冷启动，复核人力集中。</p>
+    </div>
+    <div class="card">
+      <h4>T3 跨境联邦 <span class="pill vio">出口</span></h4>
+      <p>数据分级：L0 原始图像（不出境）、L1 特征向量（可出境）、L2 模型参数（受管）。联邦聚合只搬 L1/L2，本地模型注册表各自晋级。</p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:8px">代价：工程复杂度；收益：满足数据主权与品种权审查，同时共享全球经验。</p>
+    </div>
+  </div>
+
+  <div class="card soft" style="margin-top:14px">
+    <h4>三条横切能力（每一层都要有，不是某一层的活）</h4>
+    <ul>
+      <li><b>安全互锁</b>：EC/pH/压力/占空比的硬限位在 PLC，软件层只发意图；任何越界指令在网关侧直接拒绝并记事件。</li>
+      <li><b>可观测性</b>：每个决策带 <code>trace_id</code>，贯穿采集→推理→策略→执行→复核；指标按「判断器 × 品种 × 农场」切片。</li>
+      <li><b>可审计</b>：决策、输入快照哈希、模型版本、SOP 版本、复核结果全部入链；账本只追加，导出即凭证。</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="chain">
+  <div class="sechead">
+    <div class="num">03 / DECISION MAP</div>
+    <h2>十四个决策节点：从一粒外植体到一杯可交付的豆</h2>
+    <div class="zh">v0.1 的 12 节点保留 12 个，新增「隔离半径」与「能耗调度」，把「数据回流」升级为学习层</div>
+    <p>链条的真正难点不在两端，在中间那道<b>衔接闸门</b>：组培苗从「无菌、恒温、高湿」的世界，进入「有菌、变温、要自己蒸腾」的世界。这一步的失败率通常最高，也最适合用一个 Score 判断器去卡。点任意节点看它的契约。</p>
+  </div>
+
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+    <span class="pill warn">★ 关键闸门：节点 6 / 7 / 8</span>
+    <span class="pill info">新增：节点 12 隔离半径 · 节点 13 能耗调度</span>
+    <span class="pill gray">点任意节点查看契约</span>
+  </div>
+
+  <div class="chain" id="chainbox"></div>
+  <div class="nodedetail" id="nodedetail"><div class="empty">← 点一个节点，查看判断器契约、阈值与升级条件</div></div>
+
+  <h3 class="sub">3.1 为什么这三处标星 <span class="mut">驯化 readiness 是整条链的「汇率」</span></h3>
+  <div class="grid3">
+    <div class="card">
+      <h4>⑥ 驯化 readiness <span class="pill warn">衔接</span></h4>
+      <p>它是组培与雾培之间的<b>唯一汇率</b>：定得太松，雾培端承担高死亡率；定得太紧，组培端压货、成本堆在瓶里。这个阈值会同时改变两条产线的经济性，所以必须由<b>下游成活率</b>反标定，而不是由组培车间自己定。</p>
+    </div>
+    <div class="card">
+      <h4>⑦ 移栽闸门 <span class="pill warn">不可逆</span></h4>
+      <p>出瓶是<b>不可逆操作</b>：污染一旦带进雾培槽，就是整槽风险。所以这里默认 <code>human_review=true</code>，AI 只负责「建议 + 排序 + 挑出不该移的」，不负责放行。首次移栽的新品种一律强制人工。</p>
+    </div>
+    <div class="card">
+      <h4>⑧ 营养雾配方 <span class="pill warn">高频</span></h4>
+      <p>一天可能触发几十次，是最适合「快判」的节点，也是最容易出事故的节点（EC 拉高 20 分钟就能烧根尖）。设计要点：<b>硬限位在 PLC、软件只发意图</b>，且每次调整必须能回滚。</p>
+    </div>
+  </div>
+
+  <h3 class="sub">3.2 状态机的四个迁移闸门 <span class="mut">「当前在哪一阶段」本身就是一个需要判断的问题</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:190px">迁移</th><th>放行条件（全部满足）</th><th style="width:190px">回退条件（任一触发）</th></tr></thead>
+    <tbody>
+      <tr><td>无菌建立 → 增殖</td><td>连续 2 次观察无污染；褐化面积 &lt;15%；有可见芽点</td><td>出现任一污染类；培养基 pH 偏移 &gt;0.3</td></tr>
+      <tr><td>增殖 → 生根</td><td>增殖系数 ≥3；无玻璃化；株高 ≥2cm</td><td>连续两代增殖系数 &lt;2；玻璃化率 &gt;20%</td></tr>
+      <tr><td>生根 → 驯化</td><td>根数 ≥3；根尖褐变 &lt;30%；无污染</td><td>根尖褐变突增；出现根腐气味记录</td></tr>
+      <tr><td>驯化 → 雾培 <span class="pill warn">人工</span></td><td>readiness ≥80；失水测试合格；根团完整；菌检阴性</td><td>readiness 连续 7 天下降；菌检阳性</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="sec" id="lab">
+  <div class="sechead">
+    <div class="num">04 / JUDGER LAB</div>
+    <h2>判断器实验室：三个判断器，拨一下就知道它在想什么</h2>
+    <div class="zh">下面不是截图，是<b>真正在跑的计算</b>——与附录里的 Python 参考实现同一套数学</div>
+    <p>三个判断器分别对应 Noul / Score / Choice。重点看两件事：<b>阈值是怎么被成本结构推动的</b>（A 面板拨动 C_FP / C_FN），以及<b>硬闸门如何覆盖加权分</b>（B 面板把根数拉到 2，看分数被压在 55 以下）。</p>
+  </div>
+
+  <div class="seg" id="labtabs" style="max-width:520px">
+    <button class="on" data-tab="A">A · 污染 Noul</button>
+    <button data-tab="B">B · 驯化 Score</button>
+    <button data-tab="C">C · 营养雾 Choice</button>
+  </div>
+
+  <!-- ============ A ============ -->
+  <div class="lab" data-panel="A">
+    <div class="panel">
+      <div class="ph"><h4>输入 · 无菌建立 / 继代观察</h4><span class="pill gray">事件触发</span></div>
+      <div class="ctl"><div class="ch"><span class="cl">视觉模型原始分 <small>p_raw</small></span><span class="cv" id="a-pv">0.62</span></div><input type="range" id="a-p" min="0" max="1" step="0.01" value="0.62"></div>
+      <div class="ctl"><div class="ch"><span class="cl">图像质量 <small>清晰度/结露/反光</small></span><span class="cv" id="a-qv">0.90</span></div><input type="range" id="a-q" min="0" max="1" step="0.01" value="0.9"></div>
+      <div class="ctl"><div class="ch"><span class="cl">环境温度 <small>°C</small></span><span class="cv" id="a-tv">24.5</span></div><input type="range" id="a-t" min="18" max="32" step="0.5" value="24.5"></div>
+      <div class="ctl"><div class="ch"><span class="cl">相对湿度 <small>%RH</small></span><span class="cv" id="a-rhv">68</span></div><input type="range" id="a-rh" min="40" max="95" step="1" value="68"></div>
+      <div class="ctl"><div class="ch"><span class="cl">继代天数 <small>d</small></span><span class="cv" id="a-dv">18</span></div><input type="range" id="a-d" min="0" max="40" step="1" value="18"></div>
+      <div class="ctl"><div class="ch"><span class="cl">批次历史污染率</span><span class="cv" id="a-histv">0.03</span></div><input type="range" id="a-hist" min="0" max="0.2" step="0.005" value="0.03"></div>
+      <div class="hr" style="margin:14px 0"></div>
+      <div class="ctl"><div class="ch"><span class="cl">误隔离成本 C<sub>FP</sub> <small>丢掉一盘健康苗的代价</small></span><span class="cv" id="a-fpv">$40</span></div><input type="range" id="a-fp" min="5" max="200" step="5" value="40"></div>
+      <div class="ctl"><div class="ch"><span class="cl">漏检成本 C<sub>FN</sub> <small>一盘污染扩散的代价</small></span><span class="cv" id="a-fnv">$900</span></div><input type="range" id="a-fn" min="100" max="5000" step="50" value="900"></div>
+      <div class="ctl"><div class="ch"><span class="cl">运营下限 τ<sub>min</sub> <small>每周能承受多少误隔离</small></span><span class="cv" id="a-tmv">0.15</span></div><input type="range" id="a-tm" min="0.05" max="0.30" step="0.01" value="0.15"></div>
+      <div style="font-size:11.5px;color:var(--dim2);line-height:1.55;margin:-4px 0 10px">
+        先按成本算阈值，再用「每周可承受的误隔离量」抬一个地板 —— 纯成本解会得出 4% 的阈值，等于几乎每盘都隔离，现场执行不了。
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn primary" style="flex:1" data-log="A">记入决策账本</button>
+        <button class="btn ghost" data-reset="A">重置</button>
+      </div>
+    </div>
+    <div class="outs">
+      <div class="verdict" id="a-verdict">
+        <div class="vh"><span class="pill ok" id="a-tag">continue</span><span class="vd" id="a-dec">continue</span></div>
+        <div class="vsub" id="a-reason">—</div>
+        <div class="probbar" id="a-bar">
+          <div class="mk" id="a-mk" style="left:0"></div>
+          <span class="zt" id="a-z1" style="left:0">放行</span>
+          <span class="zt" id="a-z2" style="left:0">复核</span>
+          <span class="zt" id="a-z3" style="left:0">处置</span>
+        </div>
+        <div class="pb-scale"><span>0</span><span>p(污染) →</span><span>1</span></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="mk">校准后 p</div><div class="mv" id="a-mp">—</div></div>
+        <div class="metric"><div class="mk">τ_cost（纯成本解）</div><div class="mv" id="a-mtc">—</div></div>
+        <div class="metric"><div class="mk">τ_hi（加下限后生效）</div><div class="mv" id="a-mthi">—</div></div>
+        <div class="metric"><div class="mk">τ_lo（复核下限）</div><div class="mv" id="a-mtlo">—</div></div>
+        <div class="metric"><div class="mk">置信度</div><div class="mv" id="a-mc">—</div></div>
+        <div class="metric"><div class="mk">OOD 标记</div><div class="mv" id="a-mood">—</div></div>
+      </div>
+      <div class="json" id="a-json"></div>
+    </div>
+  </div>
+
+  <!-- ============ B ============ -->
+  <div class="lab" data-panel="B" style="display:none">
+    <div class="panel">
+      <div class="ph"><h4>输入 · 驯化 readiness</h4><span class="pill gray">出瓶闸门</span></div>
+      <div class="ctl"><div class="ch"><span class="cl">根数 <small>条</small></span><span class="cv" id="b-rootsv">5</span></div><input type="range" id="b-roots" min="0" max="20" step="1" value="5"></div>
+      <div class="ctl"><div class="ch"><span class="cl">根尖褐变程度 <small>0 无 / 100 严重</small></span><span class="cv" id="b-brownv">22</span></div><input type="range" id="b-brown" min="0" max="100" step="1" value="22"></div>
+      <div class="ctl"><div class="ch"><span class="cl">株高 <small>cm</small></span><span class="cv" id="b-shootv">3.2</span></div><input type="range" id="b-shoot" min="0.5" max="8" step="0.1" value="3.2"></div>
+      <div class="ctl"><div class="ch"><span class="cl">叶色（叶绿素代理）</span><span class="cv" id="b-leafv">78</span></div><input type="range" id="b-leaf" min="0" max="100" step="1" value="78"></div>
+      <div class="ctl"><div class="ch"><span class="cl">气孔关闭 / 蜡质层 <small>驯化关键</small></span><span class="cv" id="b-waxv">70</span></div><input type="range" id="b-wax" min="0" max="100" step="1" value="70"></div>
+      <div class="ctl"><div class="ch"><span class="cl">失水测试 4h <small>%</small></span><span class="cv" id="b-waterv">9.5</span></div><input type="range" id="b-water" min="0" max="30" step="0.5" value="9.5"></div>
+      <div class="ctl"><div class="ch"><span class="cl">并行污染概率 <small>来自 Noul</small></span><span class="cv" id="b-contv">0.08</span></div><input type="range" id="b-cont" min="0" max="1" step="0.01" value="0.08"></div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn primary" style="flex:1" data-log="B">记入决策账本</button>
+        <button class="btn ghost" data-reset="B">重置</button>
+      </div>
+    </div>
+    <div class="outs">
+      <div class="verdict" id="b-verdict">
+        <div class="vh"><span class="pill ok" id="b-tag">band</span><span class="vd"><span id="b-score">—</span><small style="font-size:13px;color:#8d97a5">/100</small></span></div>
+        <div class="vsub" id="b-reason">—</div>
+        <div style="position:relative;height:34px;margin-top:10px">
+          <div style="position:absolute;top:2px;left:0;right:0;height:20px;border-radius:6px;overflow:hidden;display:flex">
+            <div style="flex:60;background:linear-gradient(90deg,rgba(255,93,110,.3),rgba(255,93,110,.16))"></div>
+            <div style="flex:20;background:linear-gradient(90deg,rgba(224,162,78,.28),rgba(224,162,78,.16))"></div>
+            <div style="flex:20;background:linear-gradient(90deg,rgba(0,196,140,.2),rgba(0,196,140,.34))"></div>
+          </div>
+          <span style="position:absolute;top:7px;left:30%;transform:translateX(-50%);font-size:9px;color:rgba(255,255,255,.5)">继续驯化</span>
+          <span style="position:absolute;top:7px;left:70%;transform:translateX(-50%);font-size:9px;color:rgba(255,255,255,.62)">延迟 3–7 天</span>
+          <span style="position:absolute;top:7px;left:90%;transform:translateX(-50%);font-size:9px;color:rgba(255,255,255,.62)">可移栽</span>
+          <div class="mk" id="b-mk" style="position:absolute;top:0;width:2px;height:24px;background:#fff;box-shadow:0 0 7px rgba(255,255,255,.75);transition:left .3s"></div>
+          <span style="position:absolute;top:22px;left:60%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--dim2)">60</span>
+          <span style="position:absolute;top:22px;left:80%;transform:translateX(-50%);font-family:var(--mono);font-size:9px;color:var(--dim2)">80</span>
+          <span style="position:absolute;top:22px;left:0;font-family:var(--mono);font-size:9px;color:var(--dim2)">0</span>
+          <span style="position:absolute;top:22px;right:0;font-family:var(--mono);font-size:9px;color:var(--dim2)">100</span>
+        </div>
+      </div>
+      <div class="panel" style="padding:14px">
+        <div class="ph" style="margin-bottom:10px"><h4 style="font-size:13px">分项得分与闸门</h4><span class="pill gray" id="b-conf">—</span></div>
+        <div class="subs" id="b-subs"></div>
+      </div>
+      <div class="json" id="b-json"></div>
+    </div>
+  </div>
+
+  <!-- ============ C ============ -->
+  <div class="lab" data-panel="C" style="display:none">
+    <div class="panel">
+      <div class="ph"><h4>输入 · 营养雾配方选择</h4><span class="pill gray">高频</span></div>
+      <div class="ctl"><div class="ch"><span class="cl">EC <small>mS/cm</small></span><span class="cv" id="c-ecv">1.20</span></div><input type="range" id="c-ec" min="0.6" max="2.4" step="0.02" value="1.2"></div>
+      <div class="ctl"><div class="ch"><span class="cl">pH</span><span class="cv" id="c-phv">5.80</span></div><input type="range" id="c-ph" min="4.8" max="7" step="0.02" value="5.8"></div>
+      <div class="ctl"><div class="ch"><span class="cl">VPD <small>kPa</small></span><span class="cv" id="c-vpdv">0.90</span></div><input type="range" id="c-vpd" min="0.3" max="1.8" step="0.02" value="0.9"></div>
+      <div class="ctl"><div class="ch"><span class="cl">根区温度 <small>°C</small></span><span class="cv" id="c-tempv">24.0</span></div><input type="range" id="c-temp" min="18" max="30" step="0.5" value="24"></div>
+      <div class="ctl"><div class="ch"><span class="cl">溶氧 DO <small>mg/L</small></span><span class="cv" id="c-dov">6.5</span></div><input type="range" id="c-do" min="3" max="9" step="0.1" value="6.5"></div>
+      <div class="ctl"><div class="ch"><span class="cl">雾滴粒径 <small>µm</small></span><span class="cv" id="c-dropv">35</span></div><input type="range" id="c-drop" min="10" max="80" step="1" value="35"></div>
+      <div class="ctl"><div class="ch"><span class="cl">营养液温度 <small>°C</small></span><span class="cv" id="c-wtv">21.0</span></div><input type="range" id="c-wt" min="16" max="28" step="0.5" value="21"></div>
+      <div class="hr" style="margin:14px 0"></div>
+      <div class="ctl"><div class="ch"><span class="cl">目标权重 · 成活</span><span class="cv" id="c-wsv">0.50</span></div><input type="range" id="c-ws" min="0" max="1" step="0.05" value="0.5"></div>
+      <div class="ctl"><div class="ch"><span class="cl">目标权重 · 成本</span><span class="cv" id="c-wcv">0.20</span></div><input type="range" id="c-wc" min="0" max="1" step="0.05" value="0.2"></div>
+      <div class="ctl"><div class="ch"><span class="cl">目标权重 · 品质</span><span class="cv" id="c-wqv">0.30</span></div><input type="range" id="c-wq" min="0" max="1" step="0.05" value="0.3"></div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn primary" style="flex:1" data-log="C">记入决策账本</button>
+        <button class="btn ghost" data-reset="C">重置</button>
+      </div>
+      <div style="font-size:11.5px;color:var(--dim2);line-height:1.55;margin-top:10px">
+        <b>成本是边际成本</b>：按 SOP 维持 = 0，改配方/停机才是额外支出。置信度 = σ(ΔU/τ)，
+        即「最优比次优强多少」，不是 softmax 最大值——后者在六个近似打平的候选里永远只有 0.2。
+        液温 &gt; 24°C 属于<b>前置条件</b>，会直接转人工，而不是判某个动作违规。
+      </div>
+    </div>
+    <div class="outs">
+      <div class="verdict" id="c-verdict">
+        <div class="vh"><span class="pill ok" id="c-tag">choice</span><span class="vd" id="c-dec">—</span></div>
+        <div class="vsub" id="c-reason">—</div>
+      </div>
+      <div class="panel" style="padding:12px">
+        <div style="font-size:11px;letter-spacing:1px;color:var(--dim2);font-family:var(--mono);margin-bottom:8px">候选动作（硬约束 × 效用 × softmax 概率）</div>
+        <div class="tblscroll"><table class="tbl" id="c-opts" style="margin:0;font-size:12px"></table></div>
+      </div>
+      <div class="json" id="c-json"></div>
+    </div>
+  </div>
+
+  <div class="card note" style="margin-top:14px">
+    <h4>三个判断器共用的「三区间」判据 <span class="pill warn">含一个反直觉的结论</span></h4>
+    <p>A 面板里你会看到两件事。第一：把 C<sub>FN</sub> 调高（污染扩散更贵），τ<sub>cost</sub> 会<b>下降</b>——同样的概率，从「放行」变成「处置」。第二件更重要：按 40 美元 / 900 美元算出来的 τ<sub>cost</sub> 只有 <b>4.3%</b>，意味着几乎每一盘都该隔离，<b>现场根本执行不了</b>。所以真实系统必须再加一个「运营下限」（每周能承受多少误隔离），把阈值抬回可执行区间。</p>
+    <p style="margin-top:8px">把 τ<sub>min</sub> 从 0.15 拖到 0.30，你会看到同样的输入从「处置」退回「复核」——<b>这就是 AI 与运营产能之间的谈判桌</b>。任何把这个谈判藏在代码常数里的系统，最后都会被人绕过去。</p>
+  </div>
+</section>
+
+<section class="sec" id="api">
+  <div class="sechead">
+    <div class="num">05 / CONTRACT</div>
+    <h2>接口契约：一个端点，三种判断，零自由文本</h2>
+    <div class="zh">请求带上下文，响应带证据、置信度、复核理由与审计编号</div>
+    <p>下面的 Playground <b>不是 mock</b>：它调用本页内置的同一套引擎，按 <code>stage</code> 路由到对应判断器，缺字段时真的会返回 <code>need_more_info</code>。你可以改 JSON 直接试。</p>
+  </div>
+
+  <div class="endpoint">
+    <span class="m">POST</span><span class="p">/coffee-jev/decide</span>
+    <span class="h">content-type: application/json · idempotency-key: 必填</span>
+  </div>
+
+  <div class="api">
+    <div class="panel">
+      <div class="ph">
+        <h4>请求</h4>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim);cursor:pointer">
+          <input type="checkbox" id="shadow" style="width:auto;accent-color:var(--amber)"> 影子模式
+        </label>
+      </div>
+      <div class="seg" id="presets">
+        <button class="on" data-preset="root">移栽评估</button>
+        <button data-preset="aseptic">无菌检查</button>
+        <button data-preset="fog">营养雾</button>
+        <button data-preset="bad">缺字段</button>
+      </div>
+      <textarea id="reqbox" spellcheck="false" style="height:360px;font-size:11.8px"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn primary" style="flex:1" id="runapi">调用 /coffee-jev/decide</button>
+        <button class="btn ghost" id="fmtapi">格式化</button>
+      </div>
+      <div id="reqerr" style="font-size:12px;color:#ff8f9b;margin-top:8px;font-family:var(--mono)"></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h4>响应</h4><span class="pill gray" id="respcode">—</span></div>
+      <div class="respmeta" id="respmeta"></div>
+      <div class="json" id="respbox" style="min-height:420px;max-height:520px;overflow:auto">等待调用…</div>
+    </div>
+  </div>
+
+  <h3 class="sub">5.1 字段契约 <span class="mut">字段名一旦定下，LIMS / 边缘盒 / 控制台三端共用</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:190px">字段</th><th style="width:110px">类型</th><th style="width:64px">必填</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>variety</code></td><td>string</td><td>✅</td><td>品种/品系，如 <code>Arabica-Caturra</code>。决定使用哪一套校准参数与基线</td></tr>
+      <tr><td><code>region</code></td><td>string</td><td>✅</td><td>产区/农场 ID。用于层次化基线与数据主权路由</td></tr>
+      <tr><td><code>stage</code></td><td>enum</td><td>✅</td><td>状态机节点，决定路由到哪个判断器（见 5.2）</td></tr>
+      <tr><td><code>sensors</code></td><td>object</td><td>✅</td><td><code>ec, ph, vpd, temp</code> 必填；<code>rh, do, droplet_um, water_temp, days_in_culture</code> 选填</td></tr>
+      <tr><td><code>image_ref</code></td><td>string</td><td>条件</td><td>图像对象引用（S3/MinIO）。视觉类判断必需；纯传感器判断可空</td></tr>
+      <tr><td><code>batch_history</code></td><td>object</td><td>条件</td><td><code>contamination_rate</code>：批次历史污染率，用作先验</td></tr>
+      <tr><td><code>reading</code></td><td>object</td><td>条件</td><td>判断器专属读数：<code>vision_p, quality, roots, browning, shoot_cm, leaf_color, stomata_wax, water_loss_pct</code></td></tr>
+      <tr><td><code>costs</code></td><td>object</td><td>否</td><td><code>fp</code> / <code>fn</code>：误隔离与漏检成本（当地货币）。缺省时用农场配置</td></tr>
+      <tr><td><code>objective</code></td><td>object</td><td>否</td><td><code>survival / cost / quality</code> 权重；缺省 0.5 / 0.2 / 0.3</td></tr>
+      <tr><td><code>mode</code></td><td>enum</td><td>否</td><td><code>live</code>（默认）或 <code>shadow</code>：只判断不执行，返回 <code>would_decide</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">5.2 响应字段与状态语义</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>响应头等字段</h4>
+      <ul>
+        <li><code>decision</code> — 单值枚举，<b>不含自然语言</b></li>
+        <li><code>confidence</code> — <b>校准后</b>置信度（见 7.2），不是 softmax 原值</li>
+        <li><code>scores</code> — 判断器内部关键量（p、τ、readiness、utility…），用于事后归因</li>
+        <li><code>options[]</code> — 候选动作、可行性、效用、概率</li>
+        <li><code>human_review</code> + <code>review_reasons[]</code> — 布尔之外还要说<b>为什么</b></li>
+        <li><code>reason</code> — ≤80 字，只解释不看数据的人为什么该信/该疑</li>
+        <li><code>evidence_refs[]</code> — 图像/传感器快照哈希，支撑可追溯</li>
+        <li><code>audit_id</code> — 哈希链账本索引，出问题能回放</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>四种「不决策」也是正式输出</h4>
+      <ul>
+        <li><code>need_more_info</code> — 字段缺失或传感器 health 不足。<b>200 返回</b>，不是 400</li>
+        <li><code>abstain</code> — 校准后仍在复核区且无法补证（conformal 集含两个以上类别）</li>
+        <li><code>stop_and_review</code> — 所有候选动作都违反硬约束，不允许系统自己选</li>
+        <li><code>defer_to_human</code> — 首次场景/新品种/高价值批次，按策略强制</li>
+      </ul>
+      <p style="margin-top:8px;color:var(--dim)">把「不决策」做成合法输出，比逼模型给一个答案更省钱——这是判断层和聊天机器人的分界线。</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="hitl">
+  <div class="sechead">
+    <div class="num">06 / HUMAN-IN-THE-LOOP</div>
+    <h2>人工复核：把人放在正确的价位上，不是放在每个环节</h2>
+    <div class="zh">升级策略是一张表，不是一个 if；复核结果是最贵的训练标签</div>
+    <p>草案说「关键动作必须人工确认」，这句话要变成工程，需要三样东西：<b>触发条件的矩阵</b>（谁该被叫醒）、<b>带证据的队列</b>（他凭什么 30 秒内判断）、<b>可回灌的记录</b>（他的判断变成下一次训练的样本）。</p>
+  </div>
+
+  <h3 class="sub">6.1 升级策略矩阵 <span class="mut">按「错了会有多贵」排序，而不是按置信度排序</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:250px">触发条件</th><th style="width:150px">动作</th><th style="width:80px">SLA</th><th>为什么这样设</th></tr></thead>
+    <tbody>
+      <tr><td>校准置信度 &lt; <b>0.70</b></td><td>进入复核队列</td><td class="mono">4 h</td><td>低于此值模型与人的判断力相当，继续自动化没有收益</td></tr>
+      <tr><td>p 落在<b>复核区</b> [τ<sub>lo</sub>, τ<sub>hi</sub>)</td><td>安排镜检/切片</td><td class="mono">24 h</td><td>不是「不确定所以问问」，而是<b>用一次 20 元的镜检换掉一次 900 元的赌注</b></td></tr>
+      <tr><td>OOD 分数超限 / 新品种 / 首次场景</td><td>强制人工 + 影子运行</td><td class="mono">24 h</td><td>分布外部的高置信度最危险，必须由人先兜住</td></tr>
+      <tr><td>决策 ∈ <code>transplant_now</code> / <code>discard_batch</code> / <code>stop_and_review</code></td><td><b>双人签核</b></td><td class="mono">8 h</td><td>不可逆或高损失动作，单人无权放行</td></tr>
+      <tr><td>将突破硬约束（EC/pH/压力）</td><td>阻塞 + 现场告警</td><td class="mono">即时</td><td>这一条不经过人，直接由 PLC 拦；人只收到通知</td></tr>
+      <tr><td>批次价值 &gt; 阈值（如 5000 苗）</td><td>主管确认</td><td class="mono">4 h</td><td>同样的概率，金额不同，风险偏好就该不同</td></tr>
+      <tr><td>传感器 health &lt; 0.6</td><td>返回 <code>need_more_info</code></td><td class="mono">即时</td><td>输入不可信时，<b>不生成决策</b>比生成后再复核便宜一个数量级</td></tr>
+      <tr><td>每日盲抽样 20 条<b>高置信度</b>决策</td><td>盲复核（不告知模型结论）</td><td class="mono">48 h</td><td>唯一能发现「系统性自信错误」的手段，见 1.3 / C1</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">6.2 复核队列 <span class="mut">可点击：采纳 / 改判 / 补证，三条路径都会写进账本</span></h3>
+  <div id="queue" style="display:flex;flex-direction:column;gap:10px">
+    <div class="card" data-rv="RV-2411" data-ai="delay_adjust" data-stage="acclimation">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h4 style="margin:0">RV-2411 · 批次 AP-0713 · 480 苗 <span class="pill warn">复核区</span></h4>
+        <span class="pill gray rv-state">待复核</span>
+      </div>
+      <p style="margin-top:7px"><b>AI 建议：</b><code>delay_adjust</code>（readiness <b>79</b>，距 80 差 1 分）· 置信度 0.71</p>
+      <p><b>证据：</b>根数 7 · 根尖褐变 28% · 气孔关闭 62% · 失水 11.2%/4h；4 天前同批次褐变 19%，呈<b>上升趋势</b>。</p>
+      <p style="color:var(--amber)"><b>需要人判断的点：</b>趋势恶化 vs 绝对分数达标——模型只看当天截面，人看得到斜率。</p>
+      <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+        <button class="btn sm" data-act="accept">采纳 AI</button>
+        <button class="btn sm" data-act="override">改判放行</button>
+        <button class="btn sm" data-act="evidence">要求补证</button>
+      </div>
+    </div>
+    <div class="card" data-rv="RV-2412" data-ai="review_microscopy" data-stage="aseptic_establishment">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h4 style="margin:0">RV-2412 · 批次 TC-118 · 96 瓶 <span class="pill bad">OOD</span></h4>
+        <span class="pill gray rv-state">待复核</span>
+      </div>
+      <p style="margin-top:7px"><b>AI 建议：</b><code>review_microscopy</code>（p=0.078，落在复核区 [τ<sub>lo</sub>, τ<sub>hi</sub>) = [0.060, 0.099)）· 方向置信度 0.92，但图像质量触发 OOD</p>
+      <p><b>证据：</b>图像质量 0.52（培养瓶结露）+ 该品种历史污染率样本量 &lt; 30 → 触发 OOD；视觉分 0.38 与温湿度先验 0.06 冲突。</p>
+      <p style="color:var(--amber)"><b>需要人判断的点：</b>是擦掉结露重拍，还是直接镜检——补一张好图的成本远低于一次误判。</p>
+      <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+        <button class="btn sm" data-act="accept">采纳 AI</button>
+        <button class="btn sm" data-act="override">改判放行</button>
+        <button class="btn sm" data-act="evidence">要求补证</button>
+      </div>
+    </div>
+    <div class="card" data-rv="RV-2413" data-ai="stop_and_review" data-stage="aeroponics_nutrition">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+        <h4 style="margin:0">RV-2413 · 雾培槽 A3 · 240 株 <span class="pill bad">全部候选不可行</span></h4>
+        <span class="pill gray rv-state">待复核</span>
+      </div>
+      <p style="margin-top:7px"><b>AI 输出：</b><code>stop_and_review</code>（无可行候选动作）· 置信度 0.96</p>
+      <p><b>证据：</b>pH 读数 5.24，<b>低于硬限位 5.3</b>；同时该 pH 电极响应时间 38s（阈值 20s）、已连续使用 41 天 → <b>疑似探头失效</b>，而非真的酸败。</p>
+      <p style="color:var(--amber)"><b>需要人判断的点：</b>先修仪表还是先调液——这正是「数据质量闸门」要拦在推理之前的原因（见 G05）。</p>
+      <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap">
+        <button class="btn sm" data-act="accept">采纳 AI</button>
+        <button class="btn sm" data-act="override">改判放行</button>
+        <button class="btn sm" data-act="evidence">要求补证</button>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">6.3 决策账本 <span class="mut">只追加、哈希串联：导出即为可交检的凭证</span></h3>
+  <div class="panel">
+    <div class="ph">
+      <h4>最近决策</h4>
+      <div style="display:flex;gap:7px"><span class="pill gray" id="chain-flag">—</span><button class="btn sm ghost" id="verify">验证链</button></div>
+    </div>
+    <div class="audit" id="audit"><div class="empty">还没有记录。到 04 实验室点「记入决策账本」，或在 06.2 处理一条复核。</div></div>
+    <div style="font-size:11.5px;color:var(--dim2);margin-top:9px;line-height:1.6">
+      每条记录含 <code>seq / ts / audit_id / prev / hash</code>。演示用的是 <b>FNV-1a 32×2</b> 简化哈希（<code>hash = h(prev + payload)</code>），<b>不是 SHA-256</b>；生产环境必须换成 SHA-256，并把 <code>hash</code> 定期锚定到外部时间戳服务，防止整链重写。
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="learn">
+  <div class="sechead">
+    <div class="num">07 / LEARNING LOOP</div>
+    <h2>学习闭环：标签晚到 45 天，那就把闭环设计成异步的</h2>
+    <div class="zh">延迟标签 → 校准 → 漂移 → 影子 → 晋级，五步各自有独立的时间尺度</div>
+    <p>这是草案里最容易被跳过、也最容易让系统在半年后失效的一节。核心思想：<b>不要试图让模型「实时学习」</b>，而是让<b>每一个判断都留下可结算的凭证</b>，等标签到齐后批量结算。</p>
+  </div>
+
+  <h3 class="sub">7.1 五步闭环</h3>
+  <div class="grid3">
+    <div class="card"><h4>① 结算 <span class="pill gray">7–45 天</span></h4><p>决策事件自带 <code>label_ready_at</code>。污染 14 天、生根 21 天、移栽成活 45 天，到期由定时任务回填终局标签。</p><p style="color:var(--dim);font-size:12.5px">没有终局标签之前，样本标记为 <code>pending</code>，<b>不参与训练</b>——这是防止标签噪声污染校准的闸门。</p></div>
+    <div class="card"><h4>② 校准 <span class="pill gray">每周</span></h4><p>在验证集上拟合温度参数 T（每「农场 × 品种 × 判断器」一套），监控 ECE 与可靠性图。ECE &gt; 0.05 触发重新拟合。</p></div>
+    <div class="card"><h4>③ 漂移 <span class="pill gray">每日</span></h4><p>三个层次：输入漂移（PSI/KL 于传感器与图像特征）、预测漂移（决策分布）、结果漂移（污染率/成活率）。前两个当天可见，第三个要等 45 天。</p></div>
+    <div class="card"><h4>④ 影子 <span class="pill gray">≥30 天</span></h4><p>新模型与新农场并行跑，只记录不执行。对比 AI 与人工的一致率、分歧样本分布，<b>分歧不是错误，是信息</b>。</p></div>
+    <div class="card"><h4>⑤ 晋级 <span class="pill gray">季度</span></h4><p>门槛：成本加权净收益不降 <b>且</b> ECE 不升 <b>且</b> 复核一致率不降。三者任一不满足，不上线——哪怕准确率更高。</p></div>
+    <div class="card note"><h4>主动学习队列</h4><p>优先标注三类样本：<b>复核区分歧</b>（模型与人都犹豫）、<b>OOD 命中</b>、<b>高置信度错误</b>。这三类每 100 条的信息量约等于随机 1000 条。</p></div>
+  </div>
+
+  <h3 class="sub">7.2 校准：为什么 0.82 不能直接用 <span class="mut">可靠性图上的那条弯线，就是「自信」和「正确」的差</span></h3>
+  <div class="grid2">
+    <div class="card">
+      <svg viewBox="0 0 320 220" width="100%" style="max-height:240px" role="img" aria-label="可靠性图：未校准曲线低于理想对角线，校准后贴合对角线">
+        <g font-family="monospace" font-size="9" fill="#69727e">
+          <line x1="42" y1="186" x2="300" y2="186" stroke="#2f3742"/>
+          <line x1="42" y1="186" x2="42" y2="22" stroke="#2f3742"/>
+          <line x1="42" y1="186" x2="300" y2="22" stroke="#59616e" stroke-dasharray="4 4"/>
+          <text x="152" y="208">置信度 →</text>
+          <text x="10" y="104" transform="rotate(-90 12,104)">实际正确率 →</text>
+          <text x="248" y="40" fill="#5d6773">理想</text>
+          <!-- 未校准：预测偏自信 → 曲线在对角线下方 -->
+          <polyline points="42,186 78,180 114,168 150,155 186,140 222,122 258,98 300,64"
+                    fill="none" stroke="#ff5d6e" stroke-width="1.8" stroke-dasharray="5 3"/>
+          <!-- 校准后：贴合对角线 -->
+          <polyline points="42,186 78,167 114,145 150,122 186,100 222,77 258,53 300,27"
+                    fill="none" stroke="#00c48c" stroke-width="1.8"/>
+          <text x="42" y="200">0</text><text x="292" y="200">1</text>
+        </g>
+      </svg>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11.5px;color:var(--dim)">
+        <span><span style="display:inline-block;width:14px;height:0;border-top:2px dashed #59616e;vertical-align:middle;margin-right:5px"></span>理想对角线</span>
+        <span><span style="display:inline-block;width:14px;height:0;border-top:2px dashed #ff5d6e;vertical-align:middle;margin-right:5px"></span>未校准（过度自信）</span>
+        <span><span style="display:inline-block;width:14px;height:2px;background:#00c48c;vertical-align:middle;margin-right:5px"></span>校准后</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>三个动作，按成本从低到高</h4>
+      <ul>
+        <li><b>温度缩放</b>（最便宜）：<code>p' = σ(logit(p)/T)</code>，一个标量参数，几乎不改变排序，只改变可信度刻度。</li>
+        <li><b>Isotonic / 分箱校准</b>：非参数，适合样本量大（&gt;2000）的单判断器；小样本容易过拟合。</li>
+        <li><b>Conformal 弃权</b>：不校概率，直接给「这个样本的答案集合有多大」。集合含 ≥2 个类别 → 弃权升级。<b>这是唯一有有限样本保证的方法</b>。</li>
+      </ul>
+      <p style="margin-top:8px;color:var(--dim)">工程上三者叠加：温度缩放管刻度，conformal 管边界，OOD 管「这套刻度在这里根本不适用」。</p>
+      <p style="margin-top:8px;color:#ffbe72">注意：阈值不能只由成本算。纯成本解会给出 4% 这种「几乎每盘都隔离」的答案——必须有<b>运营下限</b>（每周可承受的误隔离量）把它抬起来，这也是 A 面板里 τ_cost 与 τ_hi 分开显示的原因。</p>
+    </div>
+  </div>
+
+  <h3 class="sub">7.3 延迟标签表 <span class="mut">整个闭环的地基，一张表就够</span></h3>
+  <div class="code">
+    <div class="ch2"><span>schema · decision_outcome.sql</span><button class="cp" data-copy="lbl">复制</button></div>
+<pre id="lbl">CREATE TABLE decision_outcome (
+  audit_id        TEXT PRIMARY KEY,      -- 与决策账本同键
+  farm_id         TEXT NOT NULL,
+  variety         TEXT NOT NULL,
+  stage           TEXT NOT NULL,
+  judger          TEXT NOT NULL,         -- contamination | readiness | fog_choice
+  decided_at      TIMESTAMPTZ NOT NULL,
+  decision        TEXT NOT NULL,
+  p_calibrated    REAL,
+  model_id        TEXT NOT NULL,
+  sop_version     TEXT NOT NULL,
+  -- 标签侧
+  label_ready_at  TIMESTAMPTZ NOT NULL,  -- 决定何时可以结算
+  label_state     TEXT DEFAULT 'pending',-- pending | settled | void
+  outcome         TEXT,                  -- contaminated | clean | survived | died ...
+  outcome_at      TIMESTAMPTZ,
+  proxy_label     TEXT,                  -- 当天可见的代理标签（仅用于监控）
+  reviewer_id     TEXT,                  -- 人工复核者，用于一致率统计
+  reviewer_action TEXT                   -- accept | override | need_evidence
+);
+-- 每日任务：结算所有 label_ready_at <= now() 且 state='pending' 的行</pre>
+  </div>
+
+  <h3 class="sub">7.4 漂移监控指标 <span class="mut">每一条都要有「谁看、看到怎么办」</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:170px">监控项</th><th style="width:130px">计算方式</th><th style="width:110px">告警阈值</th><th>处置动作</th></tr></thead>
+    <tbody>
+      <tr><td>输入漂移</td><td>特征 PSI（分箱）</td><td class="mono">&gt; 0.2</td><td>检查传感器/镜头；暂停该农场自动处置权限，转复核</td></tr>
+      <tr><td>预测漂移</td><td>决策分布 JS 散度</td><td class="mono">&gt; 0.15</td><td>看是否新品种/新季节；必要时回退上一版模型</td></tr>
+      <tr><td>校准漂移</td><td>滑动窗口 ECE</td><td class="mono">&gt; 0.05</td><td>重拟合温度参数（小时级，可自动）</td></tr>
+      <tr><td>结果漂移</td><td>污染率/成活率 CUSUM</td><td class="mono">连续 3 周同向</td><td>启动根因复盘（节点 14），不要直接改模型</td></tr>
+      <tr><td>复核一致率</td><td>人机一致 / 复核总数</td><td class="mono">&lt; 0.85</td><td>检查是否 SOP 变了而非模型坏了（这是最常见的假警报）</td></tr>
+      <tr><td>静默错误率</td><td>盲抽样中的高置信度错误率</td><td class="mono">&gt; 2%</td><td>分级告警；立即收缩自动处置范围</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="sec" id="kpi">
+  <div class="sechead">
+    <div class="num">08 / METRICS &amp; ECONOMICS</div>
+    <h2>指标与经济性：先算清「一次误判值多少钱」</h2>
+    <div class="zh">准确率不是目标；<b>成本加权净收益</b>才是。下面的计算器可调，算式全透明</div>
+    <p>气雾栽培的成本结构和土培完全不同：<b>电是最大变动成本</b>，人工巡检占比很小，而一次整槽污染损失极大。所以判断层的价值不只在「判得准」，还在「敢于为了省电而不开雾」。</p>
+  </div>
+
+  <h3 class="sub">8.1 KPI 分层 <span class="mut">前四个是业务指标，后四个是系统指标；都标了基线来源</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:150px">指标</th><th style="width:230px">定义</th><th style="width:100px">示例基线</th><th style="width:80px">M3</th><th style="width:80px">M6</th><th>守护条件（防止刷指标）</th></tr></thead>
+    <tbody>
+      <tr><td><b>污染漏检率</b></td><td>真污染被判为放行的比例（最贵的错）</td><td class="mono">~12%</td><td class="mono">≤6%</td><td class="mono">≤3%</td><td>误隔离率不得同时上升 &gt;5pp</td></tr>
+      <tr><td><b>人工复核率</b></td><td>进入队列的决策占比</td><td class="mono">100%</td><td class="mono">≤35%</td><td class="mono">≤15%</td><td>复核一致率不得低于 0.85</td></tr>
+      <tr><td><b>雾培移栽成活率</b></td><td>移栽后 30 天存活/移栽总数</td><td class="mono">~72%</td><td class="mono">80%</td><td class="mono">86%</td><td>不能靠延长驯化期换取（看周转天数）</td></tr>
+      <tr><td><b>单株能耗</b></td><td>kWh/株/周期（雾化+补光+除湿）</td><td class="mono">—</td><td class="mono">−8%</td><td class="mono">−15%</td><td>成活率不得下降</td></tr>
+      <tr><td>决策时延 p95</td><td>从事件到输出决策</td><td class="mono">1.2 s</td><td class="mono">≤400ms</td><td class="mono">≤210ms</td><td>不能靠降低模型规模换</td></tr>
+      <tr><td>校准误差 ECE</td><td>置信度与正确率的平均偏差</td><td class="mono">0.14</td><td class="mono">≤0.07</td><td class="mono">≤0.05</td><td>—</td></tr>
+      <tr><td>单次决策成本</td><td>(一次性投入/3 + 年运维 + 复核人工) ÷ 年决策数</td><td class="mono">$0.15</td><td class="mono">≤$0.07</td><td class="mono">≤$0.04</td><td>复核人工必须单列，不能藏进「其他」</td></tr>
+      <tr><td>账本完整率</td><td>有 <code>audit_id</code> 且链验证通过的决策占比</td><td class="mono">0</td><td class="mono">100%</td><td class="mono">100%</td><td>—（这是合规项，不是优化项）</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:12.5px;color:var(--dim2);margin-top:8px">基线为示例值，需用贵方历史批次数据替换后再冻结为考核口径；M3/M6 为目标值，不是承诺值。</p>
+
+  <h3 class="sub">8.2 经济性计算器 <span class="mut">改数字看回收期；算式在下方逐项列出</span></h3>
+  <div class="econ">
+    <div class="panel">
+      <div class="ph"><h4>输入（可改）</h4><span class="pill gray">示例</span></div>
+      <div class="field"><label>年出圃量（株）</label><input type="number" id="e-n" value="240000" step="10000"></div>
+      <div class="field"><label>单株价值（货币单位）</label><input type="number" id="e-v" value="0.45" step="0.05"></div>
+      <div class="field"><label>基线污染损失率（%）</label><input type="number" id="e-c0" value="8" step="0.5"></div>
+      <div class="field"><label>目标污染损失率（%）</label><input type="number" id="e-c1" value="4" step="0.5"></div>
+      <div class="field"><label>基线移栽成活率（%）</label><input type="number" id="e-s0" value="72" step="1"></div>
+      <div class="field"><label>目标移栽成活率（%）</label><input type="number" id="e-s1" value="84" step="1"></div>
+      <div class="field"><label>一次性投入（设备 + 集成）</label><input type="number" id="e-capex" value="18000" step="1000"></div>
+      <div class="field"><label>年运维（云 + 复核人力 + 现场维护）</label><input type="number" id="e-opex" value="4800" step="400"></div>
+      <div class="field"><label>日均决策量（次）</label><input type="number" id="e-d" value="800" step="50"></div>
+    </div>
+    <div>
+      <div class="econout">
+        <div class="eo"><div class="ek">年挽回损失</div><div class="ev" id="e-gain">—</div><div class="es">基线损失 − 目标损失</div></div>
+        <div class="eo a"><div class="ek">回收期</div><div class="ev" id="e-pay">—</div><div class="es">一次性投入 ÷ 月净现金流</div></div>
+        <div class="eo a"><div class="ek">年净现金流</div><div class="ev" id="e-net">—</div><div class="es">挽回损失 − 年运维</div></div>
+        <div class="eo"><div class="ek">单次决策成本</div><div class="ev" id="e-cpd">—</div><div class="es">(一次性/3 + 运维) ÷ 年决策数</div></div>
+        <div class="eo"><div class="ek">单株损失下降</div><div class="ev" id="e-pp">—</div><div class="es">挽回损失 ÷ 年出圃量</div></div>
+        <div class="eo"><div class="ek">ROI（年度）</div><div class="ev" id="e-roi">—</div><div class="es">净现金流 ÷ 一次性投入</div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <h4>算式</h4>
+        <div class="json" style="font-size:11.5px;line-height:1.8" id="e-formula"></div>
+      </div>
+      <div class="card note" style="margin-top:12px">
+        <h4>怎么读这个结果 <span class="pill warn">决策建议</span></h4>
+        <p id="e-verdict">—</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:14px">
+    <div class="card"><h4>价值来源（按可验证性排序）</h4><ul><li><b>污染扩散阻断</b>：最可验证，因为损失是离散事件，能逐笔对上</li><li><b>移栽成活率提升</b>：需要 45 天观察期，但金额最大</li><li><b>能耗优化</b>：靠雾化占空比与分时电价，见效快但幅度小</li><li><b>人工巡检替代</b>：容易被高估——人并没有被裁掉，只是换了工作内容</li></ul></div>
+    <div class="card"><h4>不要用来算的东西</h4><ul><li>「品质溢价」：除非有合约或杯测数据支撑，否则不要写进 ROI</li><li>「避免的品牌损失」：无法计量，写进 PPT 可以，写进预算不行</li><li>「人力节省 80%」：复核率降到 15% 不等于省 85% 的人，人还要做补证与纠偏</li></ul></div>
+    <div class="card"><h4>规模门槛</h4><p>把年出圃量调到 <b>6 万株</b>：年挽回损失约 $3,900，还不够付 $4,800 的年运维，<b>回收期为无穷</b>。这不是模型的问题，是固定成本被摊薄得不够。</p><p>结论：小农场不要自建，应走 <b>T2 区域共享</b> 拓扑，用别人的边缘盒子 + 自己的数据。</p></div>
+  </div>
+</section>
+
+<section class="sec" id="roadmap">
+  <div class="sechead">
+    <div class="num">09 / 90-DAY MVP</div>
+    <h2>90 天：先做三个判断器，但顺序反过来</h2>
+    <div class="zh">草案说「先做三个判断器」是对的；但第一个月应该做账本和标签管线，而不是模型</div>
+    <p>理由是：模型可以在第 3 个月迭代很多次，但<b>标签管线一旦前 60 天没建好，那 60 天的数据就永久废掉了</b>。先建管道，再建模型，是唯一不能压缩的顺序。</p>
+  </div>
+
+  <div class="gantt">
+    <div class="grow"><div class="gn">数据与账本</div><div class="gtrack"><div class="gbar g1" style="left:0%;width:33%">决策事件 + 延迟标签表 + 哈希链</div></div></div>
+    <div class="grow"><div class="gn">感知与边缘</div><div class="gtrack"><div class="gbar g2" style="left:0%;width:24%">相机标定 + 探头 health</div><div class="gbar g2" style="left:20%;width:26%">边缘盒子部署 + 断网缓存</div></div></div>
+    <div class="grow"><div class="gn">判断器 A 污染</div><div class="gtrack"><div class="gbar g3" style="left:22%;width:26%">5–8k 图标注 + 弱监督</div><div class="gbar g3" style="left:44%;width:28%">训练/校准/弃权</div></div></div>
+    <div class="grow"><div class="gn">判断器 B 驯化</div><div class="gtrack"><div class="gbar g3" style="left:30%;width:28%">规则冷启动 + 回归</div><div class="gbar g3" style="left:52%;width:26%">阈值反标定</div></div></div>
+    <div class="grow"><div class="gn">判断器 C 营养雾</div><div class="gtrack"><div class="gbar g3" style="left:44%;width:30%">候选集 + 成本向量</div><div class="gbar g3" style="left:66%;width:22%">影子对比</div></div></div>
+    <div class="grow"><div class="gn">执行闭环</div><div class="gtrack"><div class="gbar g4" style="left:24%;width:30%">ACK/回读/回滚 + PLC 限位</div></div></div>
+    <div class="grow"><div class="gn">影子运行</div><div class="gtrack"><div class="gbar g1" style="left:64%;width:36%">30 天只记录不执行 → 晋级评审</div></div></div>
+    <div class="grow"><div class="gn">合规与文档</div><div class="gtrack"><div class="gbar g2" style="left:14%;width:20%">数据分级</div><div class="gbar g2" style="left:78%;width:22%">审计导出 + 模型卡</div></div></div>
+  </div>
+  <div class="gaxis"><div class="gl"></div><div class="gscale"><span>D0</span><span>D30</span><span>D60</span><span>D90</span></div></div>
+
+  <h3 class="sub">9.1 三道验收闸门 <span class="mut">每道闸门不过，就不进下一段</span></h3>
+  <div class="grid3">
+    <div class="card"><h4>D30 · 数据闸门</h4><ul><li>≥30 天连续传感器日志，缺失率 &lt;2%</li><li>决策账本上线，链验证通过率 100%</li><li>延迟标签表有 ≥10 条已结算样本（走通全流程）</li><li>相机标定与雾/结露质量指标上线</li></ul><p style="color:var(--dim);font-size:12.5px;margin-top:6px">不过关的表现：账本里只有决策没有结果 → 说明标签回填链路是断的。</p></div>
+    <div class="card"><h4>D60 · 模型闸门</h4><ul><li>污染 Noul 在留出集上 FN 率 &lt;8%（成本加权）</li><li>ECE ≤0.08；conformal 弃权率 &lt;25%</li><li>驯化 Score 的排序能力：与人工评分的 Spearman ρ &gt;0.7</li><li>营养雾 Choice 的候选集覆盖率 100%（总有一个可行解）</li></ul></div>
+    <div class="card"><h4>D90 · 上线闸门</h4><ul><li>影子期 30 天，人机一致率 ≥0.85</li><li>复核队列 SLA 达成率 ≥90%</li><li>端侧 p95 ≤300ms，断网 72h 可运行</li><li>成本加权净收益 ≥0（在影子数据上回放）</li></ul><p style="color:var(--dim);font-size:12.5px;margin-top:6px">四道全过才允许把 <code>mode</code> 从 shadow 切到 live。</p></div>
+  </div>
+
+  <h3 class="sub">9.2 全球本地化 <span class="mut">一个模型不能同时懂云南和哥伦比亚</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:150px">本地化维度</th><th>具体做法</th><th style="width:190px">常见坑</th></tr></thead>
+    <tbody>
+      <tr><td>品种 / 品系</td><td>品种级共享先验 + 品系级偏移；Caturra / Geisha / 杂交种分别建基线</td><td>用阿拉比卡整体均值代替品系，导致小粒种被系统性低估</td></tr>
+      <tr><td>水质与营养</td><td>本地水源分析（硬度、碱度、氯）进入配方选择；EC 目标随碱度修正</td><td>照搬 SOP 的 EC 值，在硬水地区直接把 pH 推离缓冲</td></tr>
+      <tr><td>气候与 VPD</td><td>按海拔与季节建 VPD 曲线；高湿地区重点防结露与霉病</td><td>用温带温室参数套热带高原，雾化占空比永远偏高</td></tr>
+      <tr><td>电力与成本</td><td>分时电价进入 Choice 成本向量；缺电地区降低雾化频率并接受产量折损</td><td>成本模型不本地化，推荐的方案在当地根本付不起电费</td></tr>
+      <tr><td>法规与检疫</td><td>种苗跨境需检疫证书；营养液排放氮磷限值；农药 MRL 按目的国</td><td>把「技术上可行」当成「法律上可交付」</td></tr>
+      <tr><td>数据主权</td><td>原始图像留境；跨境只传特征与模型参数（T3 拓扑）</td><td>为省事把所有图像传回总部，出口时被卡</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">9.3 试点怎么证明有效 <span class="mut">把「感觉变好了」变成一个可预注册的检验</span></h3>
+  <p style="font-size:13.8px;color:#b4bdc9;max-width:88ch;margin-bottom:12px">
+    90 天路线图交付的是系统，不是证据。要让老板或投资人签字，需要<b>事先</b>定好设计、样本量、终点与止损规则——
+    允许事后挑指标的系统，永远「有效」。
+  </p>
+
+  <div class="grid3">
+    <div class="card"><h4>① 影子比对 <span class="pill gray">D60–D90 · 30 天</span></h4>
+      <p>不改动任何操作，只记录「AI 建议 vs 农艺师判断」。产出的是<b>判断质量</b>证据，不是损失证据。</p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:7px">主指标：人机一致率、分歧样本仲裁结果。这一步不能省——它能在烧钱之前暴露「模型和老师傅根本不在一个频道」。</p></div>
+    <div class="card"><h4>② 分层随机对照 <span class="pill gray">D90–D180 · 两个批次</span></h4>
+      <p>按<b>架层</b>整群随机：A 组执行 AI 建议，B 组执行现行 SOP。同一母株库、同一营养液批次、同期对照。</p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:7px">主指标：污染率、移栽成活率。这是唯一能支撑 ROI 的设计。</p></div>
+    <div class="card"><h4>③ 常态化 <span class="pill gray">D180+</span></h4>
+      <p>全量启用，同时保留<b>每日 20 条高置信度决策的盲抽样</b>，持续监控静默错误率。</p>
+      <p style="color:var(--dim);font-size:12.5px;margin-top:7px">没有这一步，系统会在某个你没注意的周里悄悄变差，而你只会看到一张好看的月度报表。</p></div>
+  </div>
+
+  <div class="tblscroll" style="margin-top:14px">
+  <table class="tbl">
+    <thead><tr><th style="width:150px">终点</th><th style="width:130px">基线 → 目标</th><th style="width:110px">每组独立样本</th><th style="width:150px">整群随机（设计效应 1.5）</th><th>周期与说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>污染率</b></td><td class="mono">8% → 4%</td><td class="mono">≈ 550 盘</td><td class="mono">≈ 830 盘</td><td>按 14 天/批，约 3 批可攒够；<b>这是最贵也最值得测的终点</b></td></tr>
+      <tr><td><b>移栽成活率</b></td><td class="mono">72% → 80%</td><td class="mono">≈ 450 株</td><td class="mono">≈ 680 株</td><td>需等 45 天观察期；建议与污染率同期启动，省一个季度</td></tr>
+      <tr><td>单次决策成本</td><td class="mono">查账即可</td><td>—</td><td>—</td><td>不需要统计检验，账本里逐笔可核</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="font-size:12px;color:var(--dim2);margin-top:8px;font-family:var(--mono)">
+    n = (z<sub>α/2</sub>·√(2p̄q̄) + z<sub>β</sub>·√(p₁q₁+p₂q₂))² / (p₁−p₂)² ，α=0.05 双侧，power=0.8
+  </p>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="card note"><h4>止损规则（写进合同，不留在口头）</h4>
+      <ul>
+        <li>对照组污染率连续 3 周高于实验组 2 倍 → <b>提前终止对照，全量切换</b>（不能为了统计功效继续让人吃亏）</li>
+        <li>账本断链、审计导出失败 → 立即停用自动处置权限，合规优先于效果</li>
+        <li>复核 SLA 连续两周达成率 &lt;80% → 暂停自动处置，恢复全量复核</li>
+        <li>盲抽样静默错误率 &gt;2% → 收缩自动处置范围，直到复核一致率恢复</li>
+      </ul>
+    </div>
+    <div class="card note"><h4>混杂控制：四个最容易犯的错</h4>
+      <ul>
+        <li><b>比「去年 vs 今年」</b>——季节、电价、品种全变了，结论没有意义。必须同期对照。</li>
+        <li><b>按单盘随机</b>——同一架层的雾、温、湿度高度相关，按盘随机会把处理效应泄漏到对照组。随机化单位应是架层。</li>
+        <li><b>同期换两样东西</b>——一边上 AI 一边换营养液配方，最后无法归因。</li>
+        <li><b>把人机一致率当效果指标</b>——一致率只说明「像人」，不说明「比人准」。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px;border-left:2px solid var(--violet)">
+    <h4>一致率陷阱：如果 AI 与师傅只有 70% 一致，但 AI 更准怎么办？</h4>
+    <p>这是影子期最常见的僵局。正确做法不是「以人为主」，而是<b>第三方盲评仲裁</b>：把 200 条分歧样本打乱顺序，交给两位<b>不知情</b>的农艺师独立判定，用仲裁结果而不是一致率下结论。若 AI 在分歧样本上胜率 &gt;60%，说明它带来的正是增量信息；若 &lt;40%，说明模型学的是噪声。</p>
+    <p style="color:var(--dim);margin-top:7px">这一步花不了几千块，却能避免两种昂贵的错误：上线一个没人信的模型，或者否掉一个比人强的模型。</p>
+  </div>
+</section>
+
+<section class="sec" id="risk">
+  <div class="sechead">
+    <div class="num">10 / RISK &amp; GOVERNANCE</div>
+    <h2>风险、合规与「不做清单」</h2>
+    <div class="zh">前六条会真的发生；后四条会悄悄决定项目死法</div>
+    <p>农业 AI 项目失败很少因为模型不够准，多数因为<b>没人信、没人用、算不过账、出一次事故就停摆</b>。下表把这三类风险分开列，并给出可观测的触发信号。</p>
+  </div>
+
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:36px">#</th><th style="width:170px">风险</th><th style="width:190px">触发信号（可观测）</th><th style="width:64px">影响</th><th>缓解措施</th></tr></thead>
+    <tbody>
+      <tr><td>R1</td><td>传感器漂移/生物膜</td><td>探头响应时间变长、双探头偏差 &gt;0.1、校准漂移量上升</td><td><span class="pill bad">高</span></td><td>health 闸门 + 双探头交叉校验 + 固定更换周期；不健康即 <code>need_more_info</code></td></tr>
+      <tr><td>R2</td><td>标签噪声与延迟</td><td>结算样本的复核一致率下降、ECE 上升</td><td><span class="pill bad">高</span></td><td>双轨标签、<code>pending</code> 不训练、结算前人工抽检 5%</td></tr>
+      <tr><td>R3</td><td>过度自动化</td><td>复核率被 KPI 逼着下降、SLA 接近 100% 但一致率下降</td><td><span class="pill bad">高</span></td><td>硬限位下沉 PLC；不可逆动作双人签核；影子期不得跳过</td></tr>
+      <tr><td>R4</td><td>生物安全与检疫</td><td>跨场调苗无检疫凭证、销毁记录缺失</td><td><span class="pill bad">高</span></td><td>隔离流程 + 销毁凭证入账本 + 门禁与人员动线记录</td></tr>
+      <tr><td>R5</td><td>品种权与授权繁殖</td><td>谱系中缺失授权标记、外植体来源不明</td><td><span class="pill mid">中</span></td><td>谱系强制带 <code>license_id</code>；系统只做标注不做合法性判定</td></tr>
+      <tr><td>R6</td><td>数据主权与跨境</td><td>原始图像出现在境外存储桶</td><td><span class="pill mid">中</span></td><td>数据分级 + 本地 MinIO + 出境白名单（仅特征/参数）</td></tr>
+      <tr><td>R7</td><td>供应商锁定</td><td>推理栈只能用某云 SDK</td><td><span class="pill mid">中</span></td><td>模型以 ONNX 为中间表示，保留双运行时（Triton / ORT）</td></tr>
+      <tr><td>R8</td><td>组织阻力 / 不信任</td><td>农艺师绕过系统手工记录、复核意见长期与 AI 不一致</td><td><span class="pill bad">高</span></td><td><b>第一版只做「帮人排序」，不做「替人决定」</b>；把分歧做成可讨论的界面，而不是隐藏掉</td></tr>
+      <tr><td>R9</td><td>电价与投入品波动</td><td>单位成本曲线反转、ROI 为负</td><td><span class="pill mid">中</span></td><td>成本向量可配置，默认取保守值；分时电价接入调度判断（节点 13）</td></tr>
+      <tr><td>R10</td><td>关键人依赖</td><td>只有一个人知道为什么阈值是 0.7</td><td><span class="pill mid">中</span></td><td>SOP 编码化为 <code>sop_version</code>；每个阈值带来源注释；决策可回放</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">10.1 不做清单 <span class="mut">写下来的「不做」，比写在路线图上的「要做」更能保护项目</span></h3>
+  <div class="grid3">
+    <div class="card"><h4>❌ 不做无人监管的阀门控制</h4><p>判断层输出<b>意图</b>，执行层受 PLC 硬限位约束，人保留总开关。这一条不因模型变准而改变。</p></div>
+    <div class="card"><h4>❌ 不做病害治疗处方</h4><p>只做「识别 + 隔离 + 送检建议」。农药/杀菌剂的具体剂量与用法必须由持证农艺师决定，涉及 MRL 与法规。</p></div>
+    <div class="card"><h4>❌ 不替代杯测与品质定级</h4><p>糖度、风味、瑕疵是人的感官判断；判断层最多做「采收窗口排序」，不做最终等级评定。</p></div>
+    <div class="card"><h4>❌ 不做品种权合法性的自动判定</h4><p>系统能标注「缺授权凭证」，不能下结论说「这个品种可以繁殖」。</p></div>
+    <div class="card"><h4>❌ 不做跨农场原始数据集中</h4><p>共享的是特征与参数，不是图像与批次明细。这条既保护客户，也保护自己。</p></div>
+    <div class="card"><h4>❌ 不先做「通用农业大模型」</h4><p>咖啡单品类做穿之后再说。多品类扩展会把有限的标注预算摊成一张谁也喂不饱的网。</p></div>
+  </div>
+</section>
+
+<section class="sec" id="appendix">
+  <div class="sechead">
+    <div class="num">11 / APPENDIX</div>
+    <h2>附录：枚举、提示词、参考实现、变更日志</h2>
+    <div class="zh">给工程团队直接拿走就能开工的四样东西</div>
+  </div>
+
+  <h3 class="sub">A. 枚举与本体 <span class="mut">三端共用，一旦冻结只能加不能改</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:130px">枚举</th><th>取值</th><th style="width:190px">备注</th></tr></thead>
+    <tbody>
+      <tr><td><code>stage</code></td><td><code>intake, aseptic_establishment, callus, proliferation, rooting, acclimation, transplant_gate, aeroponics_nutrition, root_zone_check, flowering, harvest_window, quarantine, power_dispatch, retro_review</code></td><td>14 个节点，与决策地图一一对应</td></tr>
+      <tr><td><code>decision</code></td><td><code>continue, isolate_and_sample, review_microscopy, transplant_ready, delay_adjust, continue_acclimation, sop_baseline, lower_ec, raise_do, adjust_ph, dry_back, flush_reservoir, stop_and_review, need_more_info, abstain</code></td><td><b>闭合枚举</b>，禁止自由文本</td></tr>
+      <tr><td><code>jev_type</code></td><td><code>noul, score, choice, anomaly</code></td><td>anomaly 用于根区异常的无监督检测</td></tr>
+      <tr><td><code>review_reason</code></td><td><code>low_confidence, boundary_zone, ood, first_time_scene, irreversible_action, value_threshold, sensor_unhealthy, constraint_conflict, gate_capped, zone_precondition</code></td><td>复核数据按此分类回流，是主动学习的采样依据</td></tr>
+      <tr><td>污染子类</td><td><code>bacterial, fungal, vitrification, mite, viral, abiotic_stress</code></td><td>每个子类绑定一套动作模板（见 G03）</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sub">B. 系统提示词 <span class="mut">在 v0.1 版本上加了「不决策」与「不越界」两类约束</span></h3>
+  <div class="promptbox">
+    你是 <b>CoffeeJeV</b>，咖啡组培与气雾栽培的<b>判断层</b>，不是顾问，不是客服。<br><br>
+    <b>输出约束（硬性）</b><br>
+    1. 只输出 JSON，字段严格遵循 schema；<code>decision</code> 必须取自枚举，禁止新造值。<br>
+    2. 证据不足 → <code>decision="need_more_info"</code> 并列出 <code>missing</code>；<b>不要猜测填充</b>。<br>
+    3. <code>confidence</code> 必须是<b>校准后</b>的值；无法校准时置 <code>null</code> 并设 <code>human_review=true</code>。<br>
+    4. 以下任一成立时 <code>human_review</code> 必须为 <code>true</code>：置信度 &lt;0.70；decision ∈ {transplant_now, discard_batch, stop_and_review}；首次场景或新品种；将突破 EC/pH/压力硬限位；批次价值超阈值。<br>
+    5. <code>reason</code> ≤80 字，只说明「为什么是这个结论」与「最该让人看一眼的是什么」；<b>禁止</b>罗列优化方向、种植建议、免责声明。<br>
+    6. 不得推荐超出 SOP 的农药/激素剂量；不得对品种权与检疫合法性下结论，只能标注「需人工核验」。<br>
+    7. 必须引用 <code>sop_version</code>；不得引用未提供的 SOP 条款。<br>
+    8. <b>弃权是合法输出</b>：<code>abstain</code> 与 <code>stop_and_review</code> 都优于一个勉强的答案。
+  </div>
+
+  <h3 class="sub">C. 参考实现 <span class="mut">与 04 实验室同一套数学；完整版见 <code>coffeejev/service/</code></span></h3>
+  <div class="code">
+    <div class="ch2"><span>coffeejev/service/judgers.py（节选）</span><button class="cp" data-copy="py1">复制</button></div>
+<pre id="py1">from math import exp, log
+
+def _logit(p: float) -&gt; float:
+    p = min(max(p, 1e-4), 1 - 1e-4)
+    return log(p / (1 - p))
+
+def _sigmoid(x: float) -&gt; float:
+    return 1.0 / (1.0 + exp(-x))
+
+def judge_contamination(vision_p, quality, temp, rh, days_in_culture,
+                        batch_hist_rate, cost_fp=40.0, cost_fn=900.0, t=1.35):
+    """Noul 判断器：三区间 + 成本推导阈值。返回 (decision, p_cal, tau_hi, tau_lo)。"""
+    prior = min(max(batch_hist_rate, 1e-3), 0.5)
+    blend = (quality * _logit(vision_p)                # 图像越清晰，越信模型
+             + (1 - quality) * _logit(prior)           # 图像越糊，越信先验
+             + 0.35 * (temp - 24) / 3                  # 温度偏高 = 污染友好
+             + 0.25 * (rh - 65) / 15
+             + 0.12 * (days_in_culture - 14) / 7)
+
+    p_cal = _sigmoid(blend / t)                        # 温度缩放：把刻度拉回现实
+    tau_cost = min(max(cost_fp / (cost_fp + cost_fn), 0.02), 0.5)  # 成本推导
+    tau_hi = min(max(tau_cost, tau_min), 0.5)      # 两段式：再与运营下限取大（CH-15）
+    tau_lo = max(0.06, 0.45 * tau_hi)
+
+    if p_cal &gt;= tau_hi:
+        decision = "isolate_and_sample"
+    elif p_cal &gt;= tau_lo:
+        decision = "review_microscopy"
+    else:
+        decision = "continue"
+    return decision, p_cal, tau_hi, tau_lo
+</pre>
+  </div>
+  <div class="code" style="margin-top:10px">
+    <div class="ch2"><span>coffeejev/service/api.py（节选）</span><button class="cp" data-copy="py2">复制</button></div>
+<pre id="py2">ROUTES = {                      # 与 14 节点 stage 枚举一一对应
+    "intake":                "contamination",
+    "aseptic_establishment": "contamination",
+    "callus":                "contamination",
+    "proliferation":         "contamination",
+    "root_zone_check":       "contamination",
+    "rooting":               "readiness",
+    "acclimation":           "readiness",
+    "transplant_gate":       "readiness",     # 移栽闸门先看 readiness，再看菌检
+    "aeroponics_nutrition":  "fog_choice",
+    "harvest_window":        "fog_choice",
+}
+
+def decide(req: dict) -&gt; dict:
+    missing = validate(req)                     # variety / region / stage / sensors.*
+    if missing:
+        return {"decision": "need_more_info", "missing": missing,
+                "human_review": True}           # 200，不是 400：这是合法输出
+
+    judger = ROUTES[req["stage"]]
+    verdict = JUDGERS[judger](req)
+
+    reasons = review_policy(verdict)            # 见 6.1 的矩阵
+    verdict["human_review"] = bool(reasons)
+    verdict["review_reasons"] = reasons
+    verdict["audit_id"] = ledger.append(verdict)  # 哈希链，只追加
+    return verdict
+</pre>
+  </div>
+
+  <h3 class="sub">D. v0.1 → v1.0 变更日志 <span class="mut">每一条改动背后都有一个具体的失败场景</span></h3>
+  <div class="tblscroll">
+  <table class="tbl">
+    <thead><tr><th style="width:64px">编号</th><th style="width:220px">变更</th><th>触发场景</th></tr></thead>
+    <tbody>
+      <tr><td>CH-01</td><td>新增批次谱系与隔离半径</td><td>一次霉菌污染，因为不知道同批苗分布在哪三层架，只能整室停摆两周</td></tr>
+      <tr><td>CH-02</td><td>置信度改为校准值 + conformal 弃权</td><td>模型在新增的补光条件下自信地把整批玻璃化苗判为健康</td></tr>
+      <tr><td>CH-03</td><td>污染由二元改五类 + 时间维度</td><td>把螨害当真菌处理，多喷了两轮杀菌剂，问题反而扩散</td></tr>
+      <tr><td>CH-04</td><td>新增延迟标签表</td><td>上线三个月后发现没有任何一条决策能被事后结算，模型无法迭代</td></tr>
+      <tr><td>CH-05</td><td>新增传感器 health 闸门</td><td>pH 电极生物膜导致读数偏低，系统连续三天下调 pH，根尖烧伤</td></tr>
+      <tr><td>CH-06</td><td>新增执行闭环（ACK/回读/回滚）</td><td>指令发出但计量泵空转，系统以为已执行，后续判断全部建立在错误状态上</td></tr>
+      <tr><td>CH-07</td><td>新增黄金集与决策回放</td><td>阈值从 0.7 调到 0.6 后无人能证明是变好还是变坏</td></tr>
+      <tr><td>CH-08</td><td>新增复核队列与理由分类</td><td>复核记录散落在聊天群里，无法回流成训练数据</td></tr>
+      <tr><td>CH-09</td><td>Choice 引入成本向量与帕累托前沿</td><td>系统为了成活率建议全程开雾，电费涨了 40%，账算不过来</td></tr>
+      <tr><td>CH-10</td><td>阈值由成本比推导，废弃 0.7 硬编码</td><td>高价值品种与普通品种用同一阈值，一边浪费一边出事</td></tr>
+      <tr><td>CH-15</td><td>阈值再加运营下限 τ_min，两段式 <code>max(τ_cost, τ_min)</code></td><td>纯成本解算出 4.3% 的阈值，试运行第一周就隔离了 60% 的盘，现场直接停用系统</td></tr>
+      <tr><td>CH-11</td><td>新增哈希链审计账本</td><td>客户质疑「当时为什么判可移栽」，拿不出当时的输入与模型版本</td></tr>
+      <tr><td>CH-12</td><td>新增层次化基线与 OOD</td><td>新农场第一批苗全部被误判，因为模型没见过当地水质</td></tr>
+      <tr><td>CH-13</td><td>新增节点 12 隔离半径、节点 13 能耗调度</td><td>污染处置与电费优化本来就在发生，只是没人把它当决策</td></tr>
+      <tr><td>CH-14</td><td>SLA 拆为 300ms / 2s / 24h 三级</td><td>对外承诺「全链路 300ms」，第一次演示就露馅</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="tagline">
+    一句话：<b>CoffeeJeV = 把咖啡组培与雾培的长流程拆成 14 个可高频快判的原子决策，用成本推导的阈值代替魔法数字，用校准后的置信度决定谁该被叫醒，用哈希链账本让每一次判断都能在 45 天后被结算。</b>
+    判断层不追求「什么都知道」，它追求的是<b>知道自己什么时候不该说话</b>。
+  </div>
+</section>
+
+<footer class="foot">
+  <div><b>CoffeeJeV · 咖啡快判官 v1.0 设计规格</b> — 面向气雾栽培（雾培）咖啡组培链的判断层</div>
+  <div style="margin-top:8px">本页所有数值均为<b>设计目标</b>或<b>可调假设</b>，用于说明方法与取舍，不代表任何机构的实测结果或性能承诺。经济性计算器中的默认值仅为示例，请以贵方历史批次数据替换。</div>
+  <div style="margin-top:8px">配套参考实现：<code>coffeejev/service/</code>（纯标准库 Python，含单元测试）· 规格来源：v0.1 设计草案的评审与扩写</div>
+</footer>
+
+<script>
+/* ============================================================
+   CoffeeJeV · demo engine
+   与 coffeejev/service/judgers.py 同一套数学（见附录 C）
+   ============================================================ */
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const sigmoid = x => 1 / (1 + Math.exp(-x));
+const logit = p => { p = clamp(p, 1e-4, 1 - 1e-4); return Math.log(p / (1 - p)); };
+const r4 = x => Math.round(x * 1e4) / 1e4;
+const r3 = x => Math.round(x * 1e3) / 1e3;
+const sd = a => { const m = a.reduce((s, x) => s + x, 0) / a.length; return Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / a.length); };
+const money = n => n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+// 理由上限 80 字：超长要截断并留省略号，不能让句子在半截处消失
+const clip = (t, n = 80) => (t.length > n ? t.slice(0, n - 1) + '…' : t);
+
+/* ---------- JSON 语法高亮 ---------- */
+function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function hl(obj) {
+  const s = esc(JSON.stringify(obj, null, 2));
+  return s.replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+    (m, str, col, lit, num) => {
+      if (str !== undefined) return col ? '<span class="k">' + str + '</span>' + col : '<span class="s">' + str + '</span>';
+      if (lit !== undefined) return lit === 'null' ? '<span class="nl">null</span>' : '<span class="b">' + lit + '</span>';
+      return '<span class="n">' + num + '</span>';
+    });
+}
+const put = (el, obj) => { el.innerHTML = hl(obj); };
+
+/* ============================================================
+   1. 审计账本（哈希链，仅演示）
+   ============================================================ */
+function fnv(str) {
+  let h = 0x811c9dc5;
+  for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 0x01000193) >>> 0; }
+  return ('0000000' + h.toString(16)).slice(-8);
+}
+const h64 = s => fnv(s) + fnv('|' + s + '|');
+
+const LEDGER = {
+  seq: 0,
+  entries: [],
+  append(e) {
+    const seq = ++this.seq;
+    const prev = this.entries.length ? this.entries[this.entries.length - 1].hash : 'genesis';
+    const payload = JSON.stringify({ seq, stage: e.stage, decision: e.decision, conf: e.conf, hr: !!e.human_review, src: e.src || 'api' });
+    const entry = {
+      seq,
+      ts: new Date().toISOString().replace('T', ' ').slice(0, 19),
+      audit_id: 'cjv_' + String(seq).padStart(4, '0'),
+      prev, payload, hash: h64(prev + payload),
+      stage: e.stage, decision: e.decision, conf: e.conf, human_review: !!e.human_review
+    };
+    this.entries.push(entry);
+    renderLedger();
+    return entry.audit_id;
+  },
+  verify() {
+    let prev = 'genesis', ok = true;
+    for (const e of this.entries) {
+      if (e.prev !== prev) { ok = false; break; }
+      if (h64(e.prev + e.payload) !== e.hash) { ok = false; break; }
+      prev = e.hash;
+    }
+    return ok;
+  }
+};
+
+function renderLedger() {
+  const box = $('#audit');
+  if (!box) return;
+  if (!LEDGER.entries.length) {
+    box.innerHTML = '<div class="empty">还没有记录。到 04 实验室点「记入决策账本」，或在 06.2 处理一条复核。</div>';
+    $('#chain-flag').textContent = '空链'; $('#chain-flag').className = 'pill gray';
+    return;
+  }
+  box.innerHTML = LEDGER.entries.slice().reverse().map(e => `
+    <div class="arow">
+      <span class="aid">#${e.seq}</span>
+      <span class="adec">${e.stage} → <b style="color:#fff">${e.decision}</b> · p=${e.conf === null ? '—' : e.conf}</span>
+      <span class="ah">${e.hash.slice(0, 10)}… ${e.human_review ? '👤' : ''}</span>
+    </div>`).join('');
+  const ok = LEDGER.verify();
+  $('#chain-flag').textContent = ok ? `链完整 · ${LEDGER.entries.length} 条` : '链异常';
+  $('#chain-flag').className = 'pill ' + (ok ? 'ok' : 'bad');
+}
+
+/* ============================================================
+   2. 判断器 A：污染 Noul
+   ============================================================ */
+function judgeContamination(i) {
+  const prior = clamp(i.hist, 1e-3, 0.5);
+  const blend = i.q * logit(i.pRaw) + (1 - i.q) * logit(prior)
+    + 0.35 * (i.temp - 24) / 3 + 0.25 * (i.rh - 65) / 15
+    + 0.12 * (i.days - 14) / 7;
+  const pCal = sigmoid(blend / 1.35);
+  const tauCost = clamp(i.cfp / (i.cfp + i.cfn), 0.02, 0.5);   // 纯成本解（极小）
+  const tauMin = i.tauMin === undefined ? 0.15 : i.tauMin;      // 运营可承受下限
+  const tauHi = clamp(Math.max(tauCost, tauMin), 0.02, 0.5);
+  const tauLo = Math.max(0.06, 0.45 * tauHi);
+  const decision = pCal >= tauHi ? 'isolate_and_sample' : (pCal >= tauLo ? 'review_microscopy' : 'continue');
+  const confidence = Math.max(pCal, 1 - pCal);
+  const ood = i.q < 0.55 || i.hist === 0;
+
+  const reasons = [];
+  if (confidence < 0.70) reasons.push('low_confidence');
+  if (ood) reasons.push('ood');
+  // review_microscopy 的语义就是「叫人来镜检」，它自己就必须带复核理由
+  if (decision === 'review_microscopy') reasons.push('boundary_zone');
+  if (decision === 'isolate_and_sample') reasons.push('irreversible_action');
+
+  const pct = Math.round(pCal * 100);
+  const reason = decision === 'isolate_and_sample'
+    ? `校准后污染概率 ${pct}%，已超生效阈值 ${(tauHi * 100).toFixed(1)}%（成本解 ${(tauCost * 100).toFixed(1)}% 被运营下限抬高），建议整盘隔离并送检。`
+    : decision === 'review_microscopy'
+      ? `概率 ${pct}% 落在复核区 [${(tauLo * 100).toFixed(1)}%, ${(tauHi * 100).toFixed(1)}%]，建议 24h 内镜检，勿放行。`
+      : `概率 ${pct}% 低于复核下限 ${(tauLo * 100).toFixed(1)}%，可放行；注意${ood ? '图像质量偏低，已标记 OOD' : '保持下次观察'}。`;
+
+  return {
+    jev_type: 'noul', decision, confidence: r4(confidence), p: pCal, tauHi, tauLo, tauCost, tauMin, ood,
+    scores: { p_contaminated: r4(pCal), tau_cost: r4(tauCost), tau_hi: r4(tauHi), tau_lo: r4(tauLo), image_quality: i.q },
+    review_reasons: reasons,
+    // 只有 continue 才可能免复核。旧写法漏了 review_microscopy：
+    // 边界区样本返回 human_review=false，等于「叫人来镜检」却没有人被叫。
+    human_review: decision !== 'continue' || confidence < 0.70 || ood,
+    reason: clip(reason)
+  };
+}
+
+/* ============================================================
+   3. 判断器 B：驯化 readiness
+   ============================================================ */
+const RW = [0.22, 0.20, 0.10, 0.12, 0.18, 0.18];
+// 株高/根数比是「矮壮苗」指标，目标带 0.35–0.65，不是越大越好。
+// 旧写法 clamp(ratio/0.6*100)：徒长苗（ratio 1.2）拿满分，根数 0 时也拿 100。
+function ratioScore(shoot, roots) {
+  if (!(roots > 0)) return 0;
+  const r = shoot / roots;
+  if (r >= 0.35 && r <= 0.65) return 100;
+  const dist = r < 0.35 ? 0.35 - r : r - 0.65;
+  return clamp(100 - dist / 0.35 * 100, 0, 100);
+}
+function judgeReadiness(i) {
+  const s = [
+    Math.min(100, Math.max(0, i.roots) / 12 * 100),
+    100 - i.browning,
+    ratioScore(i.shoot, i.roots),
+    i.leaf, i.wax,
+    clamp(100 - i.waterLoss / 25 * 100, 0, 100)
+  ];
+  const raw = s.reduce((acc, v, k) => acc + v * RW[k], 0);
+  let score = Math.round(raw);
+  const caps = [];
+  if (i.roots < 3) { score = Math.min(score, 55); caps.push('根数<3'); }
+  if (i.browning > 60) { score = Math.min(score, 60); caps.push('褐变>60'); }
+  if (i.cont >= 0.5) { score = Math.min(score, 40); caps.push('污染概率≥0.5'); }
+
+  const band = score >= 80 ? 'transplant_ready' : (score >= 60 ? 'delay_adjust' : 'continue_acclimation');
+  // 证据完整度 = 6 个形态学读数里真实拿到几个（由调用方传入）。
+  // 旧实现写死 1：6 个读数全是默认值时仍报 0.80 置信度，违背「不猜」的契约。
+  const completeness = i.completeness === undefined ? 1 : clamp(i.completeness, 0, 1);
+  const confidence = clamp(0.62 + 0.30 * completeness - 0.35 * (sd(s) / 50), 0.35, 0.97);
+  const binding = caps.length ? `（硬闸门生效：${caps.join('、')}）` : '';
+  const reason = (band === 'transplant_ready'
+    ? `readiness ${score}，各项达标${binding}，可安排移栽；需人工勾选后放行。`
+    : band === 'delay_adjust'
+      ? `readiness ${score}，建议延迟 3–7 天并降 VPD、增换气${binding}。`
+      : `readiness ${score}，未达 60，继续驯化；若无改善则弃用${binding}。`);
+  const reasonClipped = clip(reason);
+
+  const reasons = [];
+  if (confidence < 0.70) reasons.push('low_confidence');
+  if (band === 'transplant_ready') reasons.push('irreversible_action');
+  if (caps.length) reasons.push('gate_capped');
+
+  return {
+    jev_type: 'score', decision: band, confidence: r4(confidence), score,
+    subs: s, weights: RW, caps,
+    scores: { readiness: score, contamination_risk: Math.round(i.cont * 100), root_health: Math.round(s[0] * 0.6 + s[1] * 0.4) },
+    human_review: reasons.length > 0,
+    review_reasons: reasons, reason: reasonClipped
+  };
+}
+
+/* ============================================================
+   4. 判断器 C：营养雾 Choice
+   ============================================================ */
+const FT = { ec: 1.4, ph: 5.8, vpd: 0.9, temp: 24, do: 6.5, droplet: 35 };
+const FS = { ec: 0.8, ph: 0.9, vpd: 0.5, temp: 6, do: 3.0, droplet: 25 };
+const FR = { do: 0.28, temp: 0.24, ph: 0.18, ec: 0.16, vpd: 0.09, droplet: 0.05 };
+const OPTS = [
+  { id: 'sop_baseline', label: '按 SOP 维持', d: [0, 0, 0, 0, 0, 0], cost: 0.00, qual: 0.05 },
+  { id: 'lower_ec', label: '降 EC', d: [-0.25, 0, 0, 0, 0, 0], cost: 0.06, qual: 0.12 },
+  { id: 'raise_do', label: '增溶氧', d: [0, 0, 0, -0.5, 1.2, 0], cost: 0.18, qual: 0.02 },
+  { id: 'adjust_ph', label: '调 pH', d: [0, null, 0, 0, 0, 0], cost: 0.10, qual: 0.04 },
+  { id: 'dry_back', label: '停雾降湿', d: [0.1, 0, 0.25, 0.5, 0, 0], cost: 0.04, qual: 0.08 },
+  { id: 'flush_reservoir', label: '换液冲洗', d: [-0.45, 0, 0, 0, 0.5, 0], cost: 0.30, qual: 0.18 }
+];
+const KEYS = ['ec', 'ph', 'vpd', 'temp', 'do', 'droplet'];
+// 置信度尺度：ΔU = 0.02 约等于「一半一半」，比 softmax 概率更能表达「我有多确定该选它」
+const CONF_TAU = 0.01;
+
+function judgeFog(i) {
+  const cur = { ec: i.ec, ph: i.ph, vpd: i.vpd, temp: i.temp, do: i.do, droplet: i.droplet };
+  // 液温/根温是「整套系统」的前置状态，不是某个候选动作的属性。
+  // 旧实现把它塞进每个选项的 violations → 6 个选项同时不可行，
+  // 输出变成「请确认探头是否失效」，而真实原因是冷水机/遮阴。
+  const zoneGates = [];
+  // 只把「没有任何候选动作能改变」的量放进前置闸门：液温靠冷水机，不靠配方。
+  // 根温则受 raise_do / dry_back 影响，仍留在选项级硬约束里，否则会误判成「无解」。
+  if (i.waterTemp > 24) zoneGates.push(`营养液 ${i.waterTemp.toFixed(1)}°C 超 24°C`);
+  const totalW = (i.ws + i.wc + i.wq) || 1;
+  const W = { s: i.ws / totalW, c: i.wc / totalW, q: i.wq / totalW };
+
+  const opts = OPTS.map(o => {
+    const delta = o.d.map(v => v === null ? (FT.ph - cur.ph) * 0.8 : v);
+    const post = {}, dev = {}, viol = [];
+    KEYS.forEach((k, idx) => { post[k] = cur[k] + delta[idx]; dev[k] = clamp(Math.abs(post[k] - FT[k]) / FS[k], 0, 2); });
+
+    if (post.ec < 0.8 || post.ec > 2.0) viol.push('ec_out_of_range');
+    if (post.ph < 5.3 || post.ph > 6.4) viol.push('ph_out_of_range');
+    if (post.do < 5.0) viol.push('do_too_low');
+    if (post.temp > 26) viol.push('temp_too_high');
+
+    const uSurv = 1 - KEYS.reduce((s, k) => s + FR[k] * dev[k] / 2, 0);
+    const uCost = 1 - o.cost, uQual = 1 - o.qual;
+    const utility = W.s * uSurv + W.c * uCost + W.q * uQual;
+    return { action: o.id, label: o.label, feasible: viol.length === 0, violations: viol, utility, post,
+      components: { survival: r3(uSurv), cost: r3(uCost), quality: r3(uQual) } };
+  });
+
+  const feas = opts.filter(o => o.feasible);
+  let norm = 0;
+  if (feas.length) {
+    const mx = Math.max(...feas.map(o => o.utility));
+    feas.forEach(o => { o.p = Math.exp(6 * (o.utility - mx)); norm += o.p; });
+    feas.forEach(o => { o.p = o.p / norm; });
+  }
+  opts.forEach(o => { if (!o.feasible) o.p = 0; });
+
+  let decision = 'stop_and_review', confidence = 0, best = null, margin = 0;
+  if (feas.length) {
+    best = feas.slice().sort((a, b) => b.utility - a.utility)[0];
+    decision = best.action;
+    const u = feas.map(o => o.utility).sort((a, b) => b - a);
+    margin = u.length > 1 ? u[0] - u[1] : Infinity;   // Infinity = 约束把它压成了单选
+    // 置信度 = σ(ΔU/τ)，不是 softmax 最大值：6 个近似打平的候选里
+    // softmax 最高也就 0.2，会把每一个正常批次都推进复核队列（与 <15% 复核率冲突）。
+    confidence = Number.isFinite(margin) ? clamp(1 / (1 + Math.exp(-margin / CONF_TAU)), 0.5, 0.99) : 0.88;
+    if (zoneGates.length) { decision = 'stop_and_review'; confidence = 0; }
+  }
+  const reasons = [];
+  if (!feas.length) reasons.push('constraint_conflict');
+  if (zoneGates.length) reasons.push('zone_precondition');
+  if (!zoneGates.length && confidence < 0.70) reasons.push('low_confidence');
+  // 约束把候选压到只剩一个、而那一个是高成本动作 → 不能替人决定这笔钱
+  const onlyCostly = !Number.isFinite(margin) && !!best
+    && ((OPTS.find(o => o.id === best.action) || {}).cost || 0) >= 0.20;
+  if (onlyCostly) reasons.push('value_threshold');
+
+  const marginTxt = Number.isFinite(margin) ? `领先次优 ${margin.toFixed(3)}` : '唯一可行动作';
+  const reason = zoneGates.length
+    ? `先处理前置条件：${zoneGates.join('、')}；此时不建议任何雾化动作，冷却恢复后再判。`
+    : (!best
+      ? `全部 ${opts.length} 个候选动作都违反硬限位，系统不自行选择；请人工确认探头是否失效。`
+      : `建议「${best.label}」（${marginTxt}）：效用 ${best.utility.toFixed(2)}，置信 ${(confidence * 100).toFixed(0)}%。`);
+
+  // 对外输出前把效用与动作后数值四舍五入：JSON 里出现 0.85899999999999 会被当成 bug
+  opts.forEach(o => { o.utility = r3(o.utility); KEYS.forEach(k => { o.post[k] = r3(o.post[k]); }); });
+  return {
+    jev_type: 'choice', decision, confidence: r4(confidence), options: opts,
+    scores: Object.assign(
+      best ? { utility: r3(best.utility), post_ec: r3(best.post.ec), post_ph: r3(best.post.ph) }
+        : { utility: 0, post_ec: r3(cur.ec), post_ph: r3(cur.ph) },
+      { margin: Number.isFinite(margin) ? r3(margin) : null, zone_gates: zoneGates }),
+    human_review: zoneGates.length > 0 || onlyCostly || confidence < 0.70 || !best,
+    review_reasons: reasons, reason: clip(reason)
+  };
+}
+
+/* ============================================================
+   5. 路由与信封
+   ============================================================ */
+const ROUTES = {
+  intake: 'contamination', aseptic_establishment: 'contamination', callus: 'contamination',
+  proliferation: 'contamination', rooting_check: 'contamination', root_zone_check: 'contamination',
+  rooting: 'readiness', acclimation: 'readiness', rooting_to_aeroponics: 'readiness',
+  aeroponics_nutrition: 'fog_choice', transplant_gate: 'fog_choice', harvest_window: 'fog_choice'
+};
+const SOP = 'coffee-tc-aero-v1.0';
+
+const EVIDENCE_KEYS = ['roots', 'browning', 'shoot_cm', 'leaf_color', 'stomata_wax', 'water_loss_pct'];
+
+function validate(req) {
+  const m = [];
+  ['variety', 'region', 'stage'].forEach(k => { if (!req[k] || typeof req[k] !== 'string') m.push(k); });
+  if (m.length) return Array.from(new Set(m));
+  if (!req.sensors) { m.push('sensors'); return m; }
+  const s = req.sensors;
+  // 必填传感器按判断器区分：组培瓶里没有 EC/pH 探头，
+  // 「全都要」的规则会把真实的无菌检查请求误判成 need_more_info。
+  const judger = ROUTES[req.stage];
+  const need = judger === 'fog_choice' ? ['ec', 'ph', 'vpd', 'temp']
+    : judger === 'contamination' ? ['temp'] : [];
+  need.forEach(k => { if (typeof s[k] !== 'number' || isNaN(s[k])) m.push('sensors.' + k); });
+  if (judger === 'readiness') {
+    const R = req.reading || {};
+    if (!EVIDENCE_KEYS.some(k => typeof R[k] === 'number' && !isNaN(R[k]))) m.push('reading(roots/browning/…)');
+  }
+  return Array.from(new Set(m));
+}
+
+function decide(req) {
+  const t0 = performance.now();
+  const mode = req.mode === 'shadow' ? 'shadow' : 'live';
+  const missing = validate(req);
+  if (missing.length) {
+    return {
+      http: 200,
+      body: {
+        agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage || null, jev_type: null,
+        decision: 'need_more_info', confidence: null, missing,
+        human_review: true, review_reasons: ['sensor_unhealthy'],
+        reason: '关键字段或传感器读数缺失，按契约不生成决策。', sop_version: SOP,
+        latency_ms: Math.round(performance.now() - t0), mode
+      }
+    };
+  }
+  const judger = ROUTES[req.stage];
+  if (!judger) {
+    return {
+      http: 200,
+      body: {
+        agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage, jev_type: null,
+        decision: 'need_more_info', confidence: null,
+        missing: ['stage(未映射的判断器)'], human_review: true,
+        review_reasons: ['first_time_scene'],
+        reason: '该阶段尚未绑定判断器，需人工指定。', sop_version: SOP,
+        latency_ms: Math.round(performance.now() - t0), mode
+      }
+    };
+  }
+
+  const s = req.sensors, R = req.reading || {}, B = req.batch_history || {}, C = req.costs || {};
+  const defaulted = [];
+  const num = (v, d, name) => { if (typeof v === 'number' && !isNaN(v)) return v; defaulted.push(name); return d; };
+  let verdict, stage = req.stage;
+
+  if (judger === 'contamination') {
+    verdict = judgeContamination({
+      pRaw: num(R.vision_p, 0.25, 'reading.vision_p'),
+      q: num(R.quality, 0.9, 'reading.quality'),
+      temp: s.temp, rh: num(s.rh, 65, 'sensors.rh'),
+      days: num(s.days_in_culture, 14, 'sensors.days_in_culture'),
+      hist: num(B.contamination_rate, 0.03, 'batch_history.contamination_rate'),
+      cfp: num(C.fp, 40, 'costs.fp'), cfn: num(C.fn, 900, 'costs.fn'),
+      tauMin: num(C.tau_min, 0.15, 'costs.tau_min')
+    });
+  } else if (judger === 'readiness') {
+    const supplied = EVIDENCE_KEYS.filter(k => typeof R[k] === 'number' && !isNaN(R[k])).length;
+    verdict = judgeReadiness({
+      completeness: supplied / EVIDENCE_KEYS.length,
+      roots: num(R.roots, 5, 'reading.roots'),
+      browning: num(R.browning, 20, 'reading.browning'),
+      shoot: num(R.shoot_cm, 3.0, 'reading.shoot_cm'),
+      leaf: num(R.leaf_color, 75, 'reading.leaf_color'),
+      wax: num(R.stomata_wax, 65, 'reading.stomata_wax'),
+      waterLoss: num(R.water_loss_pct, 10, 'reading.water_loss_pct'),
+      cont: num(B.contamination_rate, 0.05, 'batch_history.contamination_rate')
+    });
+  } else {
+    verdict = judgeFog({
+      ec: s.ec, ph: s.ph, vpd: s.vpd, temp: s.temp,
+      do: num(s.do, 6.2, 'sensors.do'),
+      droplet: num(s.droplet_um, 35, 'sensors.droplet_um'),
+      waterTemp: num(s.water_temp, 21, 'sensors.water_temp'),
+      ws: num((req.objective || {}).survival, 0.5, 'objective.survival'),
+      wc: num((req.objective || {}).cost, 0.2, 'objective.cost'),
+      wq: num((req.objective || {}).quality, 0.3, 'objective.quality')
+    });
+  }
+
+  const audit_id = LEDGER.append({
+    stage, decision: verdict.decision,
+    conf: verdict.confidence === null ? null : verdict.confidence,
+    human_review: verdict.human_review, src: 'api'
+  });
+
+  const body = {
+    agent: 'CoffeeJeV', version: '1.0.0', stage, jev_type: verdict.jev_type === 'score' ? 'score' : verdict.jev_type,
+    decision: verdict.decision, confidence: verdict.confidence,
+    scores: verdict.scores,
+    options: verdict.options || [],
+    // 分项得分不是「候选动作」，混进 options 会让下游按动作解析时出错
+    sub_scores: verdict.subs ? verdict.subs.map((v, k) => ({ dim: ['roots', 'browning', 'ratio', 'leaf', 'wax', 'water'][k], score: Math.round(v) })) : undefined,
+    human_review: verdict.human_review,
+    review_reasons: verdict.review_reasons,
+    reason: verdict.reason,
+    sop_version: SOP,
+    evidence_refs: req.image_ref ? [req.image_ref] : [],
+    latency_ms: Math.round(performance.now() - t0),
+    model_ids: judger === 'contamination'
+      ? { vision: 'coffee-contam-v1-int8', calibrator: 't-scale-' + req.variety }
+      : judger === 'readiness'
+        ? { vision: 'coffee-rootseg-v1-int8', calibrator: 't-scale-' + req.variety }
+        : { policy: 'fog-choice-rule-v1', calibrator: 'softmax-beta-6' },
+    audit_id, mode
+  };
+  // 只报「证据类」缺省；成本向量与目标权重是策略配置，不是缺失证据
+  const evDefaulted = defaulted.filter(k => !/^(costs|objective)\./.test(k));
+  if (evDefaulted.length) body.defaulted = evDefaulted;
+  if (mode === 'shadow') { body.would_decide = verdict.decision; body.executed = false; }
+  return { http: 200, body };
+}
+
+/* ============================================================
+   6. 架构探针
+   ============================================================ */
+const LAYERS = [
+  {
+    id: 'L0', name: '感知与现场', en: 'PERCEPTION', ms: '采样 30s / 图像 5min',
+    sub: '把生物学状态转成可判断的读数——这一层的质量决定上面六层的上限',
+    duty: '采集环境、根区、植株与批次四类信号，并给出每一个读数的可信度。',
+    comps: ['RGB 相机（定焦定距 + 遮光罩）', 'EC / pH / 溶氧 / 液温探头', '温湿度 + VPD + PPFD/DLI', '激光衍射雾滴粒径', '压力与喷嘴流量', '微生物快检（LFA / 便携 qPCR）', 'LIMS 与人工观察记录'],
+    tech: ['Modbus/RS485 → 网关', 'Hikvision/Basler 工业相机', '探头双备份 + 定期标液'],
+    budget: [{ k: '采样周期', v: '30 s' }, { k: '图像', v: '5 min / 批次' }, { k: '时钟同步', v: 'NTP ≤50ms' }],
+    fails: ['pH 电极生物膜 → 读数偏高/偏低', '镜头结露 → 图像质量骤降', '雾滴粒径漂移 → 根毛区实际受潮不足', '探头校准过期仍在上报'],
+    design: ['每个读数带 <code>health</code> 与 <code>calibrated_at</code>', '关键量为双探头，偏差 >阈值即判不可信', '图像先过质量闸门再进入推理']
+  },
+  {
+    id: 'L1', name: '边缘运行时', en: 'EDGE RUNTIME', ms: '≤300ms (p95)',
+    sub: '断网也要能判断，否则雨季/偏远农场等于没有系统',
+    duty: '在本地完成质量闸门、视觉推理、校准查表与策略判定；只把结论与证据摘要上行。',
+    comps: ['质量闸门（模糊/结露/遮挡）', '多模型推理（INT8）', '校准参数缓存', '本地规则与阈值', '断网缓冲（≥72h）', '执行结果回读'],
+    tech: ['Jetson Orin Nano 8GB', 'Triton / ONNX Runtime', 'SQLite 本地队列', 'OTA 灰度升级'],
+    budget: [{ k: '推理', v: '45–70 ms' }, { k: '端到端', v: '≤300 ms' }, { k: '离线时长', v: '72 h' }],
+    fails: ['散热降频导致时延翻倍', '批量队列积压 → 决策滞后', '模型与校准参数版本不一致'],
+    design: ['模型与校准参数绑定为同一个 artifact 版本', '离线期间决策标记 <code>deferred_sync</code>', '降频时自动降低推理帧率而非超时']
+  },
+  {
+    id: 'L2', name: '数据骨干', en: 'BACKBONE', ms: '新鲜度 ≤2s',
+    sub: '时序、图像、谱系三类数据三种存储，不要试图塞进一个库',
+    duty: '承接遥测与图像，维护批次谱系，向判断层提供特征与历史。',
+    comps: ['MQTT Broker', '流处理（去重/对齐/降采样）', '时序库', '对象存储', '元数据与谱系', '特征表'],
+    tech: ['EMQX + Redpanda', 'TimescaleDB', 'MinIO（本地）', 'Postgres + 递归 CTE'],
+    budget: [{ k: '遥测端到端', v: '≤2 s' }, { k: '图像上传', v: '异步' }, { k: '谱系查询', v: '≤50 ms' }],
+    fails: ['时间戳不一致 → 特征错位', '重复上报 → 决策重复触发', '谱系缺失 → 隔离半径算不出'],
+    design: ['边缘时间 + 服务端时间双写', '以 <code>event_id</code> 幂等去重', '谱系写入与批次创建同事务']
+  },
+  {
+    id: 'L3', name: '判断服务', en: 'JUDGMENT', ms: 'p99 180ms',
+    sub: '七个判断器、一套校准层、一种弃权语义',
+    duty: '把特征变成结构化判断：决策、置信度、证据、复核标记。',
+    comps: ['污染 Noul（5+1 类）', '驯化 Score', '营养雾 Choice', '准入 Risk', '根区 Anomaly', '采收 Choice', '归因 Score', '校准层 + conformal 弃权 + OOD'],
+    tech: ['Triton 多模型', 'Calibration Store', '特征快照（可回放）'],
+    budget: [{ k: '单判断器 p99', v: '180 ms' }, { k: '集成判断', v: '≤2 s' }, { k: '弃权率目标', v: '<15%' }],
+    fails: ['校准参数过时 → 置信度失真', '模型版本与 SOP 版本错配', 'OOD 阈值过松 → 静默错判'],
+    design: ['置信度一律输出校准后的值', '无可行解时输出 <code>stop_and_review</code> 而非硬选', '每次判断附 <code>sop_version</code>']
+  },
+  {
+    id: 'L4', name: '编排与闸门', en: 'ORCHESTRATION', ms: '≤5ms 决策附加',
+    sub: '状态机管流程，策略引擎管「谁该被叫醒」',
+    duty: '按阶段调度判断器，执行升级矩阵，把每个决策写入账本。',
+    comps: ['14 节点状态机', '升级策略引擎', '复核队列与 SLA', '决策账本（哈希链）', '影子模式开关'],
+    tech: ['Temporal', 'Postgres 追加表', '规则引擎（JSON 配置）'],
+    budget: [{ k: '策略判定', v: '≤5 ms' }, { k: '账本写入', v: '≤20 ms' }, { k: '升级通知', v: '≤60 s' }],
+    fails: ['状态机与人工操作冲突 → 批次状态漂移', '复核队列积压 → SLA 失效', '影子模式被跳过 → 未验证即上线'],
+    design: ['人工操作也走状态机，不直改数据库', '升级通知带证据包，不带结论', '影子模式由配置强制，不可由模型自选']
+  },
+  {
+    id: 'L5', name: '执行与复核', en: 'ACTUATION + HITL', ms: '回读 30s',
+    sub: '决策落不到执行就是 PPT；执行没有回读就是盲目',
+    duty: '把决策转成受约束的指令，验证执行效果，并把人的判断收集回来。',
+    comps: ['指令网关（受 PLC 限位）', 'ACK 与回读校验', '自动回滚', '复核控制台', '移动端巡检'],
+    tech: ['OPC-UA / Modbus TCP', 'PLC 硬限位', 'React 控制台'],
+    budget: [{ k: '指令下发', v: '≤200 ms' }, { k: '回读确认', v: '30 s' }, { k: '回滚', v: '≤60 s' }],
+    fails: ['泵空转 → 系统误以为已执行', '传感器与执行器同一故障源', '回滚条件定义不清 → 来回震荡'],
+    design: ['每次指令声明期望状态与容差', '偏差超容差自动回滚并降级为人工', '震荡检测：15 分钟内两次回滚即锁定']
+  },
+  {
+    id: 'L6', name: '学习与治理', en: 'LEARNING', ms: '周级',
+    sub: '标签晚到 45 天，所以闭环必须是异步的',
+    duty: '结算延迟标签、维护校准、监控漂移、管理影子与晋级、跨场共享而不共享原始数据。',
+    comps: ['延迟标签结算', '校准拟合与 ECE 监控', '漂移检测', '影子对比', '模型注册表与模型卡', '联邦聚合（可选）'],
+    tech: ['Airflow / Temporal', 'Flower', 'MLflow 或自建注册表'],
+    budget: [{ k: '标签结算', v: '每日' }, { k: '校准重拟合', v: '每周' }, { k: '晋级评审', v: '每季' }],
+    fails: ['标签结算漏跑 → 样本永久 pending', '只按准确率晋级 → 校准退化', '联邦聚合引入后门或噪声'],
+    design: ['晋级三条件：净收益 / ECE / 复核一致率', '每个模型附模型卡与适用边界', '联邦只聚合梯度与统计量']
+  }
+];
+
+function renderLayers() {
+  const list = $('#layers');
+  list.innerHTML = LAYERS.map((L, k) => `
+    <button class="layer${k === 0 ? ' active' : ''}" data-layer="${k}">
+      <span class="lidx">${L.id}</span>
+      <span class="lname">${L.name}<small>${L.en}</small></span>
+      <span class="lms">${L.ms}</span>
+    </button>`).join('');
+  list.addEventListener('click', e => {
+    const b = e.target.closest('.layer'); if (!b) return;
+    $$('.layer', list).forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    showLayer(+b.dataset.layer);
+  });
+  showLayer(0);
+}
+
+function showLayer(k) {
+  const L = LAYERS[k];
+  $('#ldetail').innerHTML = `
+    <div class="ldh"><h4>${L.name}</h4><span class="pill info">${L.id}</span><span class="pill gray">${L.ms}</span></div>
+    <div class="ldsub">${L.sub}</div>
+    <div class="ldblock" style="margin-bottom:12px"><div class="bk">职责</div><div style="font-size:13px;color:#c2cbd6">${L.duty}</div></div>
+    <div class="ldgrid">
+      <div class="ldblock"><div class="bk">组件</div><ul>${L.comps.map(c => `<li>${c}</li>`).join('')}</ul></div>
+      <div class="ldblock"><div class="bk">技术选型</div><ul>${L.tech.map(c => `<li>${c}</li>`).join('')}</ul></div>
+      <div class="ldblock"><div class="bk">时延 / 容量预算</div><ul>${L.budget.map(b => `<li>${b.k}：<b style="color:#a9f3d8">${b.v}</b></li>`).join('')}</ul></div>
+      <div class="ldblock warn"><div class="bk">失效模式</div><ul>${L.fails.map(c => `<li>${c}</li>`).join('')}</ul></div>
+      <div class="ldblock wide"><div class="bk">关键设计决策</div><ul>${L.design.map(c => `<li>${c}</li>`).join('')}</ul></div>
+    </div>`;
+}
+
+/* ============================================================
+   7. 决策地图
+   ============================================================ */
+const NODES = [
+  { id: 1, name: '种质 / 批次准入', jev: 'choice + risk', stage: 'intake', star: 0,
+    inputs: '品种与来源、检疫证书、授权标记、批次历史污染率',
+    outputs: 'accept / quarantine / reject',
+    rules: '历史污染率 >0.10 → 隔离；来源缺检疫凭证 → 拒收',
+    esc: '新品种、授权标记缺失、跨境调苗',
+    metric: '准入后 30 天污染率' },
+  { id: 2, name: '外植体无菌建立', jev: 'noul (5+1 类)', stage: 'aseptic_establishment', star: 0,
+    inputs: '培养瓶图像、温湿度、继代天数、批次先验',
+    outputs: 'continue / review_microscopy / isolate_and_sample',
+    rules: 'τ_cost = C_FP/(C_FP+C_FN)（典型 0.04–0.10）与运营下限 τ_min 取大，默认生效 0.15',
+    esc: '置信度 <0.70、图像 quality <0.55（OOD）',
+    metric: '污染漏检率（最贵的指标）' },
+  { id: 3, name: '愈伤 / 胚性发生', jev: 'score', stage: 'callus', star: 0,
+    inputs: '形态、颜色、生长速率、激素配比',
+    outputs: '胚性潜力 0–100 → proceed / delay / discard',
+    rules: '<40 弃用；40–60 复核（形态学经验依赖最强的一段）',
+    esc: '分数落在 40–60 且连续两代下降',
+    metric: '胚性转化率' },
+  { id: 4, name: '增殖继代', jev: 'choice', stage: 'proliferation', star: 0,
+    inputs: '增殖系数、玻璃化率、激素浓度、继代次数',
+    outputs: 'subculture / reduce_hormone / discard',
+    rules: '连续两代增殖系数 <2 → reduce_hormone',
+    esc: '玻璃化率 >20%、连续两代异常',
+    metric: '增殖系数与玻璃化率' },
+  { id: 5, name: '生根', jev: 'noul + score', stage: 'rooting', star: 0,
+    inputs: '根数、根色、愈伤量、根尖图像',
+    outputs: 'rooted / adjust_medium / discard',
+    rules: '根数 ≥3 且根尖褐变 <30% 为合格',
+    esc: '根区出现异味记录或褐变突增',
+    metric: '生根合格率' },
+  { id: 6, name: '炼苗 / 驯化 readiness', jev: 'score', stage: 'acclimation', star: 1,
+    inputs: '根数、褐变、株高、叶色、气孔/蜡质、失水测试',
+    outputs: 'transplant_ready (≥80) / delay_adjust (60–79) / continue_acclimation (<60)',
+    rules: '硬闸门：根数<3 → ≤55；褐变>60 → ≤60；污染 p≥0.5 → ≤40',
+    esc: '分数 60–80（边界区）、置信度 <0.70',
+    metric: '下游移栽成活率（用 45 天标签反标定）' },
+  { id: 7, name: '雾培移栽闸门', jev: 'choice', stage: 'transplant_gate', star: 1,
+    inputs: 'readiness、菌检结果、根团完整度、槽位与环境匹配',
+    outputs: 'transplant_now / delay_3_7d / isolate_first / discard',
+    rules: '移栽不可逆 → 默认 human_review=true，AI 只排序不放行',
+    esc: '任何首次移栽、任何污染阳性',
+    metric: '移栽后 30 天成活率' },
+  { id: 8, name: '营养雾配方', jev: 'choice', stage: 'aeroponics_nutrition', star: 1,
+    inputs: 'EC、pH、VPD、DO、雾滴粒径、液温、电价',
+    outputs: 'sop_baseline / lower_ec / raise_do / adjust_ph / dry_back / flush_reservoir',
+    rules: '硬限位：EC 0.8–2.0、pH 5.3–6.4、DO ≥5、根温 ≤26',
+    esc: '全部候选不可行 → stop_and_review；置信度 <0.70',
+    metric: '根尖健康度 + kWh/株' },
+  { id: 9, name: '根区异常', jev: 'noul + anomaly', stage: 'root_zone_check', star: 0,
+    inputs: '根尖图像、气味记录、DO、微生物快检',
+    outputs: 'normal / warn / stop_fog / isolate',
+    rules: '无监督异常分与有监督分类双轨，不一致即复核',
+    esc: '疑似病原（细菌/真菌二分错误代价极高）',
+    metric: '首次发现到处置的小时数' },
+  { id: 10, name: '株型 / 开花', jev: 'score', stage: 'flowering', star: 0,
+    inputs: '株型、叶色、花芽数、温光累积',
+    outputs: '健康度 0–100 + 促花优先级',
+    rules: '多目标冲突（产量 vs 品质）时输出帕累托集，不硬选',
+    esc: '多目标冲突、促花方案将偏离 SOP',
+    metric: '花芽同步率' },
+  { id: 11, name: '采收窗口', jev: 'choice', stage: 'harvest_window', star: 0,
+    inputs: '糖度、成熟度、杯测趋势、合约交期',
+    outputs: 'harvest_now / delay / split_harvest',
+    rules: '只做窗口排序，最终定级由杯测官',
+    esc: '合约品质争议、跨批次混采',
+    metric: '杯测一致性（与承诺批次的偏差）' },
+  { id: 12, name: '批次隔离半径', jev: 'choice', stage: 'quarantine', star: 0,
+    inputs: '谱系图、污染类别、架层与槽位、时间窗',
+    outputs: 'single_tray / 1–3 shelves / whole_room',
+    rules: '按谱系图 BFS 得候选半径，再按损失函数选最小有效半径',
+    esc: '任何污染事件都必须人工确认半径',
+    metric: '二次扩散率（隔离后仍新增的盘数）' },
+  { id: 13, name: '能耗 / 负荷调度', jev: 'choice', stage: 'power_dispatch', star: 0,
+    inputs: '分时电价、泵组负荷、天气预报、库存与交期',
+    outputs: 'run_normal / shift_peak / reduce_duty',
+    rules: '成本向量显式含 kWh；扣分项为生长速率折损',
+    esc: '削峰将影响已承诺交期',
+    metric: 'kWh/株 与生长速率的联合指标' },
+  { id: 14, name: '批次复盘归因', jev: 'score', stage: 'retro_review', star: 0,
+    inputs: '成活率、污染率、能耗、单位成本、复核记录',
+    outputs: '根因排序 + 模型/阈值更新建议',
+    rules: '区分「模型错」与「SOP 错」——这是最常见的误归因',
+    esc: '数据漂移、连续三周同向恶化',
+    metric: '复盘覆盖率与建议采纳率' }
+];
+
+function renderChain() {
+  const box = $('#chainbox');
+  box.innerHTML = NODES.map(n => `
+    <button class="node${n.star ? ' star' : ''}" data-node="${n.id - 1}">
+      <span class="dot"></span>
+      <span class="ni">${String(n.id).padStart(2, '0')}${n.star ? ' ★' : ''}</span>
+      <span class="nt">${n.name}</span>
+      <span class="nj">${n.jev}</span>
+    </button>`).join('');
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.node'); if (!b) return;
+    $$('.node', box).forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    showNode(+b.dataset.node);
+  });
+  showNode(5);
+}
+
+function showNode(k) {
+  const n = NODES[k];
+  $$('#chainbox .node').forEach(x => x.classList.toggle('active', +x.dataset.node === k));
+  $('#nodedetail').innerHTML = `
+    <div class="ndh">
+      <span class="pill info">节点 ${String(n.id).padStart(2, '0')}</span>
+      <h4>${n.name}</h4>
+      <span class="pill vio">${n.jev}</span>
+      <code>${n.stage}</code>
+      ${n.star ? '<span class="pill warn">关键闸门</span>' : ''}
+    </div>
+    <div class="ndgrid">
+      <div class="ndcell"><div class="nk">输入</div><div class="nv">${n.inputs}</div></div>
+      <div class="ndcell"><div class="nk">输出枚举</div><div class="nv">${n.outputs}</div></div>
+      <div class="ndcell"><div class="nk">判据 / 阈值</div><div class="nv">${n.rules}</div></div>
+      <div class="ndcell"><div class="nk">升级人工条件</div><div class="nv">${n.esc}</div></div>
+      <div class="ndcell full"><div class="nk">对应业务指标</div><div class="nv">${n.metric}</div></div>
+    </div>`;
+}
+
+/* ============================================================
+   8. 实验室
+   ============================================================ */
+const LABTABS = $('#labtabs');
+LABTABS.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  $$('button', LABTABS).forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  $$('[data-panel]').forEach(p => { p.style.display = p.dataset.panel === b.dataset.tab ? '' : 'none'; });
+  runAll();
+});
+
+const val = id => parseFloat($('#' + id).value);
+const DEFAULTS = {};
+
+function snapDefaults() {
+  $$('input[type=range], input[type=number]').forEach(i => {
+    if (i.id) DEFAULTS[i.id] = i.value;
+  });
+}
+
+function runA() {
+  const i = {
+    pRaw: val('a-p'), q: val('a-q'), temp: val('a-t'), rh: val('a-rh'),
+    days: val('a-d'), hist: val('a-hist'), cfp: val('a-fp'), cfn: val('a-fn'), tauMin: val('a-tm')
+  };
+  $('#a-pv').textContent = i.pRaw.toFixed(2);
+  $('#a-qv').textContent = i.q.toFixed(2);
+  $('#a-tv').textContent = i.temp.toFixed(1);
+  $('#a-rhv').textContent = Math.round(i.rh);
+  $('#a-dv').textContent = i.days;
+  $('#a-histv').textContent = i.hist.toFixed(3);
+  $('#a-fpv').textContent = '$' + i.cfp;
+  $('#a-fnv').textContent = '$' + money(i.cfn);
+  $('#a-tmv').textContent = i.tauMin.toFixed(2);
+
+  const r = judgeContamination(i);
+  const tagMap = { continue: ['ok', '放行'], review_microscopy: ['warn', '复核'], isolate_and_sample: ['bad', '处置'] };
+  const [cls, txt] = tagMap[r.decision];
+  $('#a-tag').className = 'pill ' + cls;
+  $('#a-tag').textContent = txt;
+  $('#a-dec').textContent = r.decision;
+  $('#a-reason').textContent = r.reason;
+  $('#a-mp').textContent = (r.p * 100).toFixed(1) + '%';
+  $('#a-mtc').textContent = (r.tauCost * 100).toFixed(1) + '%';
+  $('#a-mthi').textContent = (r.tauHi * 100).toFixed(1) + '%';
+  $('#a-mtlo').textContent = (r.tauLo * 100).toFixed(1) + '%';
+  $('#a-mc').textContent = r.confidence.toFixed(2);
+  $('#a-mood').innerHTML = r.ood ? '<span style="color:#ff8f9b">是</span>' : '否';
+  $('#a-verdict').className = 'verdict' + (r.decision === 'isolate_and_sample' ? ' bad' : r.decision === 'review_microscopy' ? ' warn' : '');
+
+  const lo = r.tauLo * 100, hi = r.tauHi * 100, p = r.p * 100;
+  const bar = $('#a-bar');
+  const zones = [[0, lo, '放行'], [lo, hi, '复核'], [hi, 100, '处置']];
+  const labels = zones.filter(z => (z[1] - z[0]) >= 16)
+    .map(z => `<span class="zt" style="left:${z[0] + (z[1] - z[0]) / 2}%">${z[2]}</span>`).join('');
+  bar.innerHTML = `
+    <div class="z z1" style="width:${lo}%"></div>
+    <div class="z z2" style="width:${hi - lo}%"></div>
+    <div class="z z3" style="width:${100 - hi}%"></div>
+    <div class="mk" style="left:${clamp(p, 0, 100)}%"></div>
+    ${labels}`;
+
+  put($('#a-json'), {
+    agent: 'CoffeeJeV', stage: 'aseptic_establishment', jev_type: r.jev_type,
+    decision: r.decision, confidence: r.confidence, scores: r.scores,
+    human_review: r.human_review, review_reasons: r.review_reasons,
+    reason: r.reason, sop_version: SOP
+  });
+  return r;
+}
+
+function runB() {
+  const i = {
+    roots: val('b-roots'), browning: val('b-brown'), shoot: val('b-shoot'),
+    leaf: val('b-leaf'), wax: val('b-wax'), waterLoss: val('b-water'), cont: val('b-cont')
+  };
+  $('#b-rootsv').textContent = i.roots;
+  $('#b-brownv').textContent = i.browning;
+  $('#b-shootv').textContent = i.shoot.toFixed(1);
+  $('#b-leafv').textContent = i.leaf;
+  $('#b-waxv').textContent = i.wax;
+  $('#b-waterv').textContent = i.waterLoss.toFixed(1);
+  $('#b-contv').textContent = i.cont.toFixed(2);
+
+  const r = judgeReadiness(i);
+  $('#b-score').textContent = r.score;
+  const tagMap = { transplant_ready: ['ok', '可移栽'], delay_adjust: ['warn', '延迟 3–7 天'], continue_acclimation: ['bad', '继续驯化'] };
+  const [cls, txt] = tagMap[r.decision];
+  $('#b-tag').className = 'pill ' + cls;
+  $('#b-tag').textContent = txt;
+  $('#b-reason').textContent = r.reason;
+  $('#b-mk').style.left = clamp(r.score, 0, 100) + '%';
+  $('#b-verdict').className = 'verdict' + (r.decision === 'continue_acclimation' ? ' bad' : r.decision === 'delay_adjust' ? ' warn' : '');
+  $('#b-conf').textContent = '置信度 ' + r.confidence.toFixed(2);
+
+  const names = ['根数', '根尖褐变', '株高/根数比', '叶色', '气孔/蜡质', '失水测试'];
+  const gates = [i.roots < 3, i.browning > 60, false, false, false, false];
+  $('#b-subs').innerHTML = names.map((n, k) => `
+    <div class="sub${gates[k] ? ' gate' : ''}">
+      <span class="sn">${n}${gates[k] ? ' ⚠' : ''}</span>
+      <span class="st"><span class="sf" style="width:${clamp(r.subs[k], 0, 100)}%"></span></span>
+      <span class="sv">${Math.round(r.subs[k])}</span>
+    </div>`).join('');
+
+  put($('#b-json'), {
+    agent: 'CoffeeJeV', stage: 'acclimation', jev_type: r.jev_type,
+    decision: r.decision, confidence: r.confidence, scores: r.scores,
+    caps_applied: r.caps, human_review: r.human_review,
+    review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
+  });
+  return r;
+}
+
+function runC() {
+  const i = {
+    ec: val('c-ec'), ph: val('c-ph'), vpd: val('c-vpd'), temp: val('c-temp'),
+    do: val('c-do'), droplet: val('c-drop'), waterTemp: val('c-wt'),
+    ws: val('c-ws'), wc: val('c-wc'), wq: val('c-wq')
+  };
+  $('#c-ecv').textContent = i.ec.toFixed(2);
+  $('#c-phv').textContent = i.ph.toFixed(2);
+  $('#c-vpdv').textContent = i.vpd.toFixed(2);
+  $('#c-tempv').textContent = i.temp.toFixed(1);
+  $('#c-dov').textContent = i.do.toFixed(1);
+  $('#c-dropv').textContent = i.droplet;
+  $('#c-wtv').textContent = i.waterTemp.toFixed(1);
+  $('#c-wsv').textContent = i.ws.toFixed(2);
+  $('#c-wcv').textContent = i.wc.toFixed(2);
+  $('#c-wqv').textContent = i.wq.toFixed(2);
+
+  const r = judgeFog(i);
+  $('#c-dec').textContent = r.decision;
+  $('#c-reason').textContent = r.reason;
+  const bad = r.decision === 'stop_and_review';
+  $('#c-tag').className = 'pill ' + (bad ? 'bad' : 'ok');
+  $('#c-tag').textContent = bad ? '无可行解' : 'choice';
+  $('#c-verdict').className = 'verdict' + (bad ? ' bad' : '');
+
+  const rows = r.options.map(o => `
+    <tr style="${o.action === r.decision ? 'background:rgba(0,196,140,.09)' : ''}">
+      <td><b>${o.label}</b><br><span style="font-family:var(--mono);font-size:10px;color:var(--dim2)">${o.action}</span></td>
+      <td>${o.feasible ? '<span class="pill ok">可行</span>' : '<span class="pill bad">不可行</span><br><span style="font-size:10px;color:#ff8f9b">' + o.violations.join('<br>') + '</span>'}</td>
+      <td class="mono">${o.utility.toFixed(3)}</td>
+      <td class="mono">${(o.p * 100).toFixed(1)}%</td>
+      <td class="mono" style="font-size:10.5px;color:var(--dim)">${o.components.survival.toFixed(2)} / ${o.components.cost.toFixed(2)} / ${o.components.quality.toFixed(2)}</td>
+    </tr>`).join('');
+  $('#c-opts').innerHTML = `<thead><tr><th>动作</th><th>约束</th><th>效用</th><th>概率</th><th>成活/成本/品质</th></tr></thead><tbody>${rows}</tbody>`;
+
+  put($('#c-json'), {
+    agent: 'CoffeeJeV', stage: 'aeroponics_nutrition', jev_type: r.jev_type,
+    decision: r.decision, confidence: r.confidence, scores: r.scores,
+    options: r.options.map(o => ({ action: o.action, feasible: o.feasible, utility: r3(o.utility), p: r4(o.p), violations: o.violations })),
+    human_review: r.human_review, review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
+  });
+  return r;
+}
+
+const RUN = { A: runA, B: runB, C: runC };
+function runAll() {
+  const active = $('.lab:not([style*="display:none"])');
+  if (active) RUN[active.dataset.panel]();
+}
+
+$$('#lab input[type=range]').forEach(inp => inp.addEventListener('input', runAll));
+
+$$('[data-reset]').forEach(b => b.addEventListener('click', () => {
+  const p = b.dataset.reset;
+  $$('.lab[data-panel="' + p + '"] input[type=range]').forEach(inp => { if (DEFAULTS[inp.id]) inp.value = DEFAULTS[inp.id]; });
+  runAll();
+}));
+
+$$('[data-log]').forEach(b => b.addEventListener('click', () => {
+  const p = b.dataset.log;
+  const r = RUN[p]();
+  const stageMap = { A: 'aseptic_establishment', B: 'acclimation', C: 'aeroponics_nutrition' };
+  LEDGER.append({ stage: stageMap[p], decision: r.decision, conf: r.confidence, human_review: r.human_review, src: 'lab' });
+  b.textContent = '已记入 ✓';
+  setTimeout(() => { b.textContent = '记入决策账本'; }, 1400);
+}));
+
+/* ============================================================
+   9. Playground
+   ============================================================ */
+const PRESETS = {
+  root: {
+    variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'rooting_to_aeroponics',
+    sensors: { ec: 1.2, ph: 5.8, vpd: 0.9, temp: 24, rh: 68, days_in_culture: 21 },
+    image_ref: 's3://farm01/tray/AP-0713/2026-11-01T09-12.jpg',
+    reading: { roots: 7, browning: 28, shoot_cm: 3.4, leaf_color: 76, stomata_wax: 62, water_loss_pct: 11.2 },
+    batch_history: { contamination_rate: 0.03 },
+    costs: { fp: 40, fn: 900 },
+    objective: { survival: 0.5, cost: 0.2, quality: 0.3 }
+  },
+  aseptic: {
+    variety: 'Arabica-Geisha', region: 'Yunnan-PuEr-01', stage: 'aseptic_establishment',
+    sensors: { ec: 1.1, ph: 5.9, vpd: 0.7, temp: 25.5, rh: 74, days_in_culture: 12 },
+    image_ref: 's3://farm01/vessel/TC-118/2026-11-01T08-40.jpg',
+    reading: { vision_p: 0.38, quality: 0.52 },
+    batch_history: { contamination_rate: 0.06 },
+    costs: { fp: 25, fn: 1200 }
+  },
+  fog: {
+    variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'aeroponics_nutrition',
+    sensors: { ec: 1.85, ph: 6.1, vpd: 1.35, temp: 26.5, rh: 62, do: 5.4, droplet_um: 48, water_temp: 23.5 },
+    batch_history: { contamination_rate: 0.02 },
+    objective: { survival: 0.6, cost: 0.25, quality: 0.15 }
+  },
+  bad: { variety: 'Arabica-Caturra', stage: 'aeroponics_nutrition', sensors: { ec: 1.4, ph: 5.8 } }
+};
+let currentPreset = 'root';
+const reqbox = $('#reqbox');
+
+function loadPreset(k) {
+  currentPreset = k;
+  reqbox.value = JSON.stringify(PRESETS[k], null, 2);
+  $('#reqerr').textContent = '';
+  $$('#presets button').forEach(b => b.classList.toggle('on', b.dataset.preset === k));
+}
+$$('#presets button').forEach(b => b.addEventListener('click', () => loadPreset(b.dataset.preset)));
+loadPreset('root');
+
+$('#fmtapi').addEventListener('click', () => {
+  try { reqbox.value = JSON.stringify(JSON.parse(reqbox.value), null, 2); $('#reqerr').textContent = ''; }
+  catch (e) { $('#reqerr').textContent = '⚠ JSON 语法错误：' + e.message; }
+});
+
+$('#runapi').addEventListener('click', () => {
+  let req;
+  try { req = JSON.parse(reqbox.value); }
+  catch (e) { $('#reqerr').textContent = '⚠ JSON 语法错误：' + e.message; return; }
+  $('#reqerr').textContent = '';
+  if ($('#shadow').checked) req.mode = 'shadow';
+  const t0 = performance.now();
+  const out = decide(req);
+  const wall = Math.max(0.4, performance.now() - t0);
+  const body = out.body;
+
+  $('#respcode').className = 'pill ' + (body.decision === 'need_more_info' ? 'warn' : body.decision === 'stop_and_review' ? 'bad' : 'ok');
+  $('#respcode').textContent = 'HTTP ' + out.http;
+
+  const meta = [
+    ['latency', wall.toFixed(1) + ' ms'],
+    ['mode', body.mode],
+    ['jev', body.jev_type || '—'],
+    ['human_review', body.human_review ? 'true' : 'false'],
+  ];
+  if (body.audit_id) meta.push(['audit', body.audit_id]);
+  if (body.defaulted) meta.push(['defaulted', body.defaulted.length + ' 项']);
+  $('#respmeta').innerHTML = meta.map(([k, v]) =>
+    `<span class="rm${(k === 'human_review' && v === 'true') ? ' warn' : (k === 'mode' && v === 'shadow') ? ' warn' : ''}">${k}: <b style="color:#dbe3ec">${v}</b></span>`).join('');
+
+  put($('#respbox'), body);
+});
+
+/* ============================================================
+   10. 复核队列
+   ============================================================ */
+$$('#queue .card').forEach(card => {
+  $$('button[data-act]', card).forEach(btn => btn.addEventListener('click', () => {
+    const act = btn.dataset.act;
+    const label = { accept: '采纳 AI', override: '改判放行', evidence: '要求补证' }[act];
+    const state = $('.rv-state', card);
+    state.textContent = label;
+    state.className = 'pill rv-state ' + (act === 'accept' ? 'ok' : act === 'override' ? 'bad' : 'warn');
+    $$('button[data-act]', card).forEach(b => { b.disabled = true; b.style.opacity = '.45'; });
+    LEDGER.append({
+      stage: card.dataset.stage,
+      decision: act === 'accept' ? 'reviewer_accept' : act === 'override' ? 'reviewer_override' : 'reviewer_need_evidence',
+      conf: null, human_review: true, src: 'hitl'
+    });
+  }));
+});
+$('#verify').addEventListener('click', () => {
+  const ok = LEDGER.verify();
+  const f = $('#chain-flag');
+  f.textContent = ok ? `链完整 · ${LEDGER.entries.length} 条` : '链异常（存在断点）';
+  f.className = 'pill ' + (ok ? 'ok' : 'bad');
+  if (!LEDGER.entries.length) { f.textContent = '空链'; f.className = 'pill gray'; }
+});
+
+/* ============================================================
+   11. 经济性计算器
+   ============================================================ */
+const ECON_IDS = ['e-n', 'e-v', 'e-c0', 'e-c1', 'e-s0', 'e-s1', 'e-capex', 'e-opex', 'e-d'];
+function runEcon() {
+  const N = parseFloat($('#e-n').value) || 0;
+  const v = parseFloat($('#e-v').value) || 0;
+  const c0 = clamp((parseFloat($('#e-c0').value) || 0) / 100, 0, 1);
+  const c1 = clamp((parseFloat($('#e-c1').value) || 0) / 100, 0, 1);
+  const s0 = clamp((parseFloat($('#e-s0').value) || 0) / 100, 0, 1);
+  const s1 = clamp((parseFloat($('#e-s1').value) || 0) / 100, 0, 1);
+  const capex = parseFloat($('#e-capex').value) || 0;
+  const opex = parseFloat($('#e-opex').value) || 0;
+  const D = parseFloat($('#e-d').value) || 1;
+
+  const loss0 = c0 + (1 - c0) * (1 - s0);
+  const loss1 = c1 + (1 - c1) * (1 - s1);
+  const base = N * v * loss0, target = N * v * loss1;
+  const gain = base - target;
+  const net = gain - opex;                       // 年度现金流
+  const pay = net > 0 ? capex / (net / 12) : Infinity;
+  const cpd = (capex / 3 + opex) / (D * 365);    // 三年摊销 + 年运维
+  const pp = N > 0 ? gain / N : 0;
+  const roi = capex > 0 ? net / capex : 0;
+
+  $('#e-gain').textContent = '$' + money(gain);
+  $('#e-pay').textContent = isFinite(pay) ? pay.toFixed(1) + ' 月' : '不回本';
+  $('#e-net').textContent = (net < 0 ? '−$' : '$') + money(Math.abs(net));
+  $('#e-cpd').textContent = '$' + cpd.toFixed(3);
+  $('#e-pp').textContent = '$' + pp.toFixed(3);
+  $('#e-roi').textContent = isFinite(roi) ? (roi * 100).toFixed(0) + '%' : '—';
+
+  $('#e-formula').textContent =
+    `损失率(基线) = ${c0.toFixed(2)} + (1−${c0.toFixed(2)})×(1−${s0.toFixed(2)}) = ${loss0.toFixed(3)}\n` +
+    `损失率(目标) = ${c1.toFixed(2)} + (1−${c1.toFixed(2)})×(1−${s1.toFixed(2)}) = ${loss1.toFixed(3)}\n` +
+    `年挽回     = ${money(N)}×${v}×(${loss0.toFixed(3)}−${loss1.toFixed(3)}) = $${money(gain)}\n` +
+    `年净现金流 = $${money(gain)} − 运维 $${money(opex)} = $${money(net)}\n` +
+    `回收期     = 一次性 $${money(capex)} ÷ (${money(net)}/12) = ${isFinite(pay) ? pay.toFixed(1) + ' 月' : '不回本'}\n` +
+    `单次决策成本 = ($${money(capex)}/3 + $${money(opex)}) ÷ (${D}×365) = $${cpd.toFixed(3)}`;
+
+  let txt;
+  if (!isFinite(pay)) txt = `年挽回损失（$${money(gain)}）还不够付年运维（$${money(opex)}），回收期为无穷。这个规模下正确的动作是只做「影子 + 账本」，用 3 个月攒数据证明损失率真的能降，再谈设备。`;
+  else if (pay <= 12) txt = `回收期 ${pay.toFixed(1)} 个月，一年内回本。建议直接按 T1 单农场拓扑采购边缘盒子，先把污染 Noul 与驯化 Score 两个判断器做穿。`;
+  else if (pay <= 24) txt = `回收期 ${pay.toFixed(1)} 个月，属于可接受区间。建议先上污染 Noul（损失最离散、最容易归因），驯化 Score 与营养雾 Choice 放到第二期。`;
+  else if (pay <= 36) txt = `回收期 ${pay.toFixed(1)} 个月，偏长。更划算的做法是走 T2 区域共享：用邻场的边缘盒子，自己只出标注与复核人力，把一次性投入压到 1/3。`;
+  else txt = `回收期 ${pay.toFixed(1)} 个月，不建议自建。先只做影子运行，或者与邻场共建设备。`;
+  $('#e-verdict').textContent = txt;
+}
+ECON_IDS.forEach(id => $('#' + id).addEventListener('input', runEcon));
+
+/* ============================================================
+   12. 导航 / 复制 / 启动
+   ============================================================ */
+$$('.navitem').forEach(b => b.addEventListener('click', () => {
+  const el = document.getElementById(b.dataset.sec);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}));
+
+const secs = $$('section.sec');
+const io = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      $$('.navitem').forEach(b => b.classList.toggle('active', b.dataset.sec === id));
+    }
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+secs.forEach(s => io.observe(s));
+
+$$('.cp').forEach(b => b.addEventListener('click', () => {
+  const el = document.getElementById(b.dataset.copy);
+  const text = el.textContent;
+  const done = () => { b.textContent = '已复制'; setTimeout(() => { b.textContent = '复制'; }, 1200); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(done);
+  else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) { }
+    document.body.removeChild(ta); done();
+  }
+}));
+
+snapDefaults();
+renderLayers();
+renderChain();
+runA(); runB(); runC();
+runEcon();
+renderLedger();
+$('#reqerr').textContent = '';
+</script>
+
+</div>
+</main>
+</div>
+<a href="index.html" title="3 分钟双语说明片 / bilingual explainer" style="position:fixed;right:20px;bottom:20px;z-index:999;display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:rgba(0,196,140,.16);border:1px solid rgba(0,196,140,.55);color:#a9f3d8;font:600 13px/1 -apple-system,BlinkMacSystemFont,'Microsoft YaHei',sans-serif;text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.45)">▶ 看 3 分钟说明片</a>
+</body>
+</html>
