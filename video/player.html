@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CoffeeJeV — 产品解说视频 · Product Explainer</title>
+<style>
+  :root{--bg:#060709;--panel:rgba(255,255,255,.045);--line:rgba(255,255,255,.1);
+    --tx:#ece9e2;--mut:#8f949d;--amber:#e8b34b}
+  *{margin:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:"Segoe UI","Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 24px 64px}
+  header{width:min(1100px,100%);display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+  h1{font-size:30px;font-weight:800}
+  h1 b{color:var(--amber)}
+  .sub{color:var(--mut);font-size:15px;letter-spacing:.04em}
+  .lang{display:flex;gap:10px}
+  .lang button{background:var(--panel);border:1px solid var(--line);color:var(--mut);padding:10px 22px;
+    border-radius:999px;font-size:15px;cursor:pointer;letter-spacing:.06em;transition:.2s}
+  .lang button.on{color:#0b0c0e;background:var(--amber);border-color:var(--amber);font-weight:700}
+  .stage{width:min(1100px,100%);position:relative;border-radius:18px;overflow:hidden;
+    border:1px solid var(--line);box-shadow:0 40px 90px rgba(0,0,0,.55);background:#000}
+  video{width:100%;display:block}
+  .meta{width:min(1100px,100%);display:flex;gap:14px;flex-wrap:wrap;margin-top:22px}
+  .chip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:14px;color:var(--mut)}
+  .chip b{color:var(--tx);font-weight:600}
+  footer{margin-top:34px;color:#565c66;font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Coffee<b>JeV</b> · <span id="t-title">产品解说视频</span></h1>
+    <div class="sub" id="t-sub">A judgement layer for aeroponic coffee — 1920×1080 · ~3 min</div>
+  </div>
+  <div class="lang">
+    <button id="btn-zh" class="on">普通话</button>
+    <button id="btn-en">English</button>
+  </div>
+</header>
+
+<div class="stage"><video id="v" controls preload="metadata"></video></div>
+
+<div class="meta">
+  <div class="chip" id="m-lang"><b>语言 Language</b> — 普通话 / English 双版本，右上角切换</div>
+  <div class="chip"><b>字幕</b> — 已烧录进画面，另有 .vtt 外挂文件（out/ 目录）</div>
+  <div class="chip"><b>离线</b> — 全部本地生成，无外部依赖</div>
+</div>
+
+<footer>COFFEEJEV · A JUDGEMENT LAYER FOR AEROPONIC COFFEE</footer>
+
+<script>
+const V = {"zh":"out/coffeejev-explainer-zh.mp4","en":"out/coffeejev-explainer-en.mp4"};
+const COPY = {
+  zh:{title:"产品解说视频", sub:"A judgement layer for aeroponic coffee — 1920×1080 · 约 3 分钟",
+      lang:"语言 Language — 普通话 / English 双版本，右上角切换"},
+  en:{title:"Product Explainer", sub:"A judgement layer for aeroponic coffee — 1920×1080 · ~3 min",
+      lang:"Language — Mandarin / English versions, switch top-right"},
+};
+const v = document.getElementById("v");
+let cur = "zh";
+function setLang(l){
+  if (l === cur && v.getAttribute("src")) return;
+  const t = v.currentTime, playing = !v.paused;
+  cur = l;
+  v.src = V[l]; v.load();
+  document.getElementById("btn-zh").classList.toggle("on", l==="zh");
+  document.getElementById("btn-en").classList.toggle("on", l==="en");
+  document.getElementById("t-title").textContent = COPY[l].title;
+  document.getElementById("t-sub").textContent = COPY[l].sub;
+  document.getElementById("m-lang").innerHTML = "<b>语言 Language</b> — " + COPY[l].lang;
+  v.addEventListener("loadedmetadata", () => {
+    if (t > 0) v.currentTime = Math.min(t, v.duration - 0.1);
+    if (playing) v.play();
+  }, {once:true});
+}
+document.getElementById("btn-zh").onclick = () => setLang("zh");
+document.getElementById("btn-en").onclick = () => setLang("en");
+setLang("zh");
+</script>
+</body>
+</html>

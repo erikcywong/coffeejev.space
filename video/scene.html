@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>CoffeeJeV Explainer — Frame Renderer</title>
+<style>
+  :root{
+    --bg:#060709; --panel:rgba(255,255,255,.045); --line:rgba(255,255,255,.10);
+    --tx:#ece9e2; --mut:#8f949d; --amber:#e8b34b; --teal:#57c7b8; --red:#e05a5a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+  body{font-family:"Segoe UI","Helvetica Neue",Helvetica,Arial,"Microsoft YaHei","PingFang SC",sans-serif;color:var(--tx)}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+    background:radial-gradient(1200px 700px at 50% 38%,#0b0d11 0%,#060709 62%,#040506 100%)}
+  #vig{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(1400px 900px at 50% 45%,transparent 55%,rgba(0,0,0,.5) 100%)}
+  .scene{position:absolute;inset:0;opacity:0;visibility:hidden}
+  .scene.on{opacity:1;visibility:visible}
+  .kicker{font-size:21px;letter-spacing:.34em;text-transform:uppercase;color:var(--amber);font-weight:600}
+  .mut{color:var(--mut)}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* chrome */
+  #wm{position:absolute;left:64px;bottom:150px;font-size:17px;letter-spacing:.12em;color:#5c626b;z-index:30}
+  #cnt{position:absolute;right:64px;top:56px;font-size:17px;letter-spacing:.3em;color:#565c66;z-index:30}
+  #cap{position:absolute;left:50%;transform:translateX(-50%);bottom:44px;width:1500px;text-align:center;
+    font-size:31px;line-height:1.5;color:#d9d6cf;z-index:40;text-shadow:0 2px 14px rgba(0,0,0,.85)}
+  #cap .en{font-size:27px}
+  #pbar{position:absolute;left:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--amber),#f3d27c);width:0;z-index:50}
+  #langbadge{position:absolute;left:64px;top:56px;font-size:16px;letter-spacing:.28em;color:#565c66;z-index:30;
+    border:1px solid rgba(255,255,255,.14);padding:6px 14px;border-radius:999px}
+
+  /* generic card */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+  .fx{opacity:0;will-change:opacity,transform}
+
+  /* S1 title */
+  #s-title .ghost{position:absolute;right:110px;top:40px;font-size:660px;font-weight:800;color:rgba(255,255,255,.035);line-height:1}
+  #s-title .wrap{position:absolute;left:150px;top:300px}
+  #s-title h1{font-size:172px;font-weight:800;letter-spacing:.01em;line-height:1;margin:26px 0 10px}
+  #s-title h1 .jv{color:var(--amber)}
+  #s-title .zh{font-size:56px;font-weight:300;letter-spacing:.42em;color:#c9c5bc}
+  #s-title .rule{width:520px;height:2px;background:linear-gradient(90deg,var(--amber),transparent);margin:44px 0 30px;transform-origin:left}
+  #s-title .tag{font-size:30px;color:var(--mut);letter-spacing:.04em}
+
+  /* S2 problem */
+  #s-problem .head{position:absolute;left:150px;top:120px}
+  #s-problem h2{font-size:64px;font-weight:700;margin-top:18px}
+  #s-problem .rows{position:absolute;left:150px;top:320px;width:980px}
+  .prow{display:flex;align-items:baseline;gap:34px;padding:34px 0;border-bottom:1px solid var(--line)}
+  .prow .idx{font-size:44px;font-weight:800;color:var(--amber);width:86px}
+  .prow .tt{font-size:44px;font-weight:700}
+  .prow .sub{font-size:24px;color:var(--mut);margin-top:8px}
+  #s-problem .probe{position:absolute;right:150px;top:360px;width:520px;padding:38px}
+  #s-problem .probe .lbl{font-size:19px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+  #s-problem .probe .big{font-size:84px;font-weight:800;margin:16px 0 6px}
+  #s-problem .badge{display:inline-block;margin-top:18px;padding:9px 18px;border-radius:999px;font-size:21px;
+    color:#ffb4b4;background:rgba(224,90,90,.14);border:1px solid rgba(224,90,90,.45)}
+  #s-problem .strike{position:relative;display:inline-block}
+  #s-problem .strike:after{content:"";position:absolute;left:-4%;top:54%;width:108%;height:5px;background:var(--red);transform:rotate(-4deg)}
+
+  /* S3 layer */
+  #s-layer .center{position:absolute;left:0;right:0;top:250px;text-align:center}
+  #s-layer .not{font-size:26px;letter-spacing:.4em;color:var(--mut)}
+  #s-layer h2{font-size:110px;font-weight:800;margin:30px 0 8px}
+  #s-layer .cols{position:absolute;left:150px;right:150px;top:590px;display:flex;gap:40px}
+  #s-layer .col{flex:1;padding:40px 36px}
+  #s-layer .col .k{font-size:56px;font-weight:800;color:var(--amber)}
+  #s-layer .col .t{font-size:30px;font-weight:700;margin:14px 0 10px}
+  #s-layer .col .d{font-size:22px;color:var(--mut);line-height:1.55}
+
+  /* S4 map */
+  #s-map .head{position:absolute;left:150px;top:100px}
+  #s-map h2{font-size:56px;font-weight:700;margin-top:16px}
+  #s-map svg{position:absolute;left:0;top:230px}
+  #s-map .types{position:absolute;left:150px;right:150px;bottom:150px;display:flex;gap:36px}
+  #s-map .tchip{flex:1;display:flex;align-items:center;gap:22px;padding:26px 32px}
+  #s-map .tchip .n{font-size:40px;font-weight:800}
+  #s-map .tchip .d{font-size:23px;color:var(--mut)}
+
+  /* b-roll template */
+  .br .left{position:absolute;left:130px;top:170px;width:560px}
+  .br h2{font-size:52px;font-weight:700;margin:20px 0 8px;line-height:1.2}
+  .br .bul{margin-top:30px}
+  .br .b{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line);font-size:26px;line-height:1.5}
+  .br .b i{font-style:normal;color:var(--amber);font-weight:800;min-width:34px}
+  .br .shot{position:absolute;right:120px;top:110px;width:1080px;height:830px;border-radius:16px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.12);background:#0b0d10;box-shadow:0 40px 90px rgba(0,0,0,.55)}
+  .br .chrome{height:44px;background:#101318;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:9px;padding:0 20px}
+  .br .chrome s{width:12px;height:12px;border-radius:50%;background:#2a2f37;text-decoration:none}
+  .br .chrome span{margin-left:14px;font-size:15px;color:#6a707a;letter-spacing:.06em}
+  .br .imgwrap{position:absolute;inset:44px 0 0 0;overflow:hidden}
+  .br .imgwrap img{position:absolute;left:0;top:0;width:100%;transform-origin:top center}
+
+  /* S8a learn */
+  #s-learn .left{position:absolute;left:150px;top:150px;width:640px}
+  #s-learn h2{font-size:54px;font-weight:700;margin-top:18px}
+  #s-learn .nums{display:flex;align-items:baseline;gap:26px;margin-top:46px}
+  #s-learn .nums .a{font-size:96px;font-weight:800;color:#c9c5bc}
+  #s-learn .nums .arr{font-size:52px;color:var(--mut)}
+  #s-learn .nums .b{font-size:96px;font-weight:800;color:var(--teal)}
+  #s-learn .steps{position:absolute;left:150px;bottom:150px;display:flex;gap:18px}
+  #s-learn .st{padding:18px 26px;font-size:24px}
+  #s-learn svg{position:absolute;right:150px;top:170px}
+
+  /* S9 roadmap */
+  #s-road .head{position:absolute;left:150px;top:120px}
+  #s-road h2{font-size:58px;font-weight:700;margin-top:16px}
+  #s-road .gantt{position:absolute;left:150px;right:150px;top:330px}
+  .gbar{position:absolute;height:64px;border-radius:10px;background:linear-gradient(90deg,rgba(232,179,75,.28),rgba(232,179,75,.08));
+    border:1px solid rgba(232,179,75,.5);display:flex;align-items:center;padding:0 24px;font-size:24px;font-weight:600}
+  .gaxis{position:absolute;left:0;right:0;bottom:-52px;display:flex;justify-content:space-between;font-size:20px;color:var(--mut)}
+  .gates{position:absolute;left:150px;right:150px;top:520px;display:flex;gap:36px}
+  .gate{flex:1;padding:28px 30px}
+  .gate .n{font-size:20px;letter-spacing:.24em;color:var(--teal);text-transform:uppercase}
+  .gate .t{font-size:27px;font-weight:700;margin-top:10px}
+  .gate .d{font-size:21px;color:var(--mut);margin-top:8px;line-height:1.5}
+  #s-road .nodo{position:absolute;left:150px;right:150px;bottom:140px;display:flex;gap:26px}
+  #s-road .nd{flex:1;display:flex;align-items:center;gap:14px;padding:22px 26px;font-size:24px;color:#b9b5ac}
+  #s-road .nd i{font-style:normal;color:var(--red);font-weight:800;font-size:28px}
+
+  /* S10 close */
+  #s-close .center{position:absolute;left:0;right:0;top:330px;text-align:center}
+  #s-close .l1{font-size:64px;font-weight:800;line-height:1.4}
+  #s-close .l1 em{font-style:normal;color:var(--amber)}
+  #s-close .l2{font-size:34px;color:var(--mut);margin-top:26px}
+  #s-close .cards{position:absolute;left:330px;right:330px;bottom:190px;display:flex;gap:30px}
+  #s-close .c{flex:1;text-align:center;padding:30px 20px}
+  #s-close .c .a{font-size:26px;font-weight:700;color:var(--teal)}
+  #s-close .c .b{font-size:20px;color:var(--mut);margin-top:8px}
+  #s-close .end{position:absolute;left:0;right:0;bottom:110px;text-align:center;font-size:19px;letter-spacing:.3em;color:#565c66}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="langbadge">ZH · 普通话</div>
+  <div id="cnt">01 / 12</div>
+  <div id="wm">COFFEEJEV · 咖啡快判官 · v1.0.1</div>
+
+  <!-- S1 -->
+  <section class="scene" id="s-title">
+    <div class="ghost num">14</div>
+    <div class="wrap">
+      <div class="kicker fx" id="t-k">Aeroponic Coffee · Judgement Layer</div>
+      <h1 class="fx" id="t-h">Coffee<span class="jv">JeV</span></h1>
+      <div class="zh fx" id="t-z">咖啡快判官</div>
+      <div class="rule fx" id="t-r"></div>
+      <div class="tag fx" id="t-g"></div>
+    </div>
+  </section>
+
+  <!-- S2 -->
+  <section class="scene" id="s-problem">
+    <div class="head fx" id="p-h">
+      <div class="kicker">Why · 为什么难</div>
+      <h2 id="p-t"></h2>
+    </div>
+    <div class="rows" id="p-rows"></div>
+    <div class="probe card fx" id="p-card">
+      <div class="lbl">pH probe · reading</div>
+      <div class="big num">5.82</div>
+      <div class="lbl">confidence <span class="strike num" style="color:#d9d6cf">0.94</span></div>
+      <div class="badge" id="p-badge">probe health 0.42 · 生物膜 fouling</div>
+    </div>
+  </section>
+
+  <!-- S3 -->
+  <section class="scene" id="s-layer">
+    <div class="center">
+      <div class="not fx" id="l-n">NOT A CHATBOT · 不是聊天机器人</div>
+      <h2 class="fx" id="l-h">判断层</h2>
+      <div class="mut fx" id="l-s" style="font-size:30px;margin-top:6px"></div>
+    </div>
+    <div class="cols">
+      <div class="col card fx" id="l-c1"><div class="k num">14</div><div class="t" id="l-t1"></div><div class="d" id="l-d1"></div></div>
+      <div class="col card fx" id="l-c2"><div class="k num">±0</div><div class="t" id="l-t2"></div><div class="d" id="l-d2"></div></div>
+      <div class="col card fx" id="l-c3"><div class="k">?</div><div class="t" id="l-t3"></div><div class="d" id="l-d3"></div></div>
+    </div>
+  </section>
+
+  <!-- S4 -->
+  <section class="scene" id="s-map">
+    <div class="head fx" id="m-h"><div class="kicker">Decision Map · 决策地图</div><h2 id="m-t"></h2></div>
+    <svg width="1920" height="560" viewBox="0 0 1920 560" id="m-svg"></svg>
+    <div class="types">
+      <div class="tchip card fx" id="m-t1"><div class="n" style="color:var(--red)">Noul</div><div class="d" id="m-d1"></div></div>
+      <div class="tchip card fx" id="m-t2"><div class="n" style="color:var(--amber)">Choice</div><div class="d" id="m-d2"></div></div>
+      <div class="tchip card fx" id="m-t3"><div class="n" style="color:var(--teal)">Score</div><div class="d" id="m-d3"></div></div>
+    </div>
+  </section>
+
+  <!-- b-roll scenes -->
+  <section class="scene br" id="s-bra"></section>
+  <section class="scene br" id="s-brb"></section>
+  <section class="scene br" id="s-brc"></section>
+  <section class="scene br" id="s-brd"></section>
+  <section class="scene br" id="s-bre"></section>
+  <section class="scene br" id="s-brf"></section>
+
+  <!-- S8a learn -->
+  <section class="scene" id="s-learn">
+    <div class="left">
+      <div class="kicker fx" id="g-k">Learning Loop · 学习闭环</div>
+      <h2 class="fx" id="g-h"></h2>
+      <div class="nums fx" id="g-n"><span class="a num">0.82</span><span class="arr">→</span><span class="b num">0.55</span></div>
+      <div class="mut fx" id="g-d" style="font-size:25px;margin-top:20px;line-height:1.6"></div>
+    </div>
+    <svg width="860" height="620" viewBox="0 0 860 620" id="g-svg"></svg>
+    <div class="steps" id="g-steps"></div>
+  </section>
+
+  <!-- S9 roadmap -->
+  <section class="scene" id="s-road">
+    <div class="head fx" id="r-h"><div class="kicker">90 Days · 路线图与治理</div><h2 id="r-t"></h2></div>
+    <div class="gantt" id="r-gantt"></div>
+    <div class="gates" id="r-gates"></div>
+    <div class="nodo" id="r-nodo"></div>
+  </section>
+
+  <!-- S10 close -->
+  <section class="scene" id="s-close">
+    <div class="center">
+      <div class="l1 fx" id="c-l1"></div>
+      <div class="l2 fx" id="c-l2"></div>
+    </div>
+    <div class="cards">
+      <div class="c card fx" id="c-c1"><div class="a" id="c-a1"></div><div class="b" id="c-b1"></div></div>
+      <div class="c card fx" id="c-c2"><div class="a" id="c-a2"></div><div class="b" id="c-b2"></div></div>
+      <div class="c card fx" id="c-c3"><div class="a" id="c-a3"></div><div class="b" id="c-b3"></div></div>
+    </div>
+    <div class="end">COFFEEJEV · A JUDGEMENT LAYER FOR AEROPONIC COFFEE</div>
+  </section>
+
+  <div id="vig"></div>
+  <div id="cap"></div>
+  <div id="pbar"></div>
+</div>
+
+<script>
+"use strict";
+/* ================= deterministic renderer =================
+   window.setTimeline(tl)  — tl = {lang, total, scenes:[{id,t0,t1,text:[...sentences]}]}
+   window.renderAt(t)      — pure function of t. No rAF, no Date. */
+const $ = id => document.getElementById(id);
+const ease = p => p <= 0 ? 0 : p >= 1 ? 1 : 1 - Math.pow(1 - p, 3);
+const seg = (p, a, b) => ease((p - a) / (b - a));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const FX = el => { el.style.opacity = 0; el.style.transition = "none"; };
+
+function rise(el, p, dy = 26) {
+  el.style.opacity = ease(p);
+  el.style.transform = `translateY(${(1 - ease(p)) * dy}px)`;
+}
+function fade(el, p) { el.style.opacity = ease(p); }
+
+/* ---------- i18n copy ---------- */
+const COPY = {
+zh: {
+  titleTag: "给气雾培咖啡温室的判断层 · 把长流程拆成能马上回答的小问题",
+  problemHead: "雾培咖啡最难的，不是种，是判断",
+  problemRows: [
+    ["01", "污染看不见", "肉眼看不出 · 等看出来一整盘已废"],
+    ["02", "探头会骗人", "EC/pH 电极数周即被生物膜糊住"],
+    ["03", "标准在人脑里", "老农艺师的判断带不走、复制不了"],
+  ],
+  layerSub: "一个只输出「决策 + 置信度 + 是否需要人」的系统",
+  layerCols: [
+    ["14", "原子化决策", "是非 · 选一 · 打分，每个判断只回答一个问题"],
+    ["±0", "校准置信度", "说 0.8 就真的有八成把握 — 温度缩放 + 可靠性图"],
+    ["?", "允许弃权", "证据不足时说 need_more_info，绝不硬猜"],
+  ],
+  mapTitle: "14 个节点 · 一条链上跑完全程",
+  mapNodes: ["种质准入","无菌建立","愈伤胚性","增殖继代","生根","驯化","雾培移栽","营养雾","根区","设备健康","生长开花","品质采收","数据回流","模型校准"],
+  mapTypes: [
+    ["Noul 是非", "污染了吗？设备正常吗？"],
+    ["Choice 选一", "六个配方动作选哪个？"],
+    ["Score 打分", "这株能不能移栽？0–100"],
+  ],
+  br: {
+    a:{k:"Panel A · Noul 污染判断",h:"阈值由成本算出，不是固定 0.7",b:[
+      "漏判一盘 ≈ 赔几十盘的苗 → 阈值压到 ~5%",
+      "5%–50% 只送检镜检：先取证，再动手",
+      "隔离/报废属不可逆动作 → 必须人工确认"]},
+    b:{k:"Panel B · Score 驯化打分",h:"六项体征加权 · 0–100 分",b:[
+      "≥80 移栽 · 60–79 延迟调环境 · <60 继续驯化",
+      "株高/根数比两端扣分：徒长苗进雾培最先死",
+      "根尖重度褐化 → 直接列入弃用候选"]},
+    c:{k:"Panel C · Choice 营养雾",h:"六个候选动作 · 效用 × 约束 × 边际成本",b:[
+      "EC / pH / VPD / 溶氧 / 雾滴 / 液温一起看",
+      "参数全部达标 → 正确答案是什么都不做",
+      "唯一可选动作若很贵 → 不替你决定这笔钱"]},
+    d:{k:"API · 接口契约",h:"一个接口，永不硬猜",b:[
+      "POST 批次状态 → 决策 + 置信度 + 候选项",
+      "缺字段 → need_more_info，绝不编造",
+      "影子模式：先判断记账三个月，不执行"]},
+    e:{k:"Human-in-loop · 人工复核",h:"升级带证据包，账本不可篡改",b:[
+      "复核三动作：采纳 / 改判放行 / 要求补证",
+      "哈希链账本：改任何一条，链即断",
+      "「验证链」按钮当场可试"]},
+    f:{k:"Economics · 经济性",h:"改个数字，马上看到回收期",b:[
+      "回收期 / 年净现金流 / 单次决策成本 全透明",
+      "年出圃 <6 万株 → 摊不薄固定成本，回收期 ∞",
+      "小规模正确做法：区域共享边缘盒子（T2）"]},
+  },
+  learnHead: "标签会迟到，但不会缺席",
+  learnSub: "污染标签 7–14 天到 · 成活率 30–45 天到<br>所以先记账 → 回填 → 每周重校准",
+  learnSteps: ["记录决策","延迟标签回填","每周重校准","漂移监控","影子晋级"],
+  roadTitle: "90 天交付系统，也交付证据",
+  roadBars: [["判断器 ×3 + 边缘部署",0,.34],["黄金集 · 校准 · 复核队列",.33,.66],["影子运行 + 预注册试点",.65,1]],
+  roadGates: [
+    ["GATE 1","判断准确率","对照 SOP 基线不降"],
+    ["GATE 2","复核率 <15%","闸门不被「没事发生」刷屏"],
+    ["GATE 3","净收益不降","且 ECE 不升，才准晋级"],
+  ],
+  roadNodo:["不做全自动控制","不集中跨场原始数据","不做无人值守变更"],
+  closeL1: "答得准就说准，<em>答不准就说不知道</em>",
+  closeL2: "整份规格完全离线 · 双击即开 · 后端纯 Python 可直接接入",
+  closeCards: [["离线单文件","index.html 零依赖"],["Python 参考实现","同一套数学 · 41 个测试"],["POST /coffee-jev/decide","结构化 JSON 契约"]],
+  cap: {},      // filled from timeline
+},
+en: {
+  titleTag: "A judgement layer for aeroponic coffee — long process, small answerable questions",
+  problemHead: "The hard part isn't growing. It's deciding.",
+  problemRows: [
+    ["01","Contamination is invisible","By the time you see it, the tray is gone"],
+    ["02","Probes lie","EC / pH electrodes foul within weeks"],
+    ["03","Standards live in one head","A veteran's judgement can't be copied"],
+  ],
+  layerSub: "One system that outputs decision + confidence + who reviews",
+  layerCols: [
+    ["14","Atomic decisions","Yes/no, pick-one, or a score — one question each"],
+    ["±0","Calibrated confidence","When it says 0.8, it's right ~80% of the time"],
+    ["?","Allowed to abstain","Says need_more_info instead of guessing"],
+  ],
+  mapTitle: "14 nodes · one chain, end to end",
+  mapNodes: ["Germplasm","Sterile est.","Callus","Multiplication","Rooting","Acclimation","Transplant","Fog recipe","Root zone","Equipment","Growth","Harvest","Feedback","Calibration"],
+  mapTypes: [
+    ["Noul — yes/no","Contaminated? Equipment healthy?"],
+    ["Choice — pick one","Which of six fog actions?"],
+    ["Score — 0–100","Is this plant ready to transplant?"],
+  ],
+  br: {
+    a:{k:"Panel A · Noul — Contamination",h:"The threshold comes from cost, not a fixed 0.7",b:[
+      "Miss one tray ≈ lose dozens → threshold ~5%",
+      "5–50% = microscopy check: evidence first",
+      "Quarantine is irreversible → human confirms"]},
+    b:{k:"Panel B · Score — Readiness",h:"Six signs weighted into 0–100",b:[
+      "≥80 transplant · 60–79 wait · <60 keep acclimating",
+      "Shoot/root ratio penalized both ends — leggy dies first",
+      "Severe root-tip browning → discard candidate"]},
+    c:{k:"Panel C · Choice — Fog recipe",h:"Six actions · utility × constraints × marginal cost",b:[
+      "EC, pH, VPD, DO, droplet size, water temp — together",
+      "All in band → the right answer is do nothing",
+      "Only option is costly → it won't spend your money"]},
+    d:{k:"API · Contract",h:"One endpoint. It never guesses.",b:[
+      "POST batch state → decision + confidence + options",
+      "Missing fields → need_more_info, never invented",
+      "Shadow mode: judge & log for 3 months, execute nothing"]},
+    e:{k:"Human-in-loop · Review",h:"Escalations carry evidence, not verdicts",b:[
+      "Reviewer moves: accept / override / request evidence",
+      "Hash-chained ledger: change one record, chain breaks",
+      "Try the verify button on the page"]},
+    f:{k:"Economics",h:"Change a number, see the payback",b:[
+      "Payback / net cash flow / cost per decision — transparent",
+      "<60k plants/yr → fixed costs don't spread → payback ∞",
+      "At that scale: shared regional edge box (T2)"]},
+  },
+  learnHead: "Labels arrive late — but they arrive",
+  learnSub: "Contamination labels: 7–14 days · survival: 30–45 days<br>So: log now → backfill → recalibrate weekly",
+  learnSteps: ["Log decision","Backfill label","Weekly recalibration","Drift monitoring","Shadow → promote"],
+  roadTitle: "90 days deliver the system — and the evidence",
+  roadBars: [["3 judgers + edge deploy",0,.34],["Golden set · calibration · review queue",.33,.66],["Shadow run + pre-registered pilot",.65,1]],
+  roadGates: [
+    ["GATE 1","Judgement accuracy","vs the SOP baseline"],
+    ["GATE 2","Review rate <15%","gates not flooded by no-ops"],
+    ["GATE 3","Net gain not down","and ECE not up — then promote"],
+  ],
+  roadNodo:["No full automation","No cross-farm raw data pooling","No unattended changes"],
+  closeL1: "Sure when it's sure. <em>“I don't know” when it isn't.</em>",
+  closeL2: "The whole spec runs offline · double-click to open · plain-Python backend",
+  closeCards: [["Single offline file","index.html, zero dependencies"],["Python reference impl","same math · 41 tests"],["POST /coffee-jev/decide","structured JSON contract"]],
+  cap: {},
+}};
+
+/* ---------- timeline state ---------- */
+let TL = null, curScene = null, LANG = "zh";
+const C = () => COPY[LANG];
+
+function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+/* build dynamic DOM once per language */
+function buildCopy() {
+  const c = C();
+  $("wm").textContent = LANG === "zh" ? "COFFEEJEV · 咖啡快判官 · v1.0.1" : "COFFEEJEV · v1.0.1";
+  $("langbadge").textContent = LANG === "zh" ? "ZH · 普通话" : "EN · English";
+  $("t-g").textContent = c.titleTag;
+  $("p-t").textContent = c.problemHead;
+  const rows = $("p-rows"); rows.innerHTML = "";
+  c.problemRows.forEach(r => {
+    const d = el("div","prow fx");
+    d.innerHTML = `<div class="idx num">${r[0]}</div><div><div class="tt">${r[1]}</div><div class="sub">${r[2]}</div></div>`;
+    rows.appendChild(d);
+  });
+  $("l-s").textContent = c.layerSub;
+  ["1","2","3"].forEach((k,i)=>{
+    $("l-t"+k).textContent = c.layerCols[i][1];
+    $("l-d"+k).textContent = c.layerCols[i][2];
+  });
+  $("m-t").textContent = c.mapTitle;
+  ["1","2","3"].forEach((k,i)=>{
+    $("m-d"+k).textContent = c.mapTypes[i][1];
+    $("m-t"+k).querySelector(".n").childNodes[0].textContent = c.mapTypes[i][0].split(" ")[0] + " ";
+  });
+  // map svg
+  const svg = $("m-svg"); svg.innerHTML = "";
+  const nodeW=196, nodeH=86, gapX=(1920-300-nodeW*7)/6;
+  const pos = c.mapNodes.map((n,i)=>{
+    const row = i<7?0:1, col = i<7?i:i-7;
+    const x = 150 + col*(nodeW+gapX) + (row? nodeW/2+gapX/2:0);
+    const y = row? 300:120;
+    return {x,y,n};
+  });
+  const lines = [];
+  for (let i=0;i<pos.length-1;i++){
+    const a=pos[i], b=pos[i+1];
+    const ln = document.createElementNS("http://www.w3.org/2000/svg","line");
+    ln.setAttribute("x1",a.x+nodeW); ln.setAttribute("y1",a.y+nodeH/2);
+    ln.setAttribute("x2",b.x); ln.setAttribute("y2",b.y+nodeH/2);
+    ln.setAttribute("stroke","rgba(255,255,255,.16)"); ln.setAttribute("stroke-width","2");
+    svg.appendChild(ln); lines.push(ln);
+  }
+  pos.forEach((p,i)=>{
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("opacity","0");
+    const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    r.setAttribute("x",p.x); r.setAttribute("y",p.y); r.setAttribute("width",nodeW); r.setAttribute("height",nodeH);
+    r.setAttribute("rx","12"); r.setAttribute("fill","rgba(255,255,255,.05)");
+    r.setAttribute("stroke","rgba(232,179,75,.4)");
+    const t1 = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t1.setAttribute("x",p.x+18); t1.setAttribute("y",p.y+34);
+    t1.setAttribute("fill","#e8b34b"); t1.setAttribute("font-size","19");
+    t1.setAttribute("font-weight","700"); t1.textContent = String(i+1).padStart(2,"0");
+    const t2 = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t2.setAttribute("x",p.x+18); t2.setAttribute("y",p.y+64);
+    t2.setAttribute("fill","#ece9e2"); t2.setAttribute("font-size","23"); t2.textContent = p.n;
+    g.appendChild(r); g.appendChild(t1); g.appendChild(t2);
+    svg.appendChild(g);
+  });
+  svg._lines = lines; svg._nodes = [...svg.querySelectorAll("g")];
+
+  // b-roll scenes
+  const brMap = [["s-bra","a"],["s-brb","b"],["s-brc","c"],["s-brd","d"],["s-bre","e"],["s-brf","f"]];
+  brMap.forEach(([sid,key],i)=>{
+    const s = $(sid); s.innerHTML = "";
+    const d = c.br[key];
+    const left = el("div","left");
+    left.innerHTML = `<div class="kicker fx"></div><h2 class="fx"></h2><div class="bul"></div>`;
+    left.children[0].textContent = d.k;
+    left.children[1].textContent = d.h;
+    const bul = left.children[2];
+    d.b.forEach((t,j)=>{
+      const b = el("div","b fx"); b.innerHTML = `<i class="num">0${j+1}</i><span></span>`;
+      b.querySelector("span").textContent = t;
+      bul.appendChild(b);
+    });
+    const shot = el("div","shot");
+    shot.innerHTML = `<div class="chrome"><s></s><s></s><s></s><span>coffeejev / index.html</span></div>
+      <div class="imgwrap"><img src="broll/${["lab-a","lab-b","lab-c","api","ledger","econ"][i]}.png"></div>`;
+    s.appendChild(left); s.appendChild(shot);
+    s._fx = {k:left.children[0], h:left.children[1], bs:[...bul.children], img:shot.querySelector("img")};
+  });
+
+  // learn
+  $("g-h").textContent = c.learnHead;
+  $("g-d").innerHTML = c.learnSub;
+  const steps = $("g-steps"); steps.innerHTML="";
+  c.learnSteps.forEach(t=>{ const s=el("div","st card fx"); s.textContent=t; steps.appendChild(s); });
+  const gv = $("g-svg"); gv.innerHTML = "";
+  const ax = (x1,y1,x2,y2)=>{const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",x1);l.setAttribute("y1",y1);l.setAttribute("x2",x2);l.setAttribute("y2",y2);
+    l.setAttribute("stroke","rgba(255,255,255,.18)");l.setAttribute("stroke-width","2");gv.appendChild(l);};
+  ax(90,40,90,520); ax(90,520,820,520);
+  const diag = document.createElementNS("http://www.w3.org/2000/svg","line");
+  diag.setAttribute("x1",90);diag.setAttribute("y1",520);diag.setAttribute("x2",820);diag.setAttribute("y2",60);
+  diag.setAttribute("stroke","rgba(255,255,255,.25)");diag.setAttribute("stroke-dasharray","7 9");
+  gv.appendChild(diag);
+  const mkPath = (d,color,w)=>{const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d",d);p.setAttribute("fill","none");p.setAttribute("stroke",color);
+    p.setAttribute("stroke-width",w);gv.appendChild(p);return p;};
+  gv._bent = mkPath("M90,520 C 260,430 330,240 560,205 S 760,150 820,128","#e05a5a",4);
+  gv._cal  = mkPath("M90,520 L820,60","#57c7b8",0);
+  const t1 = document.createElementNS("http://www.w3.org/2000/svg","text");
+  t1.setAttribute("x",600);t1.setAttribute("y",90);t1.setAttribute("fill","#8f949d");t1.setAttribute("font-size","20");
+  t1.textContent = LANG==="zh"?"可靠性图 · calibrated":"reliability diagram"; gv.appendChild(t1);
+
+  // roadmap
+  $("r-t").textContent = c.roadTitle;
+  const g = $("r-gantt"); g.innerHTML="";
+  c.roadBars.forEach((b,i)=>{
+    const bar = el("div","gbar fx"); bar.textContent = b[0];
+    bar.style.left = (b[1]*100)+"%"; bar.style.width = ((b[2]-b[1])*100)+"%";
+    bar.style.top = (i*96)+"px"; bar.style.transformOrigin="left";
+    g.appendChild(bar);
+  });
+  const axis = el("div","gaxis");
+  axis.innerHTML = `<span class="num">DAY 0</span><span class="num">30</span><span class="num">60</span><span class="num">90</span>`;
+  g.appendChild(axis);
+  const gates = $("r-gates"); gates.innerHTML="";
+  c.roadGates.forEach(gt=>{
+    const d = el("div","gate card fx");
+    d.innerHTML = `<div class="n">${gt[0]}</div><div class="t"></div><div class="d"></div>`;
+    d.querySelector(".t").textContent = gt[1]; d.querySelector(".d").textContent = gt[2];
+    gates.appendChild(d);
+  });
+  const nodo = $("r-nodo"); nodo.innerHTML="";
+  c.roadNodo.forEach(t=>{ const d = el("div","nd card fx"); d.innerHTML = `<i>✕</i><span></span>`;
+    d.querySelector("span").textContent = t; nodo.appendChild(d); });
+
+  // close
+  $("c-l1").innerHTML = c.closeL1;
+  $("c-l2").textContent = c.closeL2;
+  ["1","2","3"].forEach((k,i)=>{
+    $("c-a"+k).textContent = c.closeCards[i][0];
+    $("c-b"+k).textContent = c.closeCards[i][1];
+  });
+}
+
+function setTimeline(tl) {
+  TL = tl; LANG = tl.lang || "zh";
+  buildCopy();
+}
+function setCaption(txt) {
+  const cap = $("cap");
+  if (cap._txt !== txt) {
+    cap._txt = txt;
+    cap.innerHTML = txt ? `<span class="${LANG==='en'?'en':''}">${txt}</span>` : "";
+  }
+}
+
+/* ---------- per-scene animation ---------- */
+function animScene(id, p, sEl) {
+  switch (id) {
+    case "s-title": {
+      rise($("t-k"), seg(p,0,.12));
+      rise($("t-h"), seg(p,.08,.3), 40);
+      rise($("t-z"), seg(p,.24,.42));
+      const r = seg(p,.4,.62);
+      $("t-r").style.opacity = r>0?1:0;
+      $("t-r").style.transform = `scaleX(${r})`;
+      rise($("t-g"), seg(p,.52,.72));
+      break;
+    }
+    case "s-problem": {
+      rise($("p-h"), seg(p,0,.14));
+      [...$("p-rows").children].forEach((r,i)=> rise(r, seg(p,.12+i*.16,.3+i*.16)));
+      rise($("p-card"), seg(p,.6,.8), 34);
+      $("p-badge").style.opacity = .55 + .45*Math.abs(Math.sin(p*22));
+      break;
+    }
+    case "s-layer": {
+      rise($("l-n"), seg(p,0,.15));
+      rise($("l-h"), seg(p,.08,.3), 44);
+      rise($("l-s"), seg(p,.24,.4));
+      ["1","2","3"].forEach((k,i)=> rise($("l-c"+k), seg(p,.38+i*.14,.56+i*.14)));
+      break;
+    }
+    case "s-map": {
+      rise($("m-h"), seg(p,0,.14));
+      const svg = $("m-svg");
+      svg._nodes.forEach((g,i)=>{
+        g.setAttribute("opacity", String(seg(p, .08+i*.052, .16+i*.052)));
+      });
+      svg._lines.forEach((l,i)=>{
+        l.setAttribute("stroke", seg(p, .1+i*.052, .18+i*.052)>.5 ? "rgba(232,179,75,.55)" : "rgba(255,255,255,.16)");
+      });
+      ["1","2","3"].forEach((k,i)=> rise($("m-t"+k), seg(p,.72+i*.08,.84+i*.08)));
+      break;
+    }
+    default: {
+      if (sEl && sEl._fx) {
+        const f = sEl._fx;
+        rise(f.k, seg(p,0,.12));
+        rise(f.h, seg(p,.06,.22));
+        f.bs.forEach((b,i)=> rise(b, seg(p,.18+i*.14,.34+i*.14)));
+        f.img.style.transform = `scale(${1 + .06*ease(p)})`;
+      }
+      if (id === "s-learn") {
+        rise($("g-k"), seg(p,0,.12));
+        rise($("g-h"), seg(p,.06,.24));
+        rise($("g-n"), seg(p,.2,.4), 30);
+        rise($("g-d"), seg(p,.32,.5));
+        const q = seg(p,.4,.8);
+        $("g-svg")._bent.setAttribute("stroke-dasharray", `${q*1200} 2000`);
+        $("g-svg")._cal.setAttribute("stroke-width", String(4*seg(p,.62,.9)));
+        [...$("g-steps").children].forEach((s,i)=> rise(s, seg(p,.5+i*.08,.62+i*.08)));
+      }
+      if (id === "s-road") {
+        rise($("r-h"), seg(p,0,.12));
+        [...$("r-gantt").querySelectorAll(".gbar")].forEach((b,i)=>{
+          const q = seg(p,.14+i*.1,.3+i*.1);
+          b.style.transform = `scaleX(${q})`; b.style.opacity = q>0?1:0;
+        });
+        [...$("r-gates").children].forEach((g,i)=> rise(g, seg(p,.44+i*.09,.58+i*.09)));
+        [...$("r-nodo").children].forEach((n,i)=> rise(n, seg(p,.72+i*.08,.84+i*.08)));
+      }
+      if (id === "s-close") {
+        rise($("c-l1"), seg(p,0,.2), 40);
+        rise($("c-l2"), seg(p,.18,.36));
+        ["1","2","3"].forEach((k,i)=> rise($("c-c"+k), seg(p,.36+i*.1,.5+i*.1)));
+      }
+    }
+  }
+}
+
+/* ---------- main ---------- */
+window.setTimeline = setTimeline;
+window.renderAt = function (t) {
+  if (!TL) return;
+  const total = TL.total;
+  const sc = TL.scenes.find(s => t >= s.t0 && t < s.t1) || TL.scenes[TL.scenes.length-1];
+  // scene visibility
+  document.querySelectorAll(".scene").forEach(s => s.classList.remove("on"));
+  const sEl = $(sc.id);
+  sEl.classList.add("on");
+  const dur = sc.t1 - sc.t0;
+  const lp = clamp((t - sc.t0) / dur, 0, 1);
+  const exit = 1 - clamp((sc.t1 - t) / 0.55, 0, 1);   // fade out near end
+  sEl.style.opacity = String(ease(Math.min(lp/.06,1)) * (1 - ease(exit)));
+  animScene(sc.id, lp, sEl);
+  // global fade from/to black
+  let g = 1;
+  if (t < 0.6) g = t / 0.6;
+  if (total - t < 0.8) g = Math.min(g, (total - t) / 0.8);
+  $("stage").style.background = "#060709";
+  sEl.style.filter = g < 1 ? `brightness(${0.25 + 0.75*g})` : "none";
+  // caption
+  let ctxt = "";
+  for (const c of (sc.caps || [])) if (t >= sc.t0 + c[0] && t < sc.t0 + c[1]) { ctxt = c[2]; break; }
+  setCaption(ctxt);
+  // chrome
+  const idx = TL.scenes.indexOf(sc) + 1;
+  $("cnt").textContent = String(idx).padStart(2,"0") + " / " + String(TL.scenes.length).padStart(2,"0");
+  $("pbar").style.width = (100 * t / total) + "%";
+};
+</script>
+</body>
+</html>

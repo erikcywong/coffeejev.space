@@ -1,0 +1,10 @@
+# build artifacts (regenerable via video/build.py)
+video/frames/
+video/tts/
+video/.tmp/
+shots/
+__pycache__/
+.pytest_cache/
+*.pyc
+video/out/*.wav
+video/out/timeline_*.json
