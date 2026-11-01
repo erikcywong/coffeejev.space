@@ -13,7 +13,8 @@
 <link rel="canonical" href="https://www.coffeejev.space/">
 <style>
   :root{
-    --tx:#e9ecf1; --dim:#8d97a5;
+    --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+    --green:#00c48c; --green2:#3fe0b0; --line:#313945;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -25,57 +26,92 @@
       radial-gradient(900px 480px at 12% -12%,rgba(0,196,140,.10),transparent 62%),
       radial-gradient(760px 420px at 92% -14%,rgba(224,162,78,.08),transparent 62%);
   }
-  header{display:flex;align-items:center;gap:14px;padding:20px clamp(16px,3vw,34px)}
+
+  /* ---------- top bar ---------- */
+  header{
+    display:flex;align-items:center;gap:clamp(10px,2vw,22px);
+    padding:16px clamp(14px,3vw,32px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .brand{
+    display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;flex-shrink:0;
+  }
   .mark{
-    width:36px;height:36px;border-radius:10px;flex-shrink:0;
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;
     background:linear-gradient(150deg,#123a2e,#0b1f18);
     border:1px solid rgba(0,196,140,.35);
     display:flex;align-items:center;justify-content:center;
   }
-  .brand{font-size:16px;font-weight:800;letter-spacing:.2px}
-  .spacer{flex:1}
-  .lang{display:flex;background:#0c1015;border:1px solid #313945;border-radius:999px;padding:3px}
+  .brand b{font-size:15.5px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
+
+  .tabs{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+  .tabs a{
+    font-size:13px;font-weight:600;color:var(--dim);text-decoration:none;
+    padding:7px 12px;border-radius:8px;white-space:nowrap;transition:.15s;
+  }
+  .tabs a:hover{color:#fff;background:rgba(255,255,255,.05)}
+  .tabs a.on{color:#a9f3d8;background:rgba(0,196,140,.12);box-shadow:0 0 0 1px rgba(0,196,140,.28) inset}
+  .tabs .sep{width:1px;height:18px;background:rgba(255,255,255,.10);margin:0 6px}
+
+  .spacer{flex:1;min-width:8px}
+  .lang{display:flex;background:#0c1015;border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
   .lang button{
-    border:0;background:none;color:var(--dim);font:inherit;font-size:13px;font-weight:600;
-    padding:6px 14px;border-radius:999px;cursor:pointer;transition:.15s;
+    border:0;background:none;color:var(--dim);font:inherit;font-size:12.5px;font-weight:600;
+    padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;
   }
   .lang button.on{background:rgba(0,196,140,.14);color:#a9f3d8;box-shadow:0 0 0 1px rgba(0,196,140,.35) inset}
   .dl{
-    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:7px;text-decoration:none;flex-shrink:0;
     font-size:12.5px;font-weight:600;color:#c9d2dd;
-    border:1px solid #313945;border-radius:9px;padding:8px 12px;background:#11141a;transition:.15s;
+    border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:#11141a;transition:.15s;
   }
   .dl:hover{border-color:rgba(0,196,140,.5);color:#fff}
+
+  /* ---------- video ---------- */
   main{
     flex:1;display:flex;align-items:center;justify-content:center;
-    padding:0 clamp(16px,3vw,34px) clamp(20px,3vw,34px);
+    padding:clamp(14px,2.4vw,26px) clamp(14px,3vw,32px) clamp(18px,3vw,30px);
   }
   .frame{
-    width:min(1400px,100%);border-radius:18px;overflow:hidden;
+    width:min(1400px,100%);border-radius:16px;overflow:hidden;
     border:1px solid rgba(255,255,255,.12);background:#000;
     box-shadow:0 30px 90px rgba(0,0,0,.65);
   }
   video{display:block;width:100%;aspect-ratio:16/9;background:#000}
-  @media (max-width:560px){
-    header{gap:10px;padding:14px}
-    .brand{font-size:14.5px}
+
+  @media (max-width:720px){
+    header{gap:8px;padding:12px 14px;flex-wrap:wrap}
+    .brand b{font-size:14.5px}
+    .tabs a{font-size:12.5px;padding:6px 9px}
+    .tabs .sep{display:none}
+    .tabs .gh{display:none}
     .dl{display:none}
-    .lang button{padding:6px 11px;font-size:12.5px}
-    main{padding:0 12px 14px}
+    main{padding:10px 12px 14px}
     .frame{border-radius:12px}
   }
 </style>
 </head>
 <body>
 <header>
-  <div class="mark" aria-hidden="true">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
-      <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
-      <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
-    </svg>
-  </div>
-  <div class="brand">CoffeeJeV</div>
+  <a class="brand" href="./" aria-label="CoffeeJeV home">
+    <span class="mark" aria-hidden="true">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+        <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+        <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
+      </svg>
+    </span>
+    <b>CoffeeJeV</b>
+  </a>
+
+  <nav class="tabs" aria-label="Main">
+    <span class="sep" aria-hidden="true"></span>
+    <a href="./" class="on" aria-current="page">视频</a>
+    <a href="spec.html">设计规格</a>
+    <a href="https://github.com/erikcywong/coffeejev.space" target="_blank" rel="noopener" class="gh">GitHub ↗</a>
+  </nav>
+
   <div class="spacer"></div>
+
   <div class="lang" id="langico" role="group" aria-label="Language">
     <button data-lang="zh" class="on">中文</button>
     <button data-lang="en">English</button>
