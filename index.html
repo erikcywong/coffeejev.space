@@ -3,283 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CoffeeJeV · 咖啡快判官 — 气雾栽培咖啡的判断层</title>
-<meta name="description" content="CoffeeJeV：面向气雾栽培（雾培）与组培咖啡的判断层智能体。14 个决策节点、7 层架构、3 个在线判断器、成本推导阈值、校准与人在环复核。含中英双语 3 分钟说明片。">
+<title>CoffeeJeV · 咖啡快判官</title>
+<meta name="description" content="CoffeeJeV — 气雾栽培咖啡的判断层。3 分钟双语说明片（普通话 / English）。">
 <meta property="og:title" content="CoffeeJeV · 咖啡快判官">
-<meta property="og:description" content="A decision layer for aeroponic coffee — not a chatbot. 14 checkpoints, 7 layers, thresholds argued from money.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://erikcywong.github.io/coffejev.space/media/poster-zh.jpg">
-<meta property="og:url" content="https://erikcywong.github.io/coffejev.space/">
-<link rel="canonical" href="https://erikcywong.github.io/coffejev.space/">
+<meta property="og:description" content="A decision layer for aeroponic coffee. 3-minute explainer, 中文 / English.">
+<meta property="og:type" content="video.other">
+<meta property="og:url" content="https://www.coffeejev.space/">
+<meta property="og:image" content="https://www.coffeejev.space/media/poster-zh.jpg">
+<link rel="canonical" href="https://www.coffeejev.space/">
 <style>
-:root{
-  --bg:#08090b; --card:#11141a; --line:#232931; --line2:#313945;
-  --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
-  --green:#00c48c; --green2:#3fe0b0; --amber:#e0a24e; --violet:#8b6cff;
-  --mono:ui-monospace,SFMono-Regular,Consolas,monospace;
-  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.65;
-  background-image:radial-gradient(900px 460px at 10% -10%,rgba(0,196,140,.12),transparent 62%),
-                   radial-gradient(720px 400px at 94% -12%,rgba(224,162,78,.10),transparent 62%)}
-a{color:#3fe0b0}
-.wrap{max-width:1180px;margin:0 auto;padding:24px 24px 60px}
-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:26px}
-.mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(150deg,#123a2e,#0b1f18);
-  border:1px solid rgba(0,196,140,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.brand b{font-size:16px;letter-spacing:.2px}
-.brand span{display:block;font-size:11px;color:var(--dim2);font-family:var(--mono);letter-spacing:1.2px;text-transform:uppercase}
-.spacer{flex:1}
-.langico{display:flex;background:#0c1015;border:1px solid var(--line2);border-radius:999px;padding:3px}
-.langico button{border:0;background:none;color:var(--dim);font:inherit;font-size:13px;font-weight:600;
-  padding:7px 16px;border-radius:999px;cursor:pointer;transition:.15s}
-.langico button.on{background:rgba(0,196,140,.14);color:#a9f3d8;box-shadow:0 0 0 1px rgba(0,196,140,.35) inset}
-.btn{display:inline-flex;align-items:center;gap:7px;font-size:13px;text-decoration:none;color:#c9d2dd;
-  border:1px solid var(--line2);border-radius:9px;padding:9px 14px;background:var(--card);transition:.15s}
-.btn:hover{border-color:rgba(0,196,140,.5);color:#fff;text-decoration:none}
-.btn.primary{background:linear-gradient(180deg,#12d69b,#00a878);border-color:rgba(0,196,140,.6);color:#04120d;font-weight:800}
-.btn.primary:hover{filter:brightness(1.07);color:#04120d}
-
-.hero{margin:8px 0 22px}
-.hero h1{font-size:clamp(26px,4vw,40px);line-height:1.18;letter-spacing:-.8px;font-weight:800;margin-bottom:10px}
-.hero h1 em{font-style:normal;background:linear-gradient(96deg,#00c48c,#7fe0b6 55%,#e0a24e);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{color:#b9c2ce;max-width:78ch;font-size:15.5px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.5px;
-  background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
-.chip .k{font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.8px;text-transform:uppercase}
-
-.stage{position:relative;background:#000;border:1px solid var(--line);border-radius:16px;overflow:hidden;
-  box-shadow:0 24px 70px rgba(0,0,0,.55)}
-video{display:block;width:100%;aspect-ratio:16/9;background:#000}
-.stage .badge{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:1.2px;
-  color:#9fb0bf;background:rgba(0,0,0,.55);border:1px solid var(--line2);border-radius:6px;padding:3px 8px;pointer-events:none}
-
-.meta{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px;font-size:12.5px;color:var(--dim)}
-.meta .k{font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--dim2);margin-right:5px}
-
-h2{font-size:15px;font-weight:750;letter-spacing:.2px;margin:28px 0 10px;display:flex;align-items:center;gap:8px}
-h2::before{content:"";width:3px;height:14px;background:var(--green);border-radius:2px}
-
-.chapters{display:grid;grid-template-columns:repeat(auto-fill,minmax(214px,1fr));gap:7px}
-.ch{display:flex;gap:9px;align-items:baseline;background:var(--card);border:1px solid var(--line);border-radius:9px;
-  padding:9px 11px;cursor:pointer;text-align:left;font:inherit;color:var(--dim);transition:.15s}
-.ch:hover{background:#161a21;color:var(--tx)}
-.ch.on{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.10);color:#fff}
-.ch .n{font-family:var(--mono);font-size:10.5px;color:var(--dim2)}
-.ch.on .n{color:var(--green2)}
-.ch .t{font-size:12.8px;font-weight:600;line-height:1.4}
-.ch .d{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--dim2)}
-
-.transcript{display:flex;flex-direction:column;gap:8px}
-.tr{display:grid;grid-template-columns:64px 1fr;gap:12px;padding:10px 12px;border-radius:9px;border:1px solid transparent;
-  cursor:pointer;transition:.15s}
-.tr:hover{background:rgba(255,255,255,.03)}
-.tr.on{background:rgba(0,196,140,.07);border-color:rgba(0,196,140,.25)}
-.tr .tm{font-family:var(--mono);font-size:11px;color:var(--dim2);padding-top:3px}
-.tr.on .tm{color:var(--green2)}
-.tr .tx{font-size:14.2px;color:#b9c2ce;line-height:1.7}
-.tr.on .tx{color:#eef1f5}
-.tr .tt{display:block;font-size:12.5px;color:var(--dim);margin-bottom:2px;font-weight:600}
-
-.cta{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:30px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:block;
-  text-decoration:none;color:inherit;transition:.15s}
-.card:hover{border-color:rgba(0,196,140,.45);background:#161a21;text-decoration:none}
-.card .ck{font-family:var(--mono);font-size:10.5px;letter-spacing:1.2px;color:var(--dim2);text-transform:uppercase}
-.card h3{font-size:15.5px;font-weight:750;margin:6px 0 5px;color:#fff}
-.card p{font-size:12.8px;color:var(--dim);line-height:1.6}
-.card .go{font-size:12.5px;color:var(--green2);margin-top:9px;display:inline-block}
-
-footer{margin-top:38px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--dim2);line-height:1.9}
-kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--dim)}
-@media (max-width:640px){.wrap{padding:16px 14px 46px}.hero p{font-size:14.5px}}
+  :root{
+    --tx:#e9ecf1; --dim:#8d97a5;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:#08090b;color:var(--tx);font-family:var(--font);
+    display:flex;flex-direction:column;min-height:100%;
+    background-image:
+      radial-gradient(900px 480px at 12% -12%,rgba(0,196,140,.10),transparent 62%),
+      radial-gradient(760px 420px at 92% -14%,rgba(224,162,78,.08),transparent 62%);
+  }
+  header{display:flex;align-items:center;gap:14px;padding:20px clamp(16px,3vw,34px)}
+  .mark{
+    width:36px;height:36px;border-radius:10px;flex-shrink:0;
+    background:linear-gradient(150deg,#123a2e,#0b1f18);
+    border:1px solid rgba(0,196,140,.35);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand{font-size:16px;font-weight:800;letter-spacing:.2px}
+  .spacer{flex:1}
+  .lang{display:flex;background:#0c1015;border:1px solid #313945;border-radius:999px;padding:3px}
+  .lang button{
+    border:0;background:none;color:var(--dim);font:inherit;font-size:13px;font-weight:600;
+    padding:6px 14px;border-radius:999px;cursor:pointer;transition:.15s;
+  }
+  .lang button.on{background:rgba(0,196,140,.14);color:#a9f3d8;box-shadow:0 0 0 1px rgba(0,196,140,.35) inset}
+  .dl{
+    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+    font-size:12.5px;font-weight:600;color:#c9d2dd;
+    border:1px solid #313945;border-radius:9px;padding:8px 12px;background:#11141a;transition:.15s;
+  }
+  .dl:hover{border-color:rgba(0,196,140,.5);color:#fff}
+  main{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:0 clamp(16px,3vw,34px) clamp(20px,3vw,34px);
+  }
+  .frame{
+    width:min(1400px,100%);border-radius:18px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.12);background:#000;
+    box-shadow:0 30px 90px rgba(0,0,0,.65);
+  }
+  video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+  @media (max-width:560px){
+    header{gap:10px;padding:14px}
+    .brand{font-size:14.5px}
+    .dl{display:none}
+    .lang button{padding:6px 11px;font-size:12.5px}
+    main{padding:0 12px 14px}
+    .frame{border-radius:12px}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="mark">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.6" stroke-linecap="round">
-        <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
-        <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
-      </svg>
-    </div>
-    <div class="brand"><b>CoffeeJeV</b><span>the decision layer · coffeejev.space</span></div>
-    <div class="spacer"></div>
-    <div class="langico" id="langico">
-      <button data-lang="zh" class="on">中文</button>
-      <button data-lang="en">English</button>
-    </div>
-    <a class="btn" id="dl" href="media/coffeejev-zh-cn.mp4" download>↓ <span id="dltext">下载视频</span></a>
-  </header>
-
-  <section class="hero">
-    <h1>气雾栽培咖啡的<br><em>系统一判断层</em></h1>
-    <p>不是聊天机器人，是判断层：把组培→驯化→雾培这条长链拆成 14 个原子决策，每次输出「决策 + 校准置信度 + 要不要叫人」。阈值由成本推导，而不是拍出来的。</p>
-    <div class="chips">
-      <span class="chip"><span class="k">nodes</span>14</span>
-      <span class="chip"><span class="k">judgers</span>7</span>
-      <span class="chip"><span class="k">latency</span>&lt; 300 ms</span>
-      <span class="chip"><span class="k">ledger</span>hash-chained</span>
-    </div>
-  </section>
-
-  <div class="stage">
-    <video id="v" controls preload="metadata" playsinline poster="media/poster-zh.jpg"></video>
-    <div class="badge" id="badge">中文旁白 · 1080p</div>
+<header>
+  <div class="mark" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+      <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+      <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
+    </svg>
   </div>
-
-  <div class="meta" id="meta"></div>
-
-  <h2>章节 · Chapters</h2>
-  <div class="chapters" id="chapters"></div>
-
-  <h2>旁白全文 · Transcript</h2>
-  <div class="transcript" id="transcript"></div>
-
-  <div class="cta">
-    <a class="card" href="spec.html">
-      <div class="ck">design spec · 11 sections</div>
-      <h3>打开完整设计规格 →</h3>
-      <p>12 条缺口评审、7 层架构、14 个决策节点契约、3 个可上手拨动的判断器、经济性计算器、试点验证方案。</p>
-      <span class="go">交互式 · 可离线 · 中文</span>
-    </a>
-    <a class="card" href="media/coffeejev-en.mp4" download>
-      <div class="ck">video · english</div>
-      <h3>English cut (3:01) →</h3>
-      <p>Same film, same visuals, English narration. Useful for international partners and investors.</p>
-      <span class="go">1920×1080 · H.264</span>
-    </a>
-    <a class="card" href="media/coffeejev-zh-cn.mp4" download>
-      <div class="ck">video · 普通话</div>
-      <h3>中文版 (2:56) →</h3>
-      <p>同一支片子的普通话版，适合直接发微信或放进汇报材料。</p>
-      <span class="go">1920×1080 · H.264</span>
-    </a>
+  <div class="brand">CoffeeJeV</div>
+  <div class="spacer"></div>
+  <div class="lang" id="langico" role="group" aria-label="Language">
+    <button data-lang="zh" class="on">中文</button>
+    <button data-lang="en">English</button>
   </div>
+  <a class="dl" id="dl" href="media/coffeejev-zh-cn.mp4" download aria-label="Download video">
+    <span aria-hidden="true">↓</span><span id="dltext">下载</span>
+  </a>
+</header>
 
-  <footer>
-    内容约定：站内所有数值为<b>设计目标</b>或<b>可调假设</b>，不是实测结果；唯一由计算器推导的是经济性章节里的回收期。<br>
-    快捷键：<kbd>空格</kbd> 播放/暂停 · <kbd>←</kbd><kbd>→</kbd> 前后 5 秒 · <kbd>L</kbd> 切换语言
-  </footer>
-</div>
+<main>
+  <div class="frame">
+    <video id="v" controls playsinline preload="metadata" poster="media/poster-zh.jpg"></video>
+  </div>
+</main>
 
-<script src="media/data.js"></script>
 <script>
-const SRC = {
-  zh: { file: 'media/coffeejev-zh-cn.mp4', timing: 'timing_zh.json', poster: 'media/poster-zh.jpg' },
-  en: { file: 'media/coffeejev-en.mp4', timing: 'timing_en.json', poster: 'media/poster-en.jpg' }
-};
-const $ = s => document.querySelector(s);
-const v = $('#v');
-let lang = localStorage.getItem('cjv-video-lang') || 'zh';
-let sceneAt = [];
-let script = null;
+  const SRC = {
+    zh: { file: 'media/coffeejev-zh-cn.mp4', poster: 'media/poster-zh.jpg' },
+    en: { file: 'media/coffeejev-en.mp4', poster: 'media/poster-en.jpg' }
+  };
+  const v = document.getElementById('v');
+  const dl = document.getElementById('dl');
+  const dltext = document.getElementById('dltext');
+  let lang = localStorage.getItem('cjv-lang') || 'zh';
 
-const fmt = t => {
-  t = Math.max(0, Math.floor(t));
-  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
-};
+  function load(l) {
+    lang = l;
+    localStorage.setItem('cjv-lang', l);
+    document.querySelectorAll('#langico button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+    dl.href = SRC[l].file;
+    dltext.textContent = l === 'zh' ? '下载' : 'Download';
+    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
 
-async function load(l) {
-  lang = l;
-  localStorage.setItem('cjv-video-lang', l);
-  document.querySelectorAll('#langico button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  $('#dl').href = SRC[l].file;
-  $('#dltext').textContent = l === 'zh' ? '下载视频' : 'Download';
-  $('#badge').textContent = l === 'zh' ? '中文旁白 · 1080p' : 'ENGLISH · 1080p';
-
-  const D = window.CJV_DATA;
-  if (!script) {
-    script = D ? D.script : await (await fetch('script.json', { cache: 'no-store' })).json();
+    const keep = v.currentTime || 0;
+    const playing = !v.paused && keep > 0;
+    v.poster = SRC[l].poster;
+    v.src = SRC[l].file;
+    v.load();
+    v.addEventListener('loadedmetadata', () => {
+      if (keep > 0 && keep < v.duration) v.currentTime = keep;
+      if (playing) v.play().catch(() => {});
+    }, { once: true });
   }
-  const timing = D ? D[l] : await (await fetch(SRC[l].timing, { cache: 'no-store' })).json();
 
-  sceneAt = timing.scenes.map((s, i) => ({
-    start: s.start, dur: s.dur,
-    title: script.scenes[i].title[l], say: script.scenes[i].say[l]
-  }));
+  document.querySelectorAll('#langico button').forEach(b =>
+    b.addEventListener('click', () => { if (b.dataset.lang !== lang) load(b.dataset.lang); }));
 
-  const keep = v.currentTime || 0;
-  const wasPlaying = !v.paused && keep > 0;
-  v.poster = SRC[l].poster;
-  v.src = SRC[l].file;
-  v.load();
-  v.addEventListener('loadedmetadata', () => {
-    if (keep > 0 && keep < v.duration) v.currentTime = keep;
-    if (wasPlaying) v.play().catch(() => {});
-  }, { once: true });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'l' || e.key === 'L') load(lang === 'zh' ? 'en' : 'zh');
+  });
 
-  renderChapters();
-  renderTranscript();
-  $('#meta').innerHTML = `
-    <span><span class="k">runtime</span>${fmt(timing.total)}</span>
-    <span><span class="k">scenes</span>${timing.scenes.length}</span>
-    <span><span class="k">voice</span>${l === 'zh' ? 'zh-CN Xiaoxiao' : 'en-US Aria'}</span>
-    <span><span class="k">format</span>1920×1080 · 30fps · H.264</span>`;
-  syncActive();
-}
-
-function renderChapters() {
-  $('#chapters').innerHTML = sceneAt.map((s, i) => `
-    <button class="ch" data-i="${i}">
-      <span class="n">${String(i + 1).padStart(2, '0')}</span>
-      <span class="t">${s.title}</span>
-      <span class="d">${fmt(s.start)}</span>
-    </button>`).join('');
-  $('#chapters').querySelectorAll('.ch').forEach(el => el.addEventListener('click', () => {
-    seekTo(sceneAt[+el.dataset.i].start);
-  }));
-}
-
-function renderTranscript() {
-  $('#transcript').innerHTML = sceneAt.map((s, i) => `
-    <div class="tr" data-i="${i}">
-      <span class="tm">${fmt(s.start)}</span>
-      <span class="tx"><span class="tt">${s.title}</span>${s.say}</span>
-    </div>`).join('');
-  $('#transcript').querySelectorAll('.tr').forEach(el => el.addEventListener('click', () => {
-    seekTo(sceneAt[+el.dataset.i].start);
-  }));
-}
-
-function seekTo(t) {
-  v.currentTime = Math.min(t + 0.05, v.duration || t);
-  v.play().catch(() => {});
-}
-
-function currentScene() {
-  const t = v.currentTime;
-  let idx = 0;
-  sceneAt.forEach((s, i) => { if (t >= s.start) idx = i; });
-  return idx;
-}
-
-function syncActive() {
-  if (!sceneAt.length) return;
-  const i = currentScene();
-  document.querySelectorAll('.ch').forEach(el => el.classList.toggle('on', +el.dataset.i === i));
-  document.querySelectorAll('.tr').forEach(el => el.classList.toggle('on', +el.dataset.i === i));
-}
-
-v.addEventListener('timeupdate', syncActive);
-
-document.querySelectorAll('#langico button').forEach(b => b.addEventListener('click', () => {
-  if (b.dataset.lang !== lang) load(b.dataset.lang);
-}));
-
-document.addEventListener('keydown', e => {
-  if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
-  if (e.code === 'Space') { e.preventDefault(); v.paused ? v.play() : v.pause(); }
-  if (e.code === 'ArrowRight') { v.currentTime = Math.min(v.currentTime + 5, v.duration || 1e9); }
-  if (e.code === 'ArrowLeft') { v.currentTime = Math.max(v.currentTime - 5, 0); }
-  if (e.key === 'l' || e.key === 'L') load(lang === 'zh' ? 'en' : 'zh');
-});
-
-load(lang);
+  load(lang);
 </script>
 </body>
 </html>
