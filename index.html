@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CoffeeJeV · 咖啡快判官</title>
 <meta name="description" content="CoffeeJeV — 气雾栽培咖啡的判断层。3 分钟双语说明片（普通话 / English）。">
 <meta property="og:title" content="CoffeeJeV · 咖啡快判官">
@@ -13,89 +13,86 @@
 <link rel="canonical" href="https://www.coffeejev.space/">
 <style>
   :root{
-    --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+    --tx:#e9ecf1; --dim:#8d97a5;
     --green:#00c48c; --green2:#3fe0b0; --line:#313945;
     --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:100%;background:#08090b;overflow:hidden}
   body{
-    background:#08090b;color:var(--tx);font-family:var(--font);
-    display:flex;flex-direction:column;min-height:100%;
+    height:100vh; height:100dvh;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--tx);font-family:var(--font);
     background-image:
       radial-gradient(900px 480px at 12% -12%,rgba(0,196,140,.10),transparent 62%),
       radial-gradient(760px 420px at 92% -14%,rgba(224,162,78,.08),transparent 62%);
   }
 
-  /* ---------- top bar ---------- */
+  /* ---------- video: always the largest 16:9 rectangle that fits ---------- */
+  video{
+    display:block;
+    width:min(100vw, calc(100vh * 16 / 9));
+    height:min(100vh, calc(100vw * 9 / 16));
+    width:min(100dvw, calc(100dvh * 16 / 9));
+    height:min(100dvh, calc(100dvw * 9 / 16));
+    object-fit:contain;
+    background:#000;
+  }
+
+  /* ---------- overlay bar (never pushes the video, never needs scrolling) ---------- */
   header{
-    display:flex;align-items:center;gap:clamp(10px,2vw,22px);
-    padding:16px clamp(14px,3vw,32px);
-    border-bottom:1px solid rgba(255,255,255,.07);
+    position:fixed;top:0;left:0;right:0;z-index:5;
+    display:flex;align-items:center;gap:clamp(8px,1.6vw,18px);
+    padding:11px clamp(12px,2.2vw,24px) 26px;
+    background:linear-gradient(180deg,rgba(0,0,0,.82),rgba(0,0,0,.45) 55%,transparent);
+    transition:opacity .35s ease;
   }
-  .brand{
-    display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit;flex-shrink:0;
-  }
+  body.hideui header{opacity:0;pointer-events:none}
+
+  .brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit;flex-shrink:0}
   .mark{
-    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    width:30px;height:30px;border-radius:9px;flex-shrink:0;
     background:linear-gradient(150deg,#123a2e,#0b1f18);
     border:1px solid rgba(0,196,140,.35);
     display:flex;align-items:center;justify-content:center;
   }
-  .brand b{font-size:15.5px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
+  .brand b{font-size:14.5px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
 
-  .tabs{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+  .tabs{display:flex;align-items:center;gap:2px}
   .tabs a{
-    font-size:13px;font-weight:600;color:var(--dim);text-decoration:none;
-    padding:7px 12px;border-radius:8px;white-space:nowrap;transition:.15s;
+    font-size:12.5px;font-weight:600;color:#b7c0cc;text-decoration:none;
+    padding:6px 11px;border-radius:8px;white-space:nowrap;transition:.15s;
   }
-  .tabs a:hover{color:#fff;background:rgba(255,255,255,.05)}
-  .tabs a.on{color:#a9f3d8;background:rgba(0,196,140,.12);box-shadow:0 0 0 1px rgba(0,196,140,.28) inset}
-  .tabs .sep{width:1px;height:18px;background:rgba(255,255,255,.10);margin:0 6px}
+  .tabs a:hover{color:#fff;background:rgba(255,255,255,.10)}
+  .tabs a.on{color:#a9f3d8;background:rgba(0,196,140,.16)}
 
-  .spacer{flex:1;min-width:8px}
-  .lang{display:flex;background:#0c1015;border:1px solid var(--line);border-radius:999px;padding:3px;flex-shrink:0}
+  .spacer{flex:1;min-width:6px}
+  .lang{display:flex;background:rgba(12,16,21,.85);border:1px solid var(--line);border-radius:999px;padding:2px;flex-shrink:0}
   .lang button{
-    border:0;background:none;color:var(--dim);font:inherit;font-size:12.5px;font-weight:600;
-    padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;
+    border:0;background:none;color:var(--dim);font:inherit;font-size:12px;font-weight:600;
+    padding:5px 12px;border-radius:999px;cursor:pointer;transition:.15s;
   }
-  .lang button.on{background:rgba(0,196,140,.14);color:#a9f3d8;box-shadow:0 0 0 1px rgba(0,196,140,.35) inset}
+  .lang button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
   .dl{
-    display:inline-flex;align-items:center;gap:7px;text-decoration:none;flex-shrink:0;
-    font-size:12.5px;font-weight:600;color:#c9d2dd;
-    border:1px solid var(--line);border-radius:9px;padding:8px 12px;background:#11141a;transition:.15s;
+    display:inline-flex;align-items:center;gap:6px;text-decoration:none;flex-shrink:0;
+    font-size:12px;font-weight:600;color:#c9d2dd;
+    border:1px solid var(--line);border-radius:8px;padding:6px 10px;
+    background:rgba(17,20,26,.85);transition:.15s;
   }
   .dl:hover{border-color:rgba(0,196,140,.5);color:#fff}
 
-  /* ---------- video ---------- */
-  main{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    padding:clamp(14px,2.4vw,26px) clamp(14px,3vw,32px) clamp(18px,3vw,30px);
-  }
-  .frame{
-    width:min(1400px,100%);border-radius:16px;overflow:hidden;
-    border:1px solid rgba(255,255,255,.12);background:#000;
-    box-shadow:0 30px 90px rgba(0,0,0,.65);
-  }
-  video{display:block;width:100%;aspect-ratio:16/9;background:#000}
-
-  @media (max-width:720px){
-    header{gap:8px;padding:12px 14px;flex-wrap:wrap}
-    .brand b{font-size:14.5px}
-    .tabs a{font-size:12.5px;padding:6px 9px}
-    .tabs .sep{display:none}
-    .tabs .gh{display:none}
+  @media (max-width:620px){
+    .brand b{display:none}
+    .tabs a{font-size:12px;padding:6px 9px}
     .dl{display:none}
-    main{padding:10px 12px 14px}
-    .frame{border-radius:12px}
   }
 </style>
 </head>
 <body>
-<header>
+<header id="bar">
   <a class="brand" href="./" aria-label="CoffeeJeV home">
     <span class="mark" aria-hidden="true">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.8" stroke-linecap="round">
         <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
         <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
       </svg>
@@ -104,10 +101,8 @@
   </a>
 
   <nav class="tabs" aria-label="Main">
-    <span class="sep" aria-hidden="true"></span>
     <a href="./" class="on" aria-current="page">视频</a>
     <a href="spec.html">设计规格</a>
-    <a href="https://github.com/erikcywong/coffeejev.space" target="_blank" rel="noopener" class="gh">GitHub ↗</a>
   </nav>
 
   <div class="spacer"></div>
@@ -121,11 +116,7 @@
   </a>
 </header>
 
-<main>
-  <div class="frame">
-    <video id="v" controls playsinline preload="metadata" poster="media/poster-zh.jpg"></video>
-  </div>
-</main>
+<video id="v" controls playsinline preload="metadata" poster="media/poster-zh.jpg"></video>
 
 <script>
   const SRC = {
@@ -162,6 +153,24 @@
   document.addEventListener('keydown', e => {
     if (e.key === 'l' || e.key === 'L') load(lang === 'zh' ? 'en' : 'zh');
   });
+
+  // while playing, fade the top bar out after a moment (it comes back on mouse move)
+  let hideTimer = null;
+  function scheduleHide() {
+    clearTimeout(hideTimer);
+    if (v.paused) { document.body.classList.remove('hideui'); return; }
+    hideTimer = setTimeout(() => document.body.classList.add('hideui'), 2600);
+  }
+  v.addEventListener('play', scheduleHide);
+  v.addEventListener('pause', () => { clearTimeout(hideTimer); document.body.classList.remove('hideui'); });
+  document.addEventListener('mousemove', () => {
+    document.body.classList.remove('hideui');
+    scheduleHide();
+  });
+  document.addEventListener('touchstart', () => {
+    document.body.classList.remove('hideui');
+    scheduleHide();
+  }, { passive: true });
 
   load(lang);
 </script>
