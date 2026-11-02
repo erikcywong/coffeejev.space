@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CoffeeJeV · 咖啡快判官</title>
 <meta name="description" content="CoffeeJeV — 气雾栽培咖啡的判断层。3 分钟双语说明片（普通话 / English）。">
+<script>try{var L=localStorage.getItem('cjv-lang')||'zh';var Q=new URLSearchParams(location.search).get('lang');if(Q==='en'||Q==='zh')L=Q;document.documentElement.dataset.lang=L;document.documentElement.lang=(L==='en')?'en':'zh-CN';}catch(e){}</script>
 <meta property="og:title" content="CoffeeJeV · 咖啡快判官">
 <meta property="og:description" content="A decision layer for aeroponic coffee. 3-minute explainer, 中文 / English.">
 <meta property="og:type" content="video.other">
@@ -19,6 +20,10 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;background:#08090b;overflow:hidden}
+  /* ---- site-wide language switch ---- */
+  html[data-lang="zh"] .en-only{display:none !important}
+  html[data-lang="en"] .zh-only{display:none !important}
+
   body{
     height:100vh; height:100dvh;
     display:flex;align-items:center;justify-content:center;
@@ -39,7 +44,7 @@
     background:#000;
   }
 
-  /* ---------- overlay bar (never pushes the video, never needs scrolling) ---------- */
+  /* ---------- overlay bar ---------- */
   header{
     position:fixed;top:0;left:0;right:0;z-index:5;
     display:flex;align-items:center;gap:clamp(8px,1.6vw,18px);
@@ -58,7 +63,7 @@
   }
   .brand b{font-size:14.5px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
 
-  /* segmented control: both destinations same weight, neither reads as fine print */
+  /* segmented control */
   .switch{
     display:flex;align-items:center;gap:2px;padding:3px;flex-shrink:0;
     border-radius:999px;
@@ -82,7 +87,7 @@
     box-shadow:0 0 0 1px rgba(0,196,140,.5) inset, 0 2px 12px rgba(0,196,140,.18);
   }
 
-  /* ---------- hover dropdown: 11 subpages ---------- */
+  /* hover dropdown */
   .menu{position:relative;display:flex;flex-shrink:0}
   .menu .chev{width:10px;height:10px;opacity:.65;transition:transform .18s}
   .menu:hover .chev,.menu:focus-within .chev{transform:rotate(180deg);opacity:1}
@@ -91,11 +96,9 @@
     opacity:0;visibility:hidden;transform:translateY(-6px);
     transition:opacity .16s ease,transform .16s ease,visibility .16s;
   }
-  .menu:hover .menu-panel,.menu:focus-within .menu-panel{
-    opacity:1;visibility:visible;transform:none;
-  }
+  .menu:hover .menu-panel,.menu:focus-within .menu-panel{opacity:1;visibility:visible;transform:none}
   .menu-inner{
-    width:274px;padding:8px;border-radius:16px;
+    width:190px;padding:8px;border-radius:16px;
     background:rgba(11,14,19,.98);
     border:1px solid rgba(255,255,255,.14);
     box-shadow:0 26px 70px rgba(0,0,0,.65);
@@ -105,17 +108,16 @@
     font:600 10px/1 var(--font);letter-spacing:1.4px;text-transform:uppercase;
     color:#69727e;padding:8px 10px 9px;
   }
-  .menu-inner a{
-    display:flex;align-items:center;justify-content:flex-start;text-align:left;
+  .menu-inner a.mi{
+    display:flex;align-items:center;justify-content:flex-start;text-align:left;gap:0;
     padding:7px 10px;border-radius:9px;text-decoration:none;
     color:#cfd7e2;font-size:12.5px;font-weight:600;
     transition:background .13s,color .13s;
   }
-  .menu-inner a:hover{background:rgba(0,196,140,.14);color:#eafff7}
-  .menu-inner a b{
-    flex:0 0 auto;width:19px;text-align:left;
-    font-family:var(--mono);font-size:10.5px;font-weight:700;
-    color:#3fe0b0;
+  .menu-inner a.mi:hover{background:rgba(0,196,140,.14);color:#eafff7}
+  .menu-inner a.mi b{
+    flex:0 0 19px;text-align:left;font-family:ui-monospace,Consolas,monospace;
+    font-size:10.5px;font-weight:700;color:#3fe0b0;
   }
   .menu-foot{margin-top:6px;border-top:1px solid rgba(255,255,255,.09);padding-top:6px}
   .menu-foot a{color:#8d97a5;font-weight:600}
@@ -163,31 +165,31 @@
   <nav class="switch" aria-label="Main">
     <a href="./" class="on" aria-current="page">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg>
-      视频
+      <span class="zh-only">视频</span><span class="en-only">Video</span>
     </a>
     <div class="menu">
-      <a href="spec/index.html" aria-haspopup="true">
+      <a href="spec/index.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
           <path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h4"/>
         </svg>
-        设计规格
+        <span class="zh-only">设计规格</span><span class="en-only">Design spec</span>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </a>
       <div class="menu-panel">
         <div class="menu-inner">
-          <div class="menu-head">11 节 · 独立页面</div>
-          <a href="spec/review.html"><b>01</b>设计评审</a>
-          <a href="spec/arch.html"><b>02</b>全栈架构</a>
-          <a href="spec/chain.html"><b>03</b>决策地图</a>
-          <a href="spec/lab.html"><b>04</b>判断器实验室</a>
-          <a href="spec/api.html"><b>05</b>接口契约</a>
-          <a href="spec/hitl.html"><b>06</b>人工复核</a>
-          <a href="spec/learn.html"><b>07</b>学习闭环</a>
-          <a href="spec/kpi.html"><b>08</b>指标与经济性</a>
-          <a href="spec/roadmap.html"><b>09</b>90 天路线图</a>
-          <a href="spec/risk.html"><b>10</b>风险与治理</a>
-          <a href="spec/appendix.html"><b>11</b>附录</a>
-          <div class="menu-foot"><a href="spec.html">一页读完 →</a></div>
+          <div class="menu-head"><span class="zh-only">11 节 · 独立页面</span><span class="en-only">11 sections</span></div>
+          <a class="mi" href="spec/review.html"><b>01</b><span class="zh-only">设计评审</span><span class="en-only">Design review</span></a>
+          <a class="mi" href="spec/arch.html"><b>02</b><span class="zh-only">全栈架构</span><span class="en-only">Architecture</span></a>
+          <a class="mi" href="spec/chain.html"><b>03</b><span class="zh-only">决策地图</span><span class="en-only">Decision map</span></a>
+          <a class="mi" href="spec/lab.html"><b>04</b><span class="zh-only">判断器实验室</span><span class="en-only">Judger lab</span></a>
+          <a class="mi" href="spec/api.html"><b>05</b><span class="zh-only">接口契约</span><span class="en-only">Contract &amp; API</span></a>
+          <a class="mi" href="spec/hitl.html"><b>06</b><span class="zh-only">人工复核</span><span class="en-only">Human in the loop</span></a>
+          <a class="mi" href="spec/learn.html"><b>07</b><span class="zh-only">学习闭环</span><span class="en-only">Learning loop</span></a>
+          <a class="mi" href="spec/kpi.html"><b>08</b><span class="zh-only">指标与经济性</span><span class="en-only">Metrics &amp; economics</span></a>
+          <a class="mi" href="spec/roadmap.html"><b>09</b><span class="zh-only">90 天路线图</span><span class="en-only">90-day plan</span></a>
+          <a class="mi" href="spec/risk.html"><b>10</b><span class="zh-only">风险与治理</span><span class="en-only">Risk &amp; governance</span></a>
+          <a class="mi" href="spec/appendix.html"><b>11</b><span class="zh-only">附录</span><span class="en-only">Appendix</span></a>
+          <div class="menu-foot"><a href="spec.html"><span class="zh-only">一页读完 →</span><span class="en-only">Read all on one page →</span></a></div>
         </div>
       </div>
     </div>
@@ -199,8 +201,8 @@
     <button data-lang="zh" class="on">中文</button>
     <button data-lang="en">English</button>
   </div>
-  <a class="dl" id="dl" href="media/coffeejev-zh-cn.mp4" download aria-label="Download video">
-    <span aria-hidden="true">↓</span><span id="dltext">下载</span>
+  <a class="dl" id="dl" href="media/coffeejev-zh-cn.mp4" download>
+    <span aria-hidden="true">↓</span><span class="zh-only">下载</span><span class="en-only">Download</span>
   </a>
 </header>
 
@@ -213,18 +215,28 @@
   };
   const v = document.getElementById('v');
   const dl = document.getElementById('dl');
-  const dltext = document.getElementById('dltext');
-  let lang = localStorage.getItem('cjv-lang') || 'zh';
-  const qLang = new URLSearchParams(location.search).get('lang');
-  if (qLang === 'en' || qLang === 'zh') lang = qLang;
+  let lang = 'zh';
 
+  // keep every internal link carrying the current language, so a shared URL opens in the same language
+  function syncLinks(l) {
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
+      const base = href.split('?')[0];
+      a.setAttribute('href', l === 'en' ? base + '?lang=en' : base);
+    });
+  }
+
+  // one call switches the whole page: chrome text, links, video, poster
   function load(l) {
     lang = l;
-    localStorage.setItem('cjv-lang', l);
+    try { localStorage.setItem('cjv-lang', l); } catch (e) {}
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = (l === 'zh') ? 'zh-CN' : 'en';
     document.querySelectorAll('#langico button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+
     dl.href = SRC[l].file;
-    dltext.textContent = l === 'zh' ? '下载' : 'Download';
-    document.documentElement.lang = l === 'zh' ? 'zh-CN' : 'en';
+    syncLinks(l);
 
     const keep = v.currentTime || 0;
     const playing = !v.paused && keep > 0;
@@ -244,7 +256,7 @@
     if (e.key === 'l' || e.key === 'L') load(lang === 'zh' ? 'en' : 'zh');
   });
 
-  // while playing, fade the top bar out after a moment (it comes back on mouse move)
+  // top bar fades out while playing, returns on movement
   let hideTimer = null;
   function scheduleHide() {
     clearTimeout(hideTimer);
@@ -262,7 +274,8 @@
     scheduleHide();
   }, { passive: true });
 
-  load(lang);
+  // initial language: ?lang= wins, otherwise the stored preference
+  load(document.documentElement.dataset.lang === 'en' ? 'en' : 'zh');
 </script>
 </body>
 </html>
