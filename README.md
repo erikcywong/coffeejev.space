@@ -13,6 +13,7 @@
 > | `/` | 首页：3 分钟双语说明片（普通话 2:56 / English 3:01），整屏自适应、无滚动 |
 > | `/spec/` | 设计规格目录页（11 节概览卡片） |
 > | `/spec/<id>.html` | 11 个子页：review / arch / chain / lab / api / hitl / learn / kpi / roadmap / risk / appendix，每页带侧边章节导航与上一节·下一节 |
+> | `/spec/en/` | **英文版**（同一套 11 节 + 目录页）。正文为机器翻译 + 术语校正，标题与导语为人工撰写；每页底部可跳回中文原文 |
 > | `/spec.html` | 单页版规格（185 KB，一次读完） |
 > | `/media/coffeejev-zh-cn.mp4` · `/media/coffeejev-en.mp4` | 两个版本的成片，可直接下载 |
 > | `/video/player.html` | 另一套更重的成片（带 VTT 字幕与 b-roll），保留备用 |
