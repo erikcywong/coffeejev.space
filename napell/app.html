@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Napell Agent">
+<title>Napell Agent</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root{
+    --bg:#000; --card:#1c1c1e; --card2:#2c2c2e; --sep:rgba(255,255,255,.09);
+    --tx:#fff; --tx2:rgba(235,235,245,.6); --tx3:rgba(235,235,245,.32);
+    --green:#30d158; --brand:#00c48c; --amber:#ff9f0a; --red:#ff453a; --blue:#0a84ff; --violet:#bf5af2;
+    --r:12px; --safe-b:env(safe-area-inset-bottom, 0px);
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:#0a0a0b;color:var(--tx);font-family:var(--font);
+    display:flex;align-items:center;justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* ---------- phone frame (desktop only) ---------- */
+  .phone{
+    position:relative;width:393px;height:852px;background:var(--bg);
+    border-radius:54px;overflow:hidden;flex-direction:column;display:flex;
+    box-shadow:0 0 0 11px #1a1a1c, 0 0 0 12px #2c2c2e, 0 40px 90px rgba(0,0,0,.75);
+  }
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+    background:#000;border-radius:20px;z-index:30}
+  @media (max-width:820px), (max-height:900px){
+    body{background:var(--bg);display:block}
+    .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+    .island{display:none}
+  }
+
+  /* ---------- status bar ---------- */
+  .status{
+    height:54px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;
+    padding:0 30px 6px;font-size:14px;font-weight:600;letter-spacing:.2px;z-index:20;
+    position:relative;
+  }
+  [dir="rtl"] .status{flex-direction:row-reverse}
+  .status .right{display:flex;align-items:center;gap:5px}
+  .status svg{display:block}
+  .status .time{font-variant-numeric:tabular-nums}
+
+  /* ---------- scroll area ---------- */
+  .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(64px + var(--safe-b))}
+  .scroll::-webkit-scrollbar{display:none}
+
+  /* ---------- nav (large title) ---------- */
+  .nav{padding:6px 16px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .nav h1{font-size:34px;font-weight:800;letter-spacing:-.6px;line-height:1.15}
+  [dir="rtl"] .nav h1{letter-spacing:0}
+  .nav .actions{display:flex;gap:8px;align-items:center}
+  .iconbtn{width:32px;height:32px;border-radius:50%;background:var(--card2);border:0;color:var(--tx2);
+    display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .iconbtn:active{background:#3a3a3c}
+
+  /* ---------- grouped list ---------- */
+  .group{margin:0 16px 22px}
+  .group > .h{font-size:13px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;
+    padding:0 4px 7px}
+  .card{background:var(--card);border-radius:var(--r);overflow:hidden}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:44px;position:relative;cursor:pointer}
+  .row + .row::before{content:"";position:absolute;top:0;inset-inline-start:16px;inset-inline-end:0;height:.5px;background:var(--sep)}
+  .row:active{background:var(--card2)}
+  .row .txt{flex:1;min-width:0}
+  .row .t{font-size:17px;font-weight:500;letter-spacing:-.2px}
+  .row .s{font-size:13px;color:var(--tx2);margin-top:2px;line-height:1.4}
+  .row .v{font-size:17px;color:var(--tx2);font-variant-numeric:tabular-nums;unicode-bidi:isolate;direction:ltr}
+  .chev{width:8px;height:13px;flex:none;color:var(--tx3)}
+  [dir="rtl"] .chev{transform:scaleX(-1)}
+  .badge{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;letter-spacing:.2px}
+  .b-ok{background:rgba(48,209,88,.16);color:#5ae07f}
+  .b-warn{background:rgba(255,159,10,.16);color:#ffb340}
+  .b-bad{background:rgba(255,69,58,.16);color:#ff8078}
+  .b-info{background:rgba(10,132,255,.16);color:#5eb0ff}
+  .b-gray{background:rgba(255,255,255,.08);color:var(--tx2)}
+
+  /* ---------- hero card ---------- */
+  .hero{margin:0 16px 22px;border-radius:18px;padding:16px;position:relative;overflow:hidden;
+    background:linear-gradient(160deg,rgba(0,196,140,.20),rgba(0,196,140,.04) 55%),var(--card);
+    border:.5px solid rgba(0,196,140,.28)}
+  .hero .k{font-size:12px;color:var(--tx2);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .hero .big{font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1;margin:6px 0 2px}
+  .hero .big small{font-size:15px;color:var(--tx2);font-weight:600;letter-spacing:0}
+  .hero .row2{display:flex;gap:10px;margin-top:14px}
+  .stat{flex:1;background:rgba(0,0,0,.28);border-radius:10px;padding:8px 10px}
+  .stat .k2{font-size:11px;color:var(--tx2)}
+  .stat .v2{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:1px}
+
+  /* ---------- segmented ---------- */
+  .seg{display:flex;margin:0 16px 18px;background:var(--card2);border-radius:9px;padding:2px;gap:2px}
+  .seg button{flex:1;border:0;background:none;color:var(--tx2);font:inherit;font-size:13px;font-weight:600;
+    padding:7px 4px;border-radius:7px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .seg button.on{background:#48484a;color:#fff}
+
+  /* ---------- sliders ---------- */
+  .sl{padding:10px 16px;position:relative}
+  .sl + .sl::before{content:"";position:absolute;top:0;inset-inline-start:16px;inset-inline-end:0;height:.5px;background:var(--sep)}
+  .sl .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .sl .lbl{font-size:15px;font-weight:500;letter-spacing:-.2px}
+  .sl .lbl small{display:block;font-size:12px;color:var(--tx3);font-weight:400;letter-spacing:0;margin-top:1px}
+  .sl .val{font-size:15px;font-weight:600;color:var(--brand);font-variant-numeric:tabular-nums;font-family:var(--mono)}
+  input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;margin-top:12px;
+    background:#3a3a3c;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+    background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:pointer}
+
+  /* ---------- verdict ---------- */
+  .verdict{margin:0 16px 16px;border-radius:16px;padding:15px 16px;border:.5px solid rgba(48,209,88,.35);
+    background:linear-gradient(170deg,rgba(48,209,88,.14),rgba(48,209,88,.02) 60%),var(--card)}
+  .verdict.warn{border-color:rgba(255,159,10,.40);background:linear-gradient(170deg,rgba(255,159,10,.14),rgba(255,159,10,.02) 60%),var(--card)}
+  .verdict.bad{border-color:rgba(255,69,58,.40);background:linear-gradient(170deg,rgba(255,69,58,.14),rgba(255,69,58,.02) 60%),var(--card)}
+  .verdict .dec{font-family:var(--mono);font-size:19px;font-weight:700;letter-spacing:-.3px;margin:6px 0 4px}
+  .verdict .why{font-size:13px;color:var(--tx2);line-height:1.5}
+  .bar{height:26px;border-radius:7px;overflow:hidden;display:flex;margin-top:12px;position:relative;background:#2c2c2e}
+  .bar .z{height:100%}
+  .bar .mk{position:absolute;top:-3px;width:2px;height:32px;background:#fff;box-shadow:0 0 6px #fff}
+  .meters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .meter{background:rgba(0,0,0,.3);border-radius:9px;padding:7px 9px}
+  .meter .k{font-size:10.5px;color:var(--tx3);letter-spacing:.2px}
+  .meter .v{font-size:15px;font-weight:700;font-family:var(--mono);margin-top:1px;unicode-bidi:isolate;direction:ltr}
+
+  .json{margin:0 16px 22px;background:#0d0d0f;border:.5px solid var(--sep);border-radius:12px;padding:11px 12px;
+    font-family:var(--mono);font-size:11px;line-height:1.65;color:#b9c2ce;overflow-x:auto;white-space:pre}
+  .json .k{color:#7fb8ff}.json .s{color:#9fe3b8}.json .n{color:#ffcf7a}.json .b{color:#c0a6ff}.json .nl{color:#ff8078}
+
+  /* ---------- buttons ---------- */
+  .btn{display:flex;align-items:center;justify-content:center;gap:7px;width:calc(100% - 32px);margin:0 16px 14px;
+    padding:14px;border-radius:12px;border:0;font:inherit;font-size:17px;font-weight:600;cursor:pointer;
+    background:var(--brand);color:#04211a}
+  .btn:active{filter:brightness(.92)}
+  .btn.ghost{background:var(--card2);color:var(--tx)}
+  .btn.sm{width:auto;flex:1;margin:0;padding:10px;font-size:14px;border-radius:10px}
+
+  /* ---------- tab bar ---------- */
+  .tabbar{
+    flex:none;height:calc(60px + var(--safe-b));padding:0 0 calc(2px + var(--safe-b));
+    display:flex;background:rgba(20,20,22,.92);backdrop-filter:blur(20px);
+    border-top:.5px solid var(--sep);position:relative;z-index:20;
+  }
+  .tab{flex:1;border:0;background:none;color:#8e8e93;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:2px;font:inherit;font-size:10px;line-height:1;font-weight:500;cursor:pointer}
+  .tab.on{color:var(--brand)}
+  .tab svg{width:22px;height:22px}
+
+  /* ---------- sheet ---------- */
+  .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;
+    transition:opacity .25s;z-index:40;backdrop-filter:blur(2px)}
+  .backdrop.on{opacity:1;pointer-events:auto}
+  .sheet{position:absolute;left:0;right:0;bottom:0;max-height:82%;background:#1c1c1e;border-radius:20px 20px 0 0;
+    transform:translateY(102%);transition:transform .3s cubic-bezier(.32,.72,0,1);z-index:41;
+    display:flex;flex-direction:column;overflow:hidden}
+  .sheet.on{transform:none}
+  .sheet .grab{width:36px;height:5px;border-radius:3px;background:#48484a;margin:8px auto 4px;flex:none}
+  .sheet .body{overflow-y:auto;padding:6px 0 calc(20px + var(--safe-b))}
+  .sheet h2{font-size:22px;font-weight:800;letter-spacing:-.4px;padding:8px 20px 4px}
+  .sheet .kv{padding:0 20px 12px;display:flex;flex-direction:column;gap:10px}
+  .kvrow .k{font-size:12px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px}
+  .kvrow .v{font-size:15px;line-height:1.5;margin-top:2px}
+
+  /* ---------- misc ---------- */
+  .note{margin:0 16px 20px;font-size:12px;color:var(--tx3);line-height:1.6}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 16px 18px}
+  .chip{font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--card2);color:var(--tx2);
+    border:.5px solid var(--sep);cursor:pointer}
+  .chip.on{background:rgba(0,196,140,.18);color:#7ef0c8;border-color:rgba(0,196,140,.45)}
+  .empty{padding:28px 16px;text-align:center;color:var(--tx3);font-size:14px}
+  .sw{width:51px;height:31px;border-radius:16px;background:#39393d;position:relative;flex:none;transition:.2s}
+  .sw.on{background:var(--green)}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;
+    transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+  .sw.on::after{left:22px}
+  [dir="rtl"] .sw::after{left:auto;right:2px}
+  [dir="rtl"] .sw.on::after{right:22px}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="island"></div>
+  <div class="status">
+    <span class="time" id="clock">9:41</span>
+    <span class="right">
+      <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.6" y="5" width="3" height="6" rx="1"/><rect x="9.2" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.8" y="0" width="3" height="11" rx="1"/></svg>
+      <svg width="16" height="11" viewBox="0 0 16 11" fill="#fff"><path d="M8 8.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zM8 5.2c-1.6 0-3 .6-4.1 1.7l1.4 1.4A3.9 3.9 0 018 7.2c1 0 2 .4 2.7 1.1l1.4-1.4A5.8 5.8 0 008 5.2zm0-3.4c-2.5 0-4.8 1-6.5 2.7L3 6A7.2 7.2 0 018 3.8c1.9 0 3.7.7 5 2l1.4-1.4A9.2 9.2 0 008 1.8z"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12"><rect x=".5" y=".5" width="21" height="11" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".35"/><rect x="2" y="2" width="17" height="8" rx="2" fill="#fff"/><path d="M23 4v4a2 2 0 000-4z" fill="#fff" fill-opacity=".4"/></svg>
+    </span>
+  </div>
+
+  <div class="scroll" id="scroll"></div>
+
+  <nav class="tabbar" id="tabbar"></nav>
+
+  <div class="backdrop" id="backdrop"></div>
+  <div class="sheet" id="sheet">
+    <div class="grab"></div>
+    <div class="body" id="sheetBody"></div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
+
+
