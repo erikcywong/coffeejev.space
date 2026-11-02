@@ -49,7 +49,7 @@ b,strong{font-weight:700;color:#fff}
 .navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 8px var(--green)}
 
 main{min-width:0}
-.wrap{max-width:1180px;margin:0 auto;padding:0 44px}
+.wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
 @media (max-width:1080px){
   .app{grid-template-columns:minmax(0,1fr)}
   .nav{position:static;height:auto;flex-direction:column;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;min-width:0;width:100%}
@@ -345,6 +345,8 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 
 <style>
+  /* content column hugs the sidebar instead of floating in the middle on wide screens */
+  .wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
   .crumb{padding:22px 0 0;font-size:12.5px;color:var(--dim2);letter-spacing:.3px}
   .crumb a{color:var(--dim);text-decoration:none}
   .crumb a:hover{color:var(--green2)}
