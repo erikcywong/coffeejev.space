@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>接口契约 · CoffeeJeV 设计规格</title>
+<title>接口契约 · CoffeeJeV</title>
 <meta name="description" content="CoffeeJeV 咖啡快判官 —— 接口契约">
+<script>try{var L=localStorage.getItem('cjv-lang')||'zh';
+document.documentElement.dataset.lang=L;
+document.documentElement.lang=(L==='en')?'en':'zh-CN';}catch(e){}</script>
 <style>
 :root{
   --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
@@ -345,12 +348,34 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 
 <style>
-  /* content column hugs the sidebar instead of floating in the middle on wide screens */
+  /* —— site-wide language switch —— */
+  html[data-lang="zh"] .en-only{display:none !important}
+  html[data-lang="en"] .zh-only{display:none !important}
+
   .wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
+
+  .langmini{display:flex;gap:2px;margin:0 10px 12px;padding:3px;border-radius:999px;
+    background:#0c1015;border:1px solid var(--line2)}
+  .langmini button{flex:1;border:0;background:none;color:var(--dim);font:inherit;
+    font-size:11.5px;font-weight:700;padding:6px 8px;border-radius:999px;cursor:pointer;transition:.15s}
+  .langmini button:hover{color:#fff}
+  .langmini button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+
   .crumb{padding:22px 0 0;font-size:12.5px;color:var(--dim2);letter-spacing:.3px}
   .crumb a{color:var(--dim);text-decoration:none}
   .crumb a:hover{color:var(--green2)}
   .crumb b{color:#c9d2dd;font-weight:600}
+
+  .en-sum{border:1px solid rgba(0,196,140,.28);background:linear-gradient(180deg,rgba(0,196,140,.07),rgba(0,196,140,.02));
+    border-radius:16px;padding:18px 20px;margin:26px 0 0}
+  .en-sum .k{font:700 10.5px/1 var(--mono);letter-spacing:1.6px;color:var(--green2);text-transform:uppercase}
+  .en-sum h3{font-size:19px;font-weight:800;margin:9px 0 4px;color:#fff;letter-spacing:-.2px}
+  .en-sum .lead{font-size:13.5px;color:#b9c2ce;margin-bottom:10px}
+  .en-sum ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .en-sum li{font-size:13px;color:#aeb8c5;line-height:1.6;padding-left:15px;position:relative}
+  .en-sum li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--green)}
+  .en-sum .note{margin-top:11px;font-size:11.5px;color:var(--dim2)}
+
   .pager{display:flex;gap:10px;justify-content:space-between;margin:44px 0 10px;flex-wrap:wrap}
   .pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
     border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);transition:.15s}
@@ -358,7 +383,8 @@ textarea{resize:vertical;line-height:1.6}
   .pager .k{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim2);font-family:var(--mono)}
   .pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
   .pager .r{text-align:right;align-items:flex-end}
-  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:22px}
+
+  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin-top:22px}
   .toc a{display:flex;gap:12px;align-items:flex-start;text-decoration:none;border:1px solid var(--line);
     border-radius:14px;padding:15px 16px;background:var(--card);transition:.16s}
   .toc a:hover{border-color:rgba(0,196,140,.4);background:var(--card2);transform:translateY(-1px)}
@@ -379,32 +405,37 @@ textarea{resize:vertical;line-height:1.6}
         <path d="M8 21h8" stroke-opacity=".55"/><circle cx="12" cy="4.2" r="1.1" fill="#3fe0b0" stroke="none" opacity=".8"/>
       </svg>
     </div>
-    <div class="txt"><b>CoffeeJeV</b><span>设计规格 v1.0</span></div>
+    <div class="txt"><b>CoffeeJeV</b><span class="zh-only">设计规格 v1.0</span><span class="en-only">design spec v1.0</span></div>
   </div>
-  <a href="../index.html" style="display:flex;align-items:center;justify-content:center;gap:7px;margin:0 10px 12px;padding:9px 11px;border-radius:999px;border:1px solid rgba(0,196,140,.45);background:linear-gradient(180deg,rgba(0,196,140,.16),rgba(0,196,140,.07));color:#c9ffe9;text-decoration:none;font-size:12.5px;font-weight:700"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg>视频首页 / Video</a>
-  <div class="navlabel">11 节 · 独立页面</div>
+  <a href="../index.html" style="display:flex;align-items:center;justify-content:center;gap:7px;margin:0 10px 10px;padding:9px 11px;border-radius:999px;border:1px solid rgba(0,196,140,.45);background:linear-gradient(180deg,rgba(0,196,140,.16),rgba(0,196,140,.07));color:#c9ffe9;text-decoration:none;font-size:12.5px;font-weight:700"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg><span class="zh-only">视频首页</span><span class="en-only">Video</span></a>
+  <div class="langmini" id="langmini" role="group" aria-label="Language">
+    <button data-l="zh">中文</button><button data-l="en">EN</button>
+  </div>
+  <div class="navlabel"><span class="zh-only">11 节 · 独立页面</span><span class="en-only">11 sections</span></div>
   <nav class="navlist" id="navlist">
-    <a class="navitem" href="review.html"><span class="n">01</span>设计评审</a>
-    <a class="navitem" href="arch.html"><span class="n">02</span>全栈架构</a>
-    <a class="navitem" href="chain.html"><span class="n">03</span>决策地图</a>
-    <a class="navitem" href="lab.html"><span class="n">04</span>判断器实验室</a>
-    <a class="navitem on" href="api.html"><span class="n">05</span>接口契约</a>
-    <a class="navitem" href="hitl.html"><span class="n">06</span>人工复核</a>
-    <a class="navitem" href="learn.html"><span class="n">07</span>学习闭环</a>
-    <a class="navitem" href="kpi.html"><span class="n">08</span>指标与经济性</a>
-    <a class="navitem" href="roadmap.html"><span class="n">09</span>90 天路线图</a>
-    <a class="navitem" href="risk.html"><span class="n">10</span>风险与治理</a>
-    <a class="navitem" href="appendix.html"><span class="n">11</span>附录</a>
-    <a class="navitem" href="index.html"><span class="n">≡</span>全部章节</a>
+    <a class="navitem" href="review.html"><span class="n">01</span><span class="zh-only">设计评审</span><span class="en-only">Design review</span></a>
+    <a class="navitem" href="arch.html"><span class="n">02</span><span class="zh-only">全栈架构</span><span class="en-only">Architecture</span></a>
+    <a class="navitem" href="chain.html"><span class="n">03</span><span class="zh-only">决策地图</span><span class="en-only">Decision map</span></a>
+    <a class="navitem" href="lab.html"><span class="n">04</span><span class="zh-only">判断器实验室</span><span class="en-only">Judger lab</span></a>
+    <a class="navitem on" href="api.html"><span class="n">05</span><span class="zh-only">接口契约</span><span class="en-only">Contract & API</span></a>
+    <a class="navitem" href="hitl.html"><span class="n">06</span><span class="zh-only">人工复核</span><span class="en-only">Human in the loop</span></a>
+    <a class="navitem" href="learn.html"><span class="n">07</span><span class="zh-only">学习闭环</span><span class="en-only">Learning loop</span></a>
+    <a class="navitem" href="kpi.html"><span class="n">08</span><span class="zh-only">指标与经济性</span><span class="en-only">Metrics & economics</span></a>
+    <a class="navitem" href="roadmap.html"><span class="n">09</span><span class="zh-only">90 天路线图</span><span class="en-only">90-day plan</span></a>
+    <a class="navitem" href="risk.html"><span class="n">10</span><span class="zh-only">风险与治理</span><span class="en-only">Risk & governance</span></a>
+    <a class="navitem" href="appendix.html"><span class="n">11</span><span class="zh-only">附录</span><span class="en-only">Appendix</span></a>
+    <a class="navitem" href="index.html"><span class="n">≡</span><span class="zh-only">全部章节</span><span class="en-only">All sections</span></a>
   </nav>
   <div class="navfoot">
-    <div><span class="dot"></span>交互式规格文档</div>
-    <div style="margin-top:6px">本页数值为<b style="color:#aab3bf">设计目标 / 可调假设</b>，非实测结果。</div>
+    <div><span class="dot"></span><span class="zh-only">交互式规格文档</span><span class="en-only">Interactive spec</span></div>
+    <div style="margin-top:6px" class="zh-only">本页数值为<b style="color:#aab3bf">设计目标 / 可调假设</b>，非实测结果。</div>
+    <div style="margin-top:6px" class="en-only">All numbers here are <b style="color:#aab3bf">design targets or assumptions</b>, not measurements.</div>
   </div>
 </aside>
 <main>
 <div class="wrap">
-<div class="crumb"><a href="../index.html">首页</a> · <a href="index.html">设计规格</a> · <b>05 接口契约</b></div>
+<div class="crumb"><a href="../index.html"><span class="zh-only">首页</span><span class="en-only">Home</span></a> · <a href="index.html"><span class="zh-only">设计规格</span><span class="en-only">Design spec</span></a> · <b>05 <span class="zh-only">接口契约</span><span class="en-only">Contract & API</span></b></div>
+<section class="en-sum en-only"><div class="k">English summary</div><h3>Contract & API</h3><div class="lead">One endpoint, four ways to say I won't decide.</div><ul><li>Request and response contract: calibrated confidence, evidence references, review reasons and an audit id on every call.</li><li>Four legitimate non-decisions: need_more_info, abstain, stop_and_review, defer_to_human.</li><li>The playground on this page runs the same engine, routes by stage, and can run in shadow mode.</li></ul><div class="note">The detailed specification below is in Chinese.</div></section>
 <section class="sec" id="api">
   <div class="sechead">
     <div class="num">05 / CONTRACT</div>
@@ -492,7 +523,7 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 </section>
-<div class="pager"><a class="" href="lab.html"><span class="k">← 上一节</span><span class="t">04 · 判断器实验室</span></a><a class="r" href="hitl.html"><span class="k">下一节 →</span><span class="t">06 · 人工复核</span></a></div>
+<div class="pager"><a class="" href="lab.html"><span class="k"><span class="zh-only">← 上一节</span><span class="en-only">← Previous</span></span><span class="t">04 · <span class="zh-only">判断器实验室</span><span class="en-only">Judger lab</span></span></a><a class="r" href="hitl.html"><span class="k"><span class="zh-only">下一节 →</span><span class="en-only">Next →</span></span><span class="t">06 · <span class="zh-only">人工复核</span><span class="en-only">Human in the loop</span></span></a></div>
 <div style="height:40px"></div>
 </div>
 </main>
@@ -1533,5 +1564,20 @@ $$('.cp').forEach(b => b.addEventListener('click', () => {
 const _re = $('#reqerr'); if (_re) _re.textContent = '';
 
 </script>
+
+<script>
+(function () {
+  var btns = Array.prototype.slice.call(document.querySelectorAll('#langmini button'));
+  function apply(l) {
+    document.documentElement.dataset.lang = l;
+    document.documentElement.lang = (l === 'en') ? 'en' : 'zh-CN';
+    try { localStorage.setItem('cjv-lang', l); } catch (e) {}
+    btns.forEach(function (b) { b.classList.toggle('on', b.dataset.l === l); });
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.l); }); });
+  apply((function () { try { return localStorage.getItem('cjv-lang') || 'zh'; } catch (e) { return 'zh'; } })());
+})();
+</script>
+
 </body>
 </html>
