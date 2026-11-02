@@ -189,7 +189,7 @@
           <a class="mi" href="spec/roadmap.html"><b>09</b><span class="zh-only">90 天路线图</span><span class="en-only">90-day plan</span></a>
           <a class="mi" href="spec/risk.html"><b>10</b><span class="zh-only">风险与治理</span><span class="en-only">Risk &amp; governance</span></a>
           <a class="mi" href="spec/appendix.html"><b>11</b><span class="zh-only">附录</span><span class="en-only">Appendix</span></a>
-          <div class="menu-foot"><a href="spec.html"><span class="zh-only">一页读完 →</span><span class="en-only">Read all on one page →</span></a></div>
+          <div class="menu-foot"><a href="spec.html"><span class="zh-only">一页读完 →</span><span class="en-only">Full spec, one page (Chinese) →</span></a></div>
         </div>
       </div>
     </div>
@@ -217,13 +217,15 @@
   const dl = document.getElementById('dl');
   let lang = 'zh';
 
-  // keep every internal link carrying the current language, so a shared URL opens in the same language
+  // keep every internal link carrying the current language: the spec has a parallel /spec/en/ tree
   function syncLinks(l) {
     document.querySelectorAll('a[href]').forEach(a => {
-      const href = a.getAttribute('href');
+      let href = a.getAttribute('data-base') || a.getAttribute('href');
       if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
-      const base = href.split('?')[0];
-      a.setAttribute('href', l === 'en' ? base + '?lang=en' : base);
+      a.setAttribute('data-base', href);
+      let out = href.split('?')[0];
+      if (l === 'en' && out.startsWith('spec/')) out = 'spec/en/' + out.slice(5);
+      a.setAttribute('href', out);
     });
   }
 
