@@ -58,13 +58,29 @@
   }
   .brand b{font-size:14.5px;font-weight:800;letter-spacing:.2px;white-space:nowrap}
 
-  .tabs{display:flex;align-items:center;gap:2px}
-  .tabs a{
-    font-size:12.5px;font-weight:600;color:#b7c0cc;text-decoration:none;
-    padding:6px 11px;border-radius:8px;white-space:nowrap;transition:.15s;
+  /* segmented control: both destinations same weight, neither reads as fine print */
+  .switch{
+    display:flex;align-items:center;gap:2px;padding:3px;flex-shrink:0;
+    border-radius:999px;
+    background:rgba(10,13,17,.72);
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 2px 14px rgba(0,0,0,.35);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
   }
-  .tabs a:hover{color:#fff;background:rgba(255,255,255,.10)}
-  .tabs a.on{color:#a9f3d8;background:rgba(0,196,140,.16)}
+  .switch a{
+    display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    padding:7px 15px;border-radius:999px;white-space:nowrap;text-decoration:none;
+    font-size:12.5px;font-weight:700;letter-spacing:.2px;color:#d9e0e9;
+    transition:background .18s,color .18s,box-shadow .18s;
+  }
+  .switch a svg{width:13px;height:13px;flex-shrink:0}
+  .switch a:hover{color:#fff;background:rgba(255,255,255,.09)}
+  .switch a.on{
+    color:#f2fffa;
+    background:linear-gradient(180deg,rgba(0,196,140,.34),rgba(0,196,140,.18));
+    box-shadow:0 0 0 1px rgba(0,196,140,.5) inset, 0 2px 12px rgba(0,196,140,.18);
+  }
 
   .spacer{flex:1;min-width:6px}
   .lang{display:flex;background:rgba(12,16,21,.85);border:1px solid var(--line);border-radius:999px;padding:2px;flex-shrink:0}
@@ -83,8 +99,13 @@
 
   @media (max-width:620px){
     .brand b{display:none}
-    .tabs a{font-size:12px;padding:6px 9px}
+    .switch a{font-size:12px;padding:7px 12px;gap:6px}
+    .lang button{padding:5px 10px;font-size:11.5px}
     .dl{display:none}
+  }
+  @media (max-width:420px){
+    .switch a svg{display:none}
+    .switch a{font-size:12px;padding:7px 11px}
   }
 </style>
 </head>
@@ -100,9 +121,17 @@
     <b>CoffeeJeV</b>
   </a>
 
-  <nav class="tabs" aria-label="Main">
-    <a href="./" class="on" aria-current="page">视频</a>
-    <a href="spec.html">设计规格</a>
+  <nav class="switch" aria-label="Main">
+    <a href="./" class="on" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg>
+      视频
+    </a>
+    <a href="spec.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h4"/>
+      </svg>
+      设计规格
+    </a>
   </nav>
 
   <div class="spacer"></div>
@@ -159,7 +188,7 @@
   function scheduleHide() {
     clearTimeout(hideTimer);
     if (v.paused) { document.body.classList.remove('hideui'); return; }
-    hideTimer = setTimeout(() => document.body.classList.add('hideui'), 2600);
+    hideTimer = setTimeout(() => document.body.classList.add('hideui'), 4200);
   }
   v.addEventListener('play', scheduleHide);
   v.addEventListener('pause', () => { clearTimeout(hideTimer); document.body.classList.remove('hideui'); });
