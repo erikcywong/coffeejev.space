@@ -4,14 +4,16 @@
 
 本目录是对 v0.1 设计草案的**评审 + 全栈扩写**，交付物为一份自包含的可交互 HTML 规格与一份可运行的 Python 参考实现。
 
-> 🎬 线上首页就是**双语说明片**：`index.html`（中/英切换、章节跳转、旁白全文）。完整设计规格在 `spec.html`。
+> 🎬 线上首页就是**双语说明片**：`index.html`。设计规格已拆成**11 个独立子页**，导航栏 hover「设计规格」即可展开。
 >
-> **线上地址**：https://erikcywong.github.io/coffeejev.space/
+> **线上地址**：https://www.coffeejev.space/
 >
 > | 路径 | 内容 |
 > |---|---|
-> | `/` | 首页：3 分钟双语说明片（普通话 2:56 / English 3:01）+ 章节 + 旁白全文 |
-> | `/spec.html` | 11 节交互式设计规格（判断器实验室、经济性计算器、试点验证方案） |
+> | `/` | 首页：3 分钟双语说明片（普通话 2:56 / English 3:01），整屏自适应、无滚动 |
+> | `/spec/` | 设计规格目录页（11 节概览卡片） |
+> | `/spec/<id>.html` | 11 个子页：review / arch / chain / lab / api / hitl / learn / kpi / roadmap / risk / appendix，每页带侧边章节导航与上一节·下一节 |
+> | `/spec.html` | 单页版规格（185 KB，一次读完） |
 > | `/media/coffeejev-zh-cn.mp4` · `/media/coffeejev-en.mp4` | 两个版本的成片，可直接下载 |
 > | `/video/player.html` | 另一套更重的成片（带 VTT 字幕与 b-roll），保留备用 |
 > | `/service/` | Python 参考实现（纯标准库） |
