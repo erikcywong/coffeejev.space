@@ -1534,7 +1534,9 @@ const _re = $('#reqerr'); if (_re) _re.textContent = '';
     btns.forEach(function (b) { b.classList.toggle('on', b.dataset.l === l); });
   }
   btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.l); }); });
-  apply((function () { try { return localStorage.getItem('cjv-lang') || 'zh'; } catch (e) { return 'zh'; } })());
+  var q = new URLSearchParams(location.search).get('lang');
+  var stored = (function () { try { return localStorage.getItem('cjv-lang') || 'zh'; } catch (e) { return 'zh'; } })();
+  apply((q === 'en' || q === 'zh') ? q : stored);   // ?lang=en wins, and sticks
 })();
 </script>
 

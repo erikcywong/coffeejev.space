@@ -215,6 +215,8 @@
   const dl = document.getElementById('dl');
   const dltext = document.getElementById('dltext');
   let lang = localStorage.getItem('cjv-lang') || 'zh';
+  const qLang = new URLSearchParams(location.search).get('lang');
+  if (qLang === 'en' || qLang === 'zh') lang = qLang;
 
   function load(l) {
     lang = l;
