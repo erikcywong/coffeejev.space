@@ -133,6 +133,35 @@ const STR_EXT = {
 };
 Object.keys(STR_EXT).forEach(l => Object.assign(STR[l], STR_EXT[l]));
 
+
+const STR_CARBON = {
+  zh: {
+    'tab.carbon':'碳资产','carbon.per':'每株碳足迹','carbon.reduction':'相对基线减量',
+    'carbon.points':'积分余额','carbon.grid':'小时级边际因子','carbon.batches':'批次碳账本',
+    'carbon.label':'碳标签','carbon.baseline':'基线','carbon.grade':'数据品质','carbon.redeem':'兑换',
+    'carbon.needNet':'连接平台后可兑换','carbon.verify':'哈希校验','carbon.avoided':'累计减排',
+    'carbon.premium':'标签溢价通道','carbon.note':'因子为设计假设；积分为内部激励，不是可交易的碳信用。',
+    'carbon.map':'决策地图 · 14 节点','carbon.sop':'SOP'
+  },
+  en: {
+    'tab.carbon':'Carbon','carbon.per':'per plantlet','carbon.reduction':'vs baseline',
+    'carbon.points':'Points','carbon.grid':'hourly marginal factor','carbon.batches':'batch ledger',
+    'carbon.label':'Carbon label','carbon.baseline':'baseline','carbon.grade':'data quality','carbon.redeem':'Redeem',
+    'carbon.needNet':'connect to redeem','carbon.verify':'hash-verified','carbon.avoided':'avoided so far',
+    'carbon.premium':'label premium','carbon.note':'Factors are design assumptions; points are an internal reward, not a tradable credit.',
+    'carbon.map':'Decision map · 14 nodes','carbon.sop':'SOP'
+  },
+  ar: {
+    'tab.carbon':'الكربون','carbon.per':'لكل شتلة','carbon.reduction':'مقارنة بالأساس',
+    'carbon.points':'النقاط','carbon.grid':'العامل الساعي','carbon.batches':'سجل الدفعات',
+    'carbon.label':'ملصق الكربون','carbon.baseline':'خط الأساس','carbon.grade':'جودة البيانات','carbon.redeem':'استبدال',
+    'carbon.needNet':'اتصل للمنصة للاستبدال','carbon.verify':'موثّق بالتجزئة','carbon.avoided':'إجمالي المتجنّب',
+    'carbon.premium':'علاوة الملصق','carbon.note':'العوامل افتراضات تصميمية؛ النقاط حافز داخلي وليست رصيدًا قابلًا للتداول.',
+    'carbon.map':'خريطة القرار · 14 عقدة','carbon.sop':'الإجراء'
+  }
+};
+Object.keys(STR_CARBON).forEach(l => Object.assign(STR[l], STR_CARBON[l]));
+
 const LANG_META = { zh:{dir:'ltr', locale:'zh-CN'}, en:{dir:'ltr', locale:'en'}, ar:{dir:'rtl', locale:'ar-SA'} };
 
 let state = {
@@ -235,6 +264,38 @@ function judgeFog(i){
   return { jev:'choice', decision:best?best.action:'stop_and_review', conf:best?r4(best.p):0, options:opts, best };
 }
 
+
+
+/* ---------------- carbon demo (mirrors the platform output) ---------------- */
+const DEMO_CARBON = {
+  batches: [
+    {batch:'AP-0712', status:'delivered', plantlets:480, total_kgco2e:93.65, per_plantlet:0.1951,
+     grade:'B', data_quality_pct:61.5, reduction_pct:53.5,
+     label:{label_id:'CJ-CN-2026-0712-63E7', hash:'63e7b24d', prev:'genesis', kgco2e_per_unit:0.1951,
+            reduction_vs_baseline_pct:53.5, baseline_kgco2e_per_unit:0.42, grade:'B', data_quality:61.5,
+            standard:'ISO 14067:2018 / PAS 2050', boundary:'cradle-to-gate', gwp:'IPCC AR6, 100-year'}},
+    {batch:'AP-0713', status:'growing', plantlets:480, total_kgco2e:47.09, per_plantlet:0.098,
+     grade:'B', data_quality_pct:56.1, reduction_pct:0, label:null},
+    {batch:'AP-0714', status:'growing', plantlets:640, total_kgco2e:29.38, per_plantlet:0.046,
+     grade:'C', data_quality_pct:6.1, reduction_pct:0, label:null}
+  ],
+  labels: [],
+  points: {balance:97.2, value_cny:9.72,
+           tx:[{ts:Date.now()-3600e3, dir:'earn', points:97.2, reason:'AP-0712 碳减排'}]},
+  grid: [{lo:0,hi:6,factor:0.31},{lo:6,hi:9,factor:0.38},{lo:9,hi:12,factor:0.44},
+         {lo:12,hi:17,factor:0.47},{lo:17,hi:21,factor:0.58},{lo:21,hi:24,factor:0.41}],
+  factors: {baseline_soil:0.42, point_value_cny:0.10},
+  totals: {delivered_avoided_kg:108, premium_potential_cny:[32,108], green_bean_kg:120},
+  catalog: [
+    {id:'nutrients', name:'营养盐套装', points:100, unit:'¥10 抵扣'},
+    {id:'sensor-kit', name:'传感套件', points:500, unit:'¥50 抵扣'},
+    {id:'saas-year', name:'SaaS 一年', points:2000, unit:'模块订阅'},
+    {id:'hardware', name:'硬件采购', points:5000, unit:'¥500 抵扣'}
+  ]
+};
+const carbonData = () => (state.live && state.live.carbon
+  ? state.live.carbon
+  : {...DEMO_CARBON, labels: DEMO_CARBON.batches.filter(b => b.label).map(b => b.label)});
 
 /* ---------------- the fleet (matches the IoT platform 1:1) ---------------- */
 const DEMO_FLEET = [
@@ -542,6 +603,11 @@ function screenMore(){
   const pay = net>0 ? e.capex/(net/12) : null;
   const cpd = (e.capex/3 + e.opex)/(e.d*365);
   return `<div class="nav"><h1>${t('tab.more')}</h1></div>
+    <div class="group"><div class="card">
+      <div class="row" data-act="mapsheet"><div class="txt"><div class="t">${t('carbon.map')}</div></div>${chev}</div>
+      <div class="row" data-tab="carbon"><div class="txt"><div class="t">${t('tab.carbon')}</div>
+        <div class="s">${t('carbon.per')} · ${t('carbon.label')}</div></div>${chev}</div>
+    </div></div>
     <div class="group"><div class="h">${t('dev.platform')}</div><div class="card">
       ${row(t('dev.platform'), state.platform || t('dev.demo'), state.live ? '✓' : (state.liveErr ? '!' : '—'))}
       <div class="row" data-act="platform"><div class="txt"><div class="t">${t('dev.connect')}</div></div>${chev}</div>
@@ -662,12 +728,115 @@ async function sendRpc(method){
   }catch(e){ if(msg) msg.textContent = t('dev.err') + ': ' + e.message; }
 }
 
+
+/* ---------------- carbon ---------------- */
+function screenCarbon(){
+  const c = carbonData();
+  const delivered = c.batches.filter(b => b.status === 'delivered');
+  const avg = delivered.length ? delivered.reduce((a, b) => a + b.per_plantlet, 0) / delivered.length : 0;
+  const red = delivered.length ? delivered.reduce((a, b) => a + b.reduction_pct, 0) / delivered.length : 0;
+  const lab = (c.labels && c.labels[0]) || (c.batches.find(b => b.label) || {}).label;
+  const peak = c.grid.reduce((a, g) => g.factor > a.factor ? g : a, c.grid[0]);
+  const low = c.grid.reduce((a, g) => g.factor < a.factor ? g : a, c.grid[0]);
+  const maxF = Math.max(...c.grid.map(g => g.factor));
+
+  const bars = c.grid.map(g => {
+    const h = Math.round((g.factor / maxF) * 100);
+    const isPeak = g.factor === peak.factor, isLow = g.factor === low.factor;
+    return `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%">
+      <div class="mono" style="font-size:9px;text-align:center;color:${isPeak ? 'var(--red)' : 'var(--tx3)'};margin-bottom:2px">${g.factor.toFixed(2)}</div>
+      <div style="height:${h}%;border-radius:3px 3px 0 0;background:${isPeak ? 'rgba(255,69,58,.55)' : isLow ? 'rgba(48,209,88,.55)' : 'rgba(0,196,140,.3)'}"></div>
+      <div class="mono" style="font-size:8.5px;text-align:center;color:var(--tx3);margin-top:3px">${g.lo}</div>
+    </div>`;
+  }).join('');
+
+  const qr = (seed) => {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < (seed || 'x').length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    let out = '';
+    for (let i = 0; i < 49; i++) {
+      h ^= h << 13; h >>>= 0; h ^= h >> 17; h ^= h << 5; h >>>= 0;
+      out += `<div style="width:6px;height:6px;background:${(h & 1) ? '#06211a' : '#fff'}"></div>`;
+    }
+    return `<div style="display:grid;grid-template-columns:repeat(7,6px);gap:1.5px;background:#fff;padding:7px;border-radius:8px">${out}</div>`;
+  };
+
+  return `<div class="nav"><h1>${t('tab.carbon')}</h1></div>
+  <div class="hero" style="background:linear-gradient(160deg,rgba(0,196,140,.18),rgba(0,196,140,.03) 60%),var(--card)">
+    <div class="k">${t('carbon.per')}</div>
+    <div class="big">${avg.toFixed(3)}<small> kgCO₂e</small></div>
+    <div style="font-size:12px;color:var(--tx2)">${t('carbon.baseline')} ${c.factors.baseline_soil} kg · <span style="color:var(--green)">-${red.toFixed(1)}%</span></div>
+    <div class="row2">
+      <div class="stat"><div class="k2">${t('carbon.points')}</div><div class="v2">${c.points.balance}</div></div>
+      <div class="stat"><div class="k2">${t('carbon.avoided')}</div><div class="v2">${c.totals.delivered_avoided_kg} kg</div></div>
+    </div>
+  </div>
+
+  <div class="group"><div class="h">${t('carbon.grid')}</div><div class="card">
+    <div style="padding:12px 14px 6px"><div style="display:flex;gap:5px;align-items:flex-end;height:86px">${bars}</div></div>
+    <div class="note" style="margin:0;padding:0 14px 12px">${low.lo}-${low.hi}h = ${low.factor} · ${peak.lo}-${peak.hi}h = ${peak.factor}</div>
+  </div></div>
+
+  <div class="group"><div class="h">${t('carbon.label')}</div><div class="card">
+    <div style="display:flex;gap:12px;padding:14px;align-items:center">
+      ${qr(lab ? lab.hash : 'demo')}
+      <div style="flex:1;min-width:0">
+        <div class="mono" style="font-size:9.5px;color:var(--tx3);letter-spacing:.8px">CARBON FOOTPRINT</div>
+        <div class="mono" style="font-size:20px;font-weight:700;letter-spacing:-.6px">${lab ? lab.kgco2e_per_unit.toFixed(3) : avg.toFixed(3)}</div>
+        <div style="font-size:11px;color:var(--tx2)">kgCO₂e / ${t('tab.carbon') === 'Carbon' ? 'plantlet' : '株'} · ${lab ? lab.grade : '—'}</div>
+      </div>
+    </div>
+    <div class="row" data-labelsheet="1"><div class="txt">
+      <div class="t" style="font-size:13px">${lab ? esc(lab.label_id) : '—'}</div>
+      <div class="s" style="font-size:11px">${lab ? esc(lab.standard || '') : ''}</div></div>${chev}</div>
+  </div></div>
+
+  <div class="group"><div class="h">${t('carbon.batches')}</div><div class="card">
+    ${c.batches.map(b => `<div class="row">
+      <div class="txt"><div class="t" style="font-size:14px">${esc(b.batch)}
+        <span class="badge ${b.status === 'delivered' ? 'b-info' : 'b-ok'}" style="margin-inline-start:5px;font-size:9.5px">${b.status === 'delivered' ? 'delivered' : 'growing'}</span></div>
+      <div class="s">${b.plantlets} p · ${b.grade} · ${b.data_quality_pct}%</div></div>
+      <div class="v mono" style="font-size:13px;color:var(--green)">${b.per_plantlet.toFixed(3)}</div>
+    </div>`).join('')}
+  </div></div>
+
+  <div class="group"><div class="h">${t('carbon.points')} · ${c.points.balance}</div><div class="card">
+    ${(c.catalog || []).slice(0, 3).map(it => `<div class="row">
+      <div class="txt"><div class="t" style="font-size:14px">${esc(it.name)}</div>
+      <div class="s">${it.points} pts · ${esc(it.unit)}</div></div>
+      <span class="badge ${c.points.balance >= it.points ? 'b-ok' : 'b-gray'}">${c.points.balance >= it.points ? t('carbon.redeem') : '—'}</span>
+    </div>`).join('')}
+  </div></div>
+
+  <div class="note">${t('carbon.note')}</div>`;
+}
+
+function openCarbonLabelSheet(){
+  const c = carbonData();
+  const lab = (c.labels && c.labels[0]) || (c.batches.find(b => b.label) || {}).label;
+  if (!lab) return;
+  openSheet(`<h2>${esc(lab.label_id)}</h2>
+    <div class="kv">
+      ${Object.entries(lab).filter(([k]) => k !== 'label_id').map(([k, v]) =>
+        `<div class="kvrow"><div class="k">${esc(k)}</div><div class="v mono" style="font-size:12.5px">${typeof v === 'object' ? esc(JSON.stringify(v)) : esc(v)}</div></div>`).join('')}
+    </div>`);
+}
+
+function openMapSheet(){
+  openSheet(`<h2>${t('carbon.map')}</h2>
+    <div class="group" style="margin:0 12px 16px"><div class="card">
+      ${NODES.map(n => `<div class="row" data-node="${n.id}">
+        <div class="txt"><div class="t" style="font-size:14px"><span class="mono" style="font-size:10px;color:var(--tx3);margin-inline-end:6px">${String(n.id).padStart(2, '0')}</span>${t('node.' + n.id)}</div>
+        <div class="s" style="font-size:11px">${n.jev} · ${n.stage}</div></div>${chev}</div>`).join('')}
+    </div></div>`);
+}
+
 /* ---------------- render ---------------- */
 const TABS = [
   ['home','M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z'],
   ['judges','M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1'],
   ['devices','M6 8h3v3H6zM6 14h3v3H6zM12 9.5h7M12 15.5h7'],
-  ['map','M9 4l6 2 5-2v14l-5 2-6-2-5 2V6zM9 4v14M15 6v14'],
+  ['carbon','M12 3c3.5 2.2 5 5.4 5 8.6A5 5 0 017 11.6C7 8.4 8.5 5.2 12 3z M12 21c0-3 0-5-1.5-7'],
   ['review','M4 12.5l5 5L20 6.5'],
   ['more','M6 12h.01M12 12h.01M18 12h.01']
 ];
@@ -677,6 +846,7 @@ function render(){
   const html = state.tab==='home'?screenHome()
     : state.tab==='judges'?screenJudges()
     : state.tab==='devices'?screenDevices()
+    : state.tab==='carbon'?screenCarbon()
     : state.tab==='map'?screenMap()
     : state.tab==='review'?screenReview()
     : screenMore();
@@ -741,6 +911,8 @@ document.getElementById('scroll').addEventListener('click', ev=>{
   if(el.dataset.lang){ applyLang(el.dataset.lang); return; }
 
   if(el.dataset.dev){ openDeviceSheet(el.dataset.dev); return; }
+  if(el.dataset.act==='mapsheet'){ openMapSheet(); return; }
+  if(el.dataset.labelsheet){ openCarbonLabelSheet(); return; }
   if(el.dataset.ack){ ackAlarm(el.dataset.ack); return; }
   if(el.dataset.act==='platform'){ openPlatformSheet(); return; }
   if(el.dataset.node){
@@ -842,7 +1014,7 @@ pushLedger({stage:'aseptic_establishment', decision:'review_microscopy', conf:0.
 if(state.platform){ syncLive().then(render); setInterval(()=>{ if(state.platform) syncLive().then(()=>{ if(['devices','more'].includes(state.tab)) render(); }); }, 6000); }
 const _qs = new URLSearchParams(location.search);
 const _q = _qs.get('lang');
-if(['home','judges','devices','map','review','more'].includes(_qs.get('tab'))) state.tab = _qs.get('tab');
+if(['home','judges','devices','carbon','map','review','more'].includes(_qs.get('tab'))) state.tab = _qs.get('tab');
 if(['a','b','c'].includes(_qs.get('judge'))) state.judge = _qs.get('judge');
 applyLang(['zh','en','ar'].includes(_q) ? _q : state.lang);
 
