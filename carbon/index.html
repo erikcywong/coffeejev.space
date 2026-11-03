@@ -318,6 +318,53 @@ p.body .m{font-family:var(--mono);font-size:13px;color:#d6e6f2}
 <div class="zc-idx">
   <h1>碳资产</h1>
   <p class="lede">从电表读数到碳足迹、碳标签与积分 —— 边界、因子、标签字段、三方账与合规风险。</p>
+  <style id="zc-film-css">
+.zc-film{max-width:980px;margin:0 auto 40px}
+.zc-film-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.zc-film-k{font-family:var(--mono,ui-monospace);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:#3fe0b0}
+.zc-film-switch{display:flex;background:#0c1015;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:2px}
+.zc-film-switch button{border:0;background:none;color:#8d97a5;font:inherit;font-size:11.5px;font-weight:700;
+  padding:5px 12px;border-radius:999px;cursor:pointer}
+.zc-film-switch button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+.zc-film video{width:100%;display:block;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+  background:#000;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.zc-film-cap{font-size:12.5px;color:#8d97a5;line-height:1.7;margin-top:10px}
+@media (max-width:900px){.zc-film{margin-bottom:28px}}
+</style>
+  <section class="zc-film" id="film">
+    <div class="zc-film-head">
+      <div class="zc-film-k">Section film · 4 beats · Carbon</div>
+      <div class="zc-film-switch" id="filmSwitch">
+        <button data-lang="zh" class="on">中文</button>
+        <button data-lang="en">English</button>
+      </div>
+    </div>
+    <video id="filmVideo" controls playsinline preload="metadata" poster="../media/section-carbon-zh.jpg">
+      <source id="filmSrc" src="../media/section-carbon-zh.mp4" type="video/mp4">
+    </video>
+    <p class="zc-film-cap" id="filmCap">四分钟不到，讲清这个板块的三件事：碳是一个调度问题、五个分项加出一个数字、标签是回执不是奖状。</p>
+  </section>
+<script>
+(function(){
+  var v = document.getElementById('filmVideo');
+  var src = document.getElementById('filmSrc');
+  var cap = document.getElementById('filmCap');
+  var caps = { zh: "四分钟不到，讲清这个板块的三件事：碳是一个调度问题、五个分项加出一个数字、标签是回执不是奖状。", en: "Four short beats: why carbon is a scheduling problem, how five line items add up to one number, and why a label is a receipt rather than a certificate." };
+  var posters = { zh: '../media/section-carbon-zh.jpg', en: '../media/section-carbon-en.jpg' };
+  document.getElementById('filmSwitch').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var l = b.dataset.lang;
+    Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.toggle('on', x === b); });
+    var t = v.currentTime, playing = !v.paused;
+    src.src = '../media/section-carbon-' + l + '.mp4';
+    v.poster = posters[l];
+    cap.textContent = caps[l];
+    v.load(); v.currentTime = t;
+    if (playing) v.play().catch(function(){});
+  });
+})();
+</script>
+
   <div style="margin:0 0 24px;padding:12px 16px;border-radius:12px;
     border:1px solid rgba(0,196,140,.30);background:rgba(0,196,140,.06);color:#a9f3d8;
     font:500 13px/1.7 -apple-system,'Segoe UI','PingFang SC',sans-serif">

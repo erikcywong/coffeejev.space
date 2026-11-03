@@ -241,6 +241,53 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
 <div class="zc-idx">
   <h1>报价</h1>
   <p class="lede">三条产品线、Zone 席位、按证据等级定价、反套利规则、核证方与中立性。</p>
+  <style id="zc-film-css">
+.zc-film{max-width:980px;margin:0 auto 40px}
+.zc-film-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.zc-film-k{font-family:var(--mono,ui-monospace);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:#3fe0b0}
+.zc-film-switch{display:flex;background:#0c1015;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:2px}
+.zc-film-switch button{border:0;background:none;color:#8d97a5;font:inherit;font-size:11.5px;font-weight:700;
+  padding:5px 12px;border-radius:999px;cursor:pointer}
+.zc-film-switch button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+.zc-film video{width:100%;display:block;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+  background:#000;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.zc-film-cap{font-size:12.5px;color:#8d97a5;line-height:1.7;margin-top:10px}
+@media (max-width:900px){.zc-film{margin-bottom:28px}}
+</style>
+  <section class="zc-film" id="film">
+    <div class="zc-film-head">
+      <div class="zc-film-k">Section film · 4 beats · Pricing</div>
+      <div class="zc-film-switch" id="filmSwitch">
+        <button data-lang="zh" class="on">中文</button>
+        <button data-lang="en">English</button>
+      </div>
+    </div>
+    <video id="filmVideo" controls playsinline preload="metadata" poster="../media/section-commercial-zh.jpg">
+      <source id="filmSrc" src="../media/section-commercial-zh.mp4" type="video/mp4">
+    </video>
+    <p class="zc-film-cap" id="filmCap">为什么按场、按批、按货值计价，为什么六万株的场自建永远回不了本，以及两条不允许越过的红线。</p>
+  </section>
+<script>
+(function(){
+  var v = document.getElementById('filmVideo');
+  var src = document.getElementById('filmSrc');
+  var cap = document.getElementById('filmCap');
+  var caps = { zh: "为什么按场、按批、按货值计价，为什么六万株的场自建永远回不了本，以及两条不允许越过的红线。", en: "Why the units are site, batch and cargo value; why a 60,000-plantlet farm never pays back a self-build; and the two red lines." };
+  var posters = { zh: '../media/section-commercial-zh.jpg', en: '../media/section-commercial-en.jpg' };
+  document.getElementById('filmSwitch').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    var l = b.dataset.lang;
+    Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.toggle('on', x === b); });
+    var t = v.currentTime, playing = !v.paused;
+    src.src = '../media/section-commercial-' + l + '.mp4';
+    v.poster = posters[l];
+    cap.textContent = caps[l];
+    v.load(); v.currentTime = t;
+    if (playing) v.play().catch(function(){});
+  });
+})();
+</script>
+
   <div class="zc-cards"><a class="zc-card" href="why.html"><span class="n">01</span><span class="t">一句话定价逻辑</span></a><a class="zc-card" href="tiers.html"><span class="n">02</span><span class="t">三条产品线</span></a><a class="zc-card" href="zone.html"><span class="n">03</span><span class="t">为什么按 Zone 卖，不按农场卖</span></a><a class="zc-card" href="evidence.html"><span class="n">04</span><span class="t">凭证定价：按证据等级，不按批</span></a><a class="zc-card" href="anti.html"><span class="n">05</span><span class="t">反套利规则（四条，写死）</span></a><a class="zc-card" href="governance.html"><span class="n">06</span><span class="t">谁在说话：签发方必须与卖方分离</span></a></div>
     <div style="margin:26px 0 0;padding:14px 18px;border-radius:12px;
     border:1px solid rgba(0,196,140,.32);background:rgba(0,196,140,.06);

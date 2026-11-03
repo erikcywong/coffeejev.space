@@ -253,6 +253,16 @@ p.body .m{font-family:var(--mono);font-size:13px;color:#d6e6f2}
 }
 @media print{.nav{display:none}.app{grid-template-columns:1fr}.sec{page-break-inside:avoid}body{background:#fff;color:#111}}
 </style>
+<style id="zc-back-css">
+.zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+  padding:9px 15px;border-radius:999px;text-decoration:none;border:0;
+  font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+  background:rgba(10,14,18,.90);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+  backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28);transition:.15s}
+.zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+.zc-back svg{width:13px;height:13px;flex:none}
+@media (max-width:640px){.zc-back{top:12px;right:12px;padding:8px 12px;font-size:11.5px}}
+</style>
 </head>
 <body>
 <div class="app">
