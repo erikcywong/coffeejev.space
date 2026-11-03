@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    Napell Agent — iOS-style PWA client for the CoffeeJeV decision layer
    Three languages: 中文 / English / العربية (RTL)
    ============================================================ */
@@ -100,6 +100,39 @@ const STR = {
     'node.11':'نافذة الحصاد','node.12':'نطاق الحجر','node.13':'جدولة الطاقة','node.14':'المراجعة اللاحقة'
   }
 };
+
+/* ---------------- IoT strings (added after the core dictionary) ---------------- */
+const STR_EXT = {
+  zh: {
+    'tab.devices':'设备',
+    'dev.platform':'平台地址','dev.connect':'连接','dev.demo':'离线演示数据','dev.live':'已连接','dev.err':'连不上',
+    'dev.online':'在线','dev.offline':'离线','dev.open':'未确认告警','dev.ack':'确认','dev.none':'没有设备',
+    'dev.keys':'关键量','dev.lastSeen':'最后上报','dev.transport':'通道','dev.profile':'Profile',
+    'dev.rpc':'下发命令','dev.rpc.ok':'已下发','dev.rpc.blocked':'被硬限位拒绝','dev.rpc.pending':'等待回执',
+    'dev.hint':'填 platform 地址即可读取真实设备；留空使用离线演示数据。',
+    'dev.ingest':'入站','dev.rate':'条/分','dev.values':'数值'
+  },
+  en: {
+    'tab.devices':'Devices',
+    'dev.platform':'Platform URL','dev.connect':'Connect','dev.demo':'offline demo data','dev.live':'connected','dev.err':'unreachable',
+    'dev.online':'online','dev.offline':'offline','dev.open':'open alarms','dev.ack':'Ack','dev.none':'no devices',
+    'dev.keys':'keys','dev.lastSeen':'last seen','dev.transport':'transport','dev.profile':'Profile',
+    'dev.rpc':'Send command','dev.rpc.ok':'sent','dev.rpc.blocked':'blocked by hard limit','dev.rpc.pending':'awaiting ack',
+    'dev.hint':'Point this at the platform URL to read real devices; leave it empty to use the offline demo data.',
+    'dev.ingest':'ingest','dev.rate':'msgs/min','dev.values':'values'
+  },
+  ar: {
+    'tab.devices':'الأجهزة',
+    'dev.platform':'عنوان المنصة','dev.connect':'اتصال','dev.demo':'بيانات عرض دون اتصال','dev.live':'متصل','dev.err':'تعذّر الاتصال',
+    'dev.online':'متصل','dev.offline':'غير متصل','dev.open':'تنبيهات مفتوحة','dev.ack':'تأكيد','dev.none':'لا توجد أجهزة',
+    'dev.keys':'القياسات','dev.lastSeen':'آخر إرسال','dev.transport':'القناة','dev.profile':'الملف',
+    'dev.rpc':'إرسال أمر','dev.rpc.ok':'أُرسل','dev.rpc.blocked':'مرفوض بحدّ صلب','dev.rpc.pending':'بانتظار التأكيد',
+    'dev.hint':'ضع عنوان المنصة لقراءة الأجهزة الحقيقية؛ اتركه فارغًا لاستخدام بيانات العرض.',
+    'dev.ingest':'الوارد','dev.rate':'رسالة/دقيقة','dev.values':'قيم'
+  }
+};
+Object.keys(STR_EXT).forEach(l => Object.assign(STR[l], STR_EXT[l]));
+
 const LANG_META = { zh:{dir:'ltr', locale:'zh-CN'}, en:{dir:'ltr', locale:'en'}, ar:{dir:'rtl', locale:'ar-SA'} };
 
 let state = {
@@ -111,7 +144,10 @@ let state = {
   b: { roots:5, brown:22, shoot:3.2, leaf:78, wax:70, water:9.5, cont:0.08 },
   c: { ec:1.2, ph:5.8, vpd:0.9, t:24, do:6.5, drop:35, wt:21, ws:0.5, wc:0.2, wq:0.3 },
   econ: { n:240000, v:0.45, c0:8, c1:4, s0:72, s1:84, capex:18000, opex:4800, d:800 },
-  ledger: []
+  ledger: [],
+  platform: localStorage.getItem('napell-platform') || '',
+  live: null,            // last /api/overview payload when connected
+  liveErr: ''
 };
 
 const t = k => (STR[state.lang] && STR[state.lang][k]) || STR.en[k] || k;
@@ -198,6 +234,21 @@ function judgeFog(i){
   const best=feas.slice().sort((a,b)=>b.utility-a.utility)[0]||null;
   return { jev:'choice', decision:best?best.action:'stop_and_review', conf:best?r4(best.p):0, options:opts, best };
 }
+
+
+/* ---------------- the fleet (matches the IoT platform 1:1) ---------------- */
+const DEMO_FLEET = [
+  {name:'fog-ctrl-A3', profile:'fog-controller', transport:'mqtt', online:true, last:{ec:1.41,ph:5.83,do:7.8,water_temp:19.8,vpd:0.38,air_temp:25.1,rh:62}},
+  {name:'root-cam-A3', profile:'vision-edge', transport:'http', online:true, last:{vision_p:0.09,image_quality:0.88,roots_count:7}},
+  {name:'tray-scan-TC118', profile:'vision-edge', transport:'http', online:true, last:{contaminated_p:0.12,image_quality:0.76}},
+  {name:'climate-PuEr-01', profile:'climate', transport:'http', online:true, last:{air_temp:24.8,rh:64,vpd:0.96,co2:642}},
+  {name:'power-meter-PuEr-01', profile:'energy', transport:'http', online:true, last:{power_kw:3.42,kwh_total:18432,tariff:0.68}},
+  {name:'micro-lab-01', profile:'lab', transport:'http', online:false, last:{sample_cfu:6,coliform:0}},
+  {name:'valve-4A', profile:'actuator', transport:'http', online:true, last:{state:'closed',pressure_bar:2.72,cycles:1841}},
+  {name:'gateway-edge-01', profile:'gateway', transport:'http', online:true, last:{cpu_pct:41,mem_pct:58,temp_c:46.2,buffer_depth:3}}
+];
+const fleet = () => (state.live && state.live.devices) ? state.live.devices : DEMO_FLEET;
+const liveAlarms = () => (state.live && state.live.alarms) ? state.live.alarms.filter(a => !a.acked) : [];
 
 /* ---------------- 14 nodes ---------------- */
 const NODES = [
@@ -491,6 +542,10 @@ function screenMore(){
   const pay = net>0 ? e.capex/(net/12) : null;
   const cpd = (e.capex/3 + e.opex)/(e.d*365);
   return `<div class="nav"><h1>${t('tab.more')}</h1></div>
+    <div class="group"><div class="h">${t('dev.platform')}</div><div class="card">
+      ${row(t('dev.platform'), state.platform || t('dev.demo'), state.live ? '✓' : (state.liveErr ? '!' : '—'))}
+      <div class="row" data-act="platform"><div class="txt"><div class="t">${t('dev.connect')}</div></div>${chev}</div>
+    </div><div class="note">${t('dev.hint')}</div></div>
     <div class="group"><div class="h">${t('more.lang')}</div><div class="card">
       ${['zh','en','ar'].map(l=>`<div class="row" data-lang="${l}"><div class="txt">
         <div class="t">${l==='zh'?'中文':l==='en'?'English':'العربية'}</div>
@@ -514,10 +569,104 @@ function screenMore(){
     </div><div class="note">${t('about.body')}</div></div>`;
 }
 
+
+/* ---------------- devices ---------------- */
+async function syncLive(){
+  if(!state.platform){ state.live = null; state.liveErr = ''; return; }
+  try{
+    const r = await fetch(state.platform.replace(/\/+$/,'') + '/api/overview', {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    state.live = await r.json(); state.liveErr = '';
+  }catch(e){ state.live = null; state.liveErr = e.message || 'error'; }
+}
+
+function screenDevices(){
+  const ds = fleet();
+  const al = liveAlarms();
+  const conn = state.platform
+    ? (state.liveErr ? `<span class="badge b-bad">${t('dev.err')}</span>`
+       : state.live ? `<span class="badge b-ok">${t('dev.live')}</span>`
+       : `<span class="badge b-gray">…</span>`)
+    : `<span class="badge b-gray">${t('dev.demo')}</span>`;
+  const kpi = state.live ? `
+    <div class="hero" style="padding:14px">
+      <div class="k">${t('dev.ingest')}</div>
+      <div class="big" style="font-size:34px">${state.live.ingest.messages}<small> msgs</small></div>
+      <div style="font-size:12px;color:var(--tx2)">${state.live.ingest.rate_per_min} ${t('dev.rate')} · ${state.live.ingest.values} ${t('dev.values')}</div>
+    </div>` : '';
+  return `<div class="nav"><h1>${t('tab.devices')}</h1>
+      <div class="actions"><button class="iconbtn" data-act="platform" aria-label="platform">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="8" cy="7" r="1.4" fill="currentColor"/></svg>
+      </button></div></div>
+    <div style="margin:0 16px 14px;display:flex;align-items:center;gap:8px">
+      <div class="mono" style="font-size:11px;color:var(--tx3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(state.platform || t('dev.demo'))}</div>${conn}
+    </div>
+    ${kpi}
+    ${al.length ? `<div class="group"><div class="h">${t('dev.open')} · ${al.length}</div><div class="card">
+      ${al.slice(0,3).map(a=>`<div class="row" data-ack="${esc(a.id)}">
+        <div class="txt"><div class="t"><span class="badge ${a.severity==='critical'?'b-bad':'b-warn'}" style="margin-inline-end:6px">${esc(a.severity)}</span>${esc(a.type)}</div>
+        <div class="s">${esc(a.message)}</div></div>
+        <span class="badge b-gray">${t('dev.ack')}</span></div>`).join('')}
+    </div></div>` : ''}
+    <div class="group"><div class="h">${ds.length} ${t('tab.devices')}</div><div class="card">
+      ${ds.map(d=>`<div class="row" data-dev="${esc(d.name)}">
+        <div class="txt"><div class="t" style="display:flex;align-items:center;gap:6px">
+          <span style="width:7px;height:7px;border-radius:50%;background:${d.online?'var(--green)':'#5d6673'}"></span>${esc(d.name)}</div>
+          <div class="s">${esc(d.profile)} · ${d.transport=='mqtt'?'MQTT':'HTTP'}</div></div>
+        <div class="v mono" style="font-size:11px">${Object.entries(d.last||{}).slice(0,2).map(([k,v])=>`${k}=${typeof v==='number'?fmtShort(v):v}`).join(' ')}</div>
+        ${chev}</div>`).join('')}
+    </div></div>
+    <div class="note">${t('dev.hint')}</div>`;
+}
+
+const fmtShort = v => Number.isInteger(v) ? String(v) : (Math.abs(v)>=100 ? v.toFixed(0) : Math.abs(v)>=10 ? v.toFixed(1) : v.toFixed(2));
+
+function openDeviceSheet(name){
+  const d = fleet().find(x=>x.name===name);
+  if(!d) return;
+  const kv = Object.entries(d.last||{}).map(([k,v])=>`<div class="meter"><div class="k">${esc(k)}</div><div class="v">${typeof v==='number'?fmtShort(v):esc(v)}</div></div>`).join('');
+  const isFog = name.indexOf('fog-ctrl')===0;
+  const isValve = name.indexOf('valve')===0;
+  openSheet(`<h2>${esc(d.name)}</h2>
+    <div style="padding:0 20px 10px;display:flex;gap:6px;flex-wrap:wrap">
+      <span class="badge ${d.online?'b-ok':'b-gray'}">${d.online?t('dev.online'):t('dev.offline')}</span>
+      <span class="badge b-info">${d.transport=='mqtt'?'MQTT':'HTTP'}</span>
+      <span class="badge b-gray">${esc(d.profile)}</span>
+    </div>
+    <div class="meters" style="padding:0 16px">${kv}</div>
+    ${(isFog||isValve)?`<div style="display:flex;gap:8px;padding:14px 16px 4px">
+      ${isFog?`<button class="btn sm" data-rpc="set_fog_recipe">${t('dev.rpc')}<br><span style="font-size:10px">EC 1.35 · pH 5.90</span></button>
+               <button class="btn sm ghost" data-rpc="stop_fog">stop_fog</button>`
+              :`<button class="btn sm" data-rpc="open">open</button><button class="btn sm ghost" data-rpc="close">close</button>`}
+    </div>`:''}
+    <div id="rpcMsg" style="padding:8px 20px 16px;font-size:12px;color:var(--tx3)"></div>`);
+}
+
+async function sendRpc(method){
+  const msg = document.getElementById('rpcMsg');
+  const name = document.getElementById('sheetBody').querySelector('h2').textContent;
+  if(!state.platform){ if(msg) msg.textContent = t('dev.demo'); return; }
+  const params = method==='set_fog_recipe' ? {ec:1.35, ph:5.9} : {};
+  try{
+    const r = await fetch(state.platform.replace(/\/+$/,'') + '/api/rpc', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({device:name, method, params})
+    });
+    const body = await r.json().catch(()=>({}));
+    if(!r.ok){
+      if(msg) msg.textContent = t('dev.rpc.blocked') + ' · ' + (body.error||r.status);
+      return;
+    }
+    if(msg) msg.textContent = t('dev.rpc.ok') + ' · #' + body.rpc.id;
+    setTimeout(syncLive, 900);
+  }catch(e){ if(msg) msg.textContent = t('dev.err') + ': ' + e.message; }
+}
+
 /* ---------------- render ---------------- */
 const TABS = [
   ['home','M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z'],
   ['judges','M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1'],
+  ['devices','M6 8h3v3H6zM6 14h3v3H6zM12 9.5h7M12 15.5h7'],
   ['map','M9 4l6 2 5-2v14l-5 2-6-2-5 2V6zM9 4v14M15 6v14'],
   ['review','M4 12.5l5 5L20 6.5'],
   ['more','M6 12h.01M12 12h.01M18 12h.01']
@@ -527,6 +676,7 @@ function render(){
   const s = document.getElementById('scroll');
   const html = state.tab==='home'?screenHome()
     : state.tab==='judges'?screenJudges()
+    : state.tab==='devices'?screenDevices()
     : state.tab==='map'?screenMap()
     : state.tab==='review'?screenReview()
     : screenMore();
@@ -590,6 +740,9 @@ document.getElementById('scroll').addEventListener('click', ev=>{
   if(el.dataset.judge){ state.judge = el.dataset.judge; render(); return; }
   if(el.dataset.lang){ applyLang(el.dataset.lang); return; }
 
+  if(el.dataset.dev){ openDeviceSheet(el.dataset.dev); return; }
+  if(el.dataset.ack){ ackAlarm(el.dataset.ack); return; }
+  if(el.dataset.act==='platform'){ openPlatformSheet(); return; }
   if(el.dataset.node){
     const n = NODES.find(x=>x.id===+el.dataset.node);
     const [d,e] = nodeTxt(n);
@@ -629,7 +782,44 @@ document.getElementById('scroll').addEventListener('click', ev=>{
   }
 });
 
-document.getElementById('sheet').addEventListener('click', ev=>{
+function openPlatformSheet(){
+  openSheet(`<h2>${t('dev.platform')}</h2>
+    <div style="padding:6px 20px 12px">
+      <input id="platInput" type="text" inputmode="url" placeholder="http://127.0.0.1:8090"
+        value="${esc(state.platform)}" style="width:100%">
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn sm ghost" data-act="plat-clear">${t('dev.demo')}</button>
+        <button class="btn sm" data-act="plat-save">${t('dev.connect')}</button>
+      </div>
+      <div id="platMsg" style="margin-top:10px;font-size:12px;color:var(--tx3)">${t('dev.hint')}</div>
+    </div>`);
+}
+
+async function ackAlarm(id){
+  if(!state.platform) return;
+  try{
+    await fetch(state.platform.replace(/\/+$/,'') + '/api/alarms/'+encodeURIComponent(id)+'/ack', {method:'POST'});
+    await syncLive(); render();
+  }catch(e){}
+}
+
+document.getElementById('sheet').addEventListener('click', async ev=>{
+  const rpc = ev.target.closest('[data-rpc]');
+  if(rpc){ sendRpc(rpc.dataset.rpc); return; }
+  const actEl = ev.target.closest('[data-act]');
+  if(actEl && actEl.dataset.act==='plat-save'){
+    const v = (document.getElementById('platInput').value || '').trim().replace(/\/+$/,'');
+    state.platform = v; localStorage.setItem('napell-platform', v);
+    const m = document.getElementById('platMsg');
+    if(m) m.textContent = '…';
+    await syncLive();
+    if(m) m.textContent = state.liveErr ? (t('dev.err') + ' · ' + state.liveErr) : `${t('dev.live')} · ${(state.live&&state.live.devices.length)||0} ${t('tab.devices')}`;
+    render(); return;
+  }
+  if(actEl && actEl.dataset.act==='plat-clear'){
+    state.platform=''; localStorage.removeItem('napell-platform'); state.live=null; state.liveErr='';
+    closeSheet(); render(); return;
+  }
   const lang = ev.target.closest('[data-lang]');
   if(lang){ applyLang(lang.dataset.lang); closeSheet(); return; }
   const act = ev.target.closest('[data-act]');
@@ -649,9 +839,10 @@ function tick(){
 tick(); setInterval(tick, 20000);
 
 pushLedger({stage:'aseptic_establishment', decision:'review_microscopy', conf:0.59, at:Date.now()});
+if(state.platform){ syncLive().then(render); setInterval(()=>{ if(state.platform) syncLive().then(()=>{ if(['devices','more'].includes(state.tab)) render(); }); }, 6000); }
 const _qs = new URLSearchParams(location.search);
 const _q = _qs.get('lang');
-if(['home','judges','map','review','more'].includes(_qs.get('tab'))) state.tab = _qs.get('tab');
+if(['home','judges','devices','map','review','more'].includes(_qs.get('tab'))) state.tab = _qs.get('tab');
 if(['a','b','c'].includes(_qs.get('judge'))) state.judge = _qs.get('judge');
 applyLang(['zh','en','ar'].includes(_q) ? _q : state.lang);
 
