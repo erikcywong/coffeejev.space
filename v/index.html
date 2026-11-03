@@ -127,6 +127,14 @@
       <div class="m"><div class="k">签发费</div><div class="v" id="fee"></div></div>
       <div class="m"><div class="k">方法版本</div><div class="v" id="method"></div></div>
     </div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:14px;align-items:center">
+      <img id="qrImg" alt="标签二维码" width="92" height="92"
+           style="border-radius:8px;background:#fff;padding:4px;flex:none">
+      <div style="min-width:0">
+        <div class="kid">扫码验证 · SCAN TO VERIFY</div>
+        <div class="note mono" id="qrUrl" style="word-break:break-all;margin-top:3px"></div>
+      </div>
+    </div>
   </div>
 
   <div class="card" id="checkCard" hidden>
@@ -192,6 +200,15 @@
     <pre id="raw"></pre>
   </details>
 
+  <div class="card" id="indexCard" hidden>
+    <h2>已签发标签 <span class="tag" id="idxCount"></span></h2>
+    <div id="idxList" class="row"></div>
+    <p class="note" style="margin-top:10px">
+      这张列表随每次导出更新。每张标签都能用它的二维码或编号独立验证 ——
+      纸张可以补印，编号和哈希不能。
+    </p>
+  </div>
+
   <div class="links">
     <a href="../method/">方法学 CJV-MTH-1.0 →</a>
     <a href="../carbon/">碳层设计与因子 →</a>
@@ -204,6 +221,7 @@
   </p>
 </div>
 
+<script src="labels.js"></script>
 <script>
 /* ---- the one baked label (demo build). A live platform returns the same shape ---- */
 const LABEL = {
@@ -239,6 +257,13 @@ const LABEL = {
   ]
 };
 const PAYLOAD = "AP-0712|93.648|0.1951|B";   // the exact string the engine hashes
+
+/* labels exported by tools/export_labels.py; the constant above is the offline fallback */
+const CATALOG = (window.CJ_LABELS && window.CJ_LABELS.labels && window.CJ_LABELS.labels.length)
+  ? window.CJ_LABELS.labels
+  : [{ ...LABEL, _payload: PAYLOAD }];
+const BASE_URL = (window.CJ_LABELS && window.CJ_LABELS.base) || 'https://www.coffeejev.space/v/?id=';
+const findLabel = id => CATALOG.find(l => l.label_id === id);
 
 const NAMES = { electricity: '电力（范围二）', nutrients: '营养盐', packaging: '包装', transport: '运输', hardware: '硬件分摊' };
 const $ = id => document.getElementById(id);
@@ -302,6 +327,10 @@ function render(label, payload, localOnly) {
   $('total').textContent = label.kgco2e_total.toFixed(3);
   $('linesCard').hidden = false;
 
+  const qr = $('qrImg');
+  if (label.qr) { qr.src = label.qr; qr.hidden = false; } else { qr.hidden = true; }
+  $('qrUrl').textContent = BASE_URL + label.label_id;
+
   $('raw').textContent = JSON.stringify({ label, payload, recomputed_hash: expect }, null, 2);
   document.title = `${label.label_id} · 已验证 · CoffeeJeV`;
 }
@@ -323,7 +352,8 @@ async function verifyLive(id) {
 
 function load(id) {
   if (!id) return;
-  if (id === LABEL.label_id) { render(LABEL, PAYLOAD); return; }
+  const hit = findLabel(id);
+  if (hit) { render(hit, hit._payload || PAYLOAD); return; }
   verdict('unknown', '本演示包未收录该标签', `编号 <span class="mono">${esc(id)}</span> 不在静态演示数据里。接上平台即可实时验证。`);
   $('labelCard').hidden = true; $('checkCard').hidden = true; $('linesCard').hidden = true;
   verifyLive(id);
@@ -334,9 +364,23 @@ $('q').addEventListener('keydown', e => { if (e.key === 'Enter') $('go').click()
 $('demo').onclick = () => { $('q').value = LABEL.label_id; load(LABEL.label_id); };
 $('live').onclick = () => verifyLive(($('q').value || '').trim() || LABEL.label_id);
 
+function renderIndex() {
+  if (CATALOG.length < 1) return;
+  $('idxCard').hidden = false;
+  $('idxCount').textContent = CATALOG.length + ' 张';
+  $('idxList').innerHTML = CATALOG.map(l =>
+    `<button data-load="${esc(l.label_id)}" style="font-family:var(--mono);font-size:11.5px">
+       ${esc(l.label_id)}<span style="color:var(--dim2);margin-left:6px">${l.kgco2e_per_unit.toFixed(3)}</span></button>`).join('');
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-load]');
+  if (b) { $('q').value = b.dataset.load; load(b.dataset.load); }
+});
+
 const fromQuery = new URLSearchParams(location.search).get('id') || location.hash.replace(/^#/, '');
 if (fromQuery) { $('q').value = fromQuery; load(fromQuery); }
-else { render(LABEL, PAYLOAD); $('q').value = LABEL.label_id; }
+else { const first = CATALOG[0]; render(first, first._payload || PAYLOAD); $('q').value = first.label_id; }
+renderIndex();
 </script>
 </body>
 </html>
