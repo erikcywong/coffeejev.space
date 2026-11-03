@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>CJV-MTH-1.0 · CoffeeJeV 方法学 / 口径公开页</title>
-<meta name="description" content="CoffeeJeV 决策层的公开方法学：12 条规则、版本哈希、挑战流程与边界声明。模型可替换，口径是产品。">
+<title>方法学 · CoffeeJeV</title>
+<meta name="description" content="模型可以被替换，口径才是产品：12 条规则、版本哈希、挑战流程、可改与不可改。">
 <style>
 :root{
   --bg:#08090b;
@@ -227,625 +226,73 @@ h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.025em}
   *{transition:none!important;animation:none!important}
 }
 </style>
+
+<style>
+  /* --- subpage chrome (added by tools/split_docs.py) --- */
+  h1,h2,h3,h4{scroll-margin-top:90px}
+  .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+    padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
+    "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+    background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+    backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
+  .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+  .zc-back svg{width:13px;height:13px}
+  .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
+    grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
+  .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
+  .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
+    text-transform:uppercase;color:#64748b;margin-bottom:12px}
+  .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
+    text-decoration:none;color:#8d97a5;border:0}
+  .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
+  .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
+  .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
+  .zc-rail a.on b{color:#3fe0b0}
+  .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+  .zc-rail a.zc-full{color:#64748b;font-size:12px}
+  .zc-main{min-width:0}
+  .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
+  .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
+  .zc-crumb a:hover{color:#3fe0b0}
+  .zc-crumb b{color:#c9d2dd;font-weight:600}
+  .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
+  .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+    border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
+    background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+  .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+  .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
+    text-transform:uppercase;color:#64748b}
+  .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+  .zc-pager .r{align-items:flex-end;text-align:right}
+  /* paper-themed docs (trial-like) */
+  .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
+  @media (max-width:900px){
+    .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
+    .zc-rail{position:static}
+    .zc-back{top:12px;right:12px}
+  }
+</style>
+
+<style>
+  .zc-idx{max-width:960px;margin:0 auto;padding:40px 26px 90px}
+  .zc-idx h1{font-size:34px;letter-spacing:-.8px;margin-bottom:10px}
+  .zc-idx .lede{color:#8d97a5;font-size:15px;margin-bottom:30px;max-width:64ch}
+  .zc-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .zc-card{display:flex;gap:12px;align-items:baseline;text-decoration:none;border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;padding:16px 18px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+  .zc-card:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+  .zc-card .n{font-family:var(--mono,ui-monospace);font-size:11px;color:#3fe0b0}
+  .zc-card .t{font-size:14.5px;color:#e9ecf1;font-weight:600}
+  .zc-idx .full{display:inline-block;margin-top:26px;font-size:13px;color:#8d97a5}
+</style>
 </head>
 <body>
-<a class="skip" href="#thesis">跳到正文</a>
-<div class="page">
-  <header class="topbar">
-    <a class="brand" href="#top">CoffeeJeV <span>/ METHOD</span></a>
-    <div class="topbar-meta">
-      <span>CJV-MTH-1.0</span>
-      <span>2026-11-03</span>
-      <span class="release"><i></i>已发布</span>
-    </div>
-  </header>
-
-  <div class="notice" role="note">
-    <span class="notice-label">READ FIRST</span>
-    <p><strong>本页是方法学，不是营销页。</strong> 这里只写可复算的判据、可挑战的边界和可审计的版本记录；不写效果承诺，也不写未获认证的合规声明。</p>
-  </div>
-
-  <div class="shell">
-    <aside>
-      <nav class="nav" aria-label="页面目录">
-        <p class="nav-title">目录 / CONTENTS</p>
-        <a href="#thesis"><span class="n">01</span>为什么口径才是资产</a>
-        <a href="#chain"><span class="n">02</span>口径链 12 条</a>
-        <a href="#version"><span class="n">03</span>版本与哈希</a>
-        <a href="#challenge"><span class="n">04</span>如何挑战一条规则</a>
-        <a href="#boundary"><span class="n">05</span>与外部标准的关系</a>
-        <a href="#fixed"><span class="n">06</span>什么可以改、什么不能改</a>
-        <a href="#claim"><span class="n">07</span>我们拒绝宣称的东西</a>
-        <div class="nav-meta">
-          <b>CJV-MTH-1.0</b>
-          生效 2026-11-03<br>
-          12 rules / 7 sections<br>
-          hash 9b12abef<br>
-          挑战窗口 30 d
-        </div>
-      </nav>
-    </aside>
-
-    <main id="top">
-      <section class="hero">
-        <p class="kicker">PUBLIC METHODOLOGY · COFFEE DECISION LAYER</p>
-        <h1>模型可以替换，<br><em>口径</em>才是产品。</h1>
-        <p class="hero-sub">CoffeeJeV 把 12 字段 IoT 遥测转成三类决策：污染判断、驯化就绪、营养雾选择。本页固定这些决策背后的 12 条规则、版本哈希和挑战流程，使模型替换不改变可审计的判据。</p>
-        <div class="meta-row">
-          <span class="chip">文档编号 <b>CJV-MTH-1.0</b></span>
-          <span class="chip">生效日期 <b>2026-11-03</b></span>
-          <span class="chip">规则数 <b>12</b></span>
-          <span class="chip hash">方法哈希 <b>9b12abef</b></span>
-          <span class="chip">适用产品 <b>判断 / 碳标签</b></span>
-        </div>
-      </section>
-
-      <section class="section" id="thesis">
-        <div class="section-head">
-          <div class="sec-num">01</div>
-          <div>
-            <p class="sec-kicker">THESIS / 为什么</p>
-            <h2>为什么口径才是资产</h2>
-            <p class="sec-desc">模型是实现的细节，口径是责任的分配。把这句话写成可审计的规则，才有资格对外签发。</p>
-          </div>
-        </div>
-        <div class="prose">
-          <p><strong>模型可复制。</strong>把 12 字段映射到三类决策的数学并不复杂：阈值、线性压分、softmax 排序，一个有经验的工程师两小时可以重写一遍，效果可能接近。任何以“模型效果”为护城河的说法，都要先接受这个前提。</p>
-          <p><strong>口径不可复制。</strong>它由事故记录、合同条款、版本历史和可被挑战的接口共同构成。哪条阈值来自一次误放行，哪一个下限是客户业务约束而非统计结论，旧标签为什么不能被静默重算——这些不在权重里。</p>
-          <p><strong>所以对外交付的是带版本号的规则。</strong>CJV-MTH-1.0，12 条，方法哈希 <span class="mark mono">9b12abef</span>。模型可以换，规则必须显式升级；每次升级都要说明影响面。别人可以复制一个 judger，很难复制一条被审计过、被挑战过、被合同引用过的规则链。</p>
-        </div>
-        <div class="copy-grid">
-          <article class="copy-card">
-            <span class="copy-tag">COPYABLE</span>
-            <h3>复制一个 judger</h3>
-            <p>模型定义、推理代码、训练数据。以小时或天计。</p>
-          </article>
-          <article class="copy-card">
-            <span class="copy-tag">NOT COPYABLE</span>
-            <h3>复制本口径</h3>
-            <p>12 条规则、事故记录、合同基线、版本历史、挑战归档。以审计周期计。</p>
-          </article>
-        </div>
-        <p class="pull">可复制的是实现，不可复制的是被审计过的判断链。</p>
-      </section>
-
-      <section class="section" id="chain">
-        <div class="section-head">
-          <div class="sec-num">02</div>
-          <div>
-            <p class="sec-kicker">RULE CHAIN / 口径链</p>
-            <h2>口径链 12 条</h2>
-            <p class="sec-desc">每条规则给出编号、判据和可挑战点。判据必须落到公式或阈值；挑战点必须指向可争议的输入或常数，而不是态度。</p>
-          </div>
-        </div>
-        <div class="chain-legend">
-          <span>判据 = 可执行公式 / 阈值</span>
-          <span>挑战点 = 可被反例推翻的假设</span>
-        </div>
-
-        <div class="rule-list">
-          <article class="rule-card" id="mth-01">
-            <div class="rule-id"><span class="rule-tag">MTH-01</span><span class="rule-kind">决策阈值</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>成本不对称阈值</h3><span class="rule-en">Cost-asymmetric threshold</span></div>
-              <p class="rule-desc">用两类错误的相对成本决定拦截概率，不先验设定“污染率”。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">τ_cost = C_FP / (C_FP + C_FN)
-<span class="muted">p ≥ τ_cost → 拦截侧；p &lt; τ_cost → 放行侧</span></div>
-                <p class="vars"><b>C_FP</b> = 一次误放行的期望成本；<b>C_FN</b> = 一次误隔离的期望成本；<b>p</b> = 污染后验概率。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>两个成本由谁定价、如何核价；若成本来自客户合同，阈值必须随合同附件重算并进入版本记录。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-02">
-            <div class="rule-id"><span class="rule-tag">MTH-02</span><span class="rule-kind">运营约束</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>运营下限</h3><span class="rule-en">Operational floor</span></div>
-              <p class="rule-desc">运营下限只允许抬高拦截概率，不允许被模型单独下调。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">τ_hi = max(τ_cost, τ_min)
-τ_min = 0.15  <span class="muted">// 默认值</span></div>
-                <p class="vars">任何低于默认值的 τ_min 必须由合同附件单独列明，并写入决策记录的 <b>method_version</b> 与标签元数据。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>下限是业务约束，不是统计结论；客户可替换，但必须写进合同，否则不得用于签发。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-03">
-            <div class="rule-id"><span class="rule-tag">MTH-03</span><span class="rule-kind">取证区间</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>双阈值取证</h3><span class="rule-en">Two-threshold evidence</span></div>
-              <p class="rule-desc">高阈值直接隔离，低阈值以上必须镜检复核，避免把不确定样本直接放行。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">τ_lo = max(0.06, 0.45 · τ_hi)</div>
-                <div class="table-wrap">
-                  <table class="data-table">
-                    <thead><tr><th>p 区间</th><th>动作</th><th>记录要求</th></tr></thead>
-                    <tbody>
-                      <tr><td><code>p &lt; τ_lo</code></td><td>放行 / release</td><td>常规决策记录</td></tr>
-                      <tr><td><code>τ_lo ≤ p &lt; τ_hi</code></td><td>镜检复核 / microscopy review</td><td>复核结论回写；未回写不得关闭</td></tr>
-                      <tr><td><code>p ≥ τ_hi</code></td><td>隔离处置 / quarantine</td><td>隔离批次号 + 处置凭证</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>0.06 与 0.45 是工程常数，不是从数据估计出来的；换作物或换复核成本后必须重新验证。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-04">
-            <div class="rule-id"><span class="rule-tag">MTH-04</span><span class="rule-kind">硬闸门</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>硬闸门压分</h3><span class="rule-en">Hard-gate score cap</span></div>
-              <p class="rule-desc">加权分只负责闸门之上的排序，不能覆盖硬约束。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">cap = 100
-if N_root &lt; 3:      cap = min(cap, 55)
-if browning &gt; 60%: cap = min(cap, 60)
-if p ≥ 0.5:        cap = min(cap, 40)
-S_final = min(S_weighted, cap)</div>
-                <div class="table-wrap">
-                  <table class="data-table">
-                    <thead><tr><th>触发条件</th><th>分数上限</th></tr></thead>
-                    <tbody>
-                      <tr><td>根数 <code>N_root &lt; 3</code></td><td class="num">≤ 55</td></tr>
-                      <tr><td>褐变 <code>browning &gt; 60%</code></td><td class="num">≤ 60</td></tr>
-                      <tr><td>污染后验 <code>p ≥ 0.5</code></td><td class="num">≤ 40</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>三个 cap 来自事故复盘；多个闸门同时触发时只取最小值，是否足以覆盖交叉风险，需要用反例检验。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-05">
-            <div class="rule-id"><span class="rule-tag">MTH-05</span><span class="rule-kind">输出语义</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>弃权语义</h3><span class="rule-en">Abstention semantics</span></div>
-              <p class="rule-desc">弃权是正式输出，不是错误码；必须写入 ledger 并计入统计，不得用默认动作填充。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">precedence: need_more_info ≻ abstain ≻ no_safe_option ≻ defer_to_human ≻ decision</div>
-                <div class="table-wrap">
-                  <table class="data-table">
-                    <thead><tr><th>输出</th><th>触发条件</th><th>下游动作</th></tr></thead>
-                    <tbody>
-                      <tr><td><code>need_more_info</code></td><td>12 字段缺失或互相冲突</td><td>指定补件字段与截止时间</td></tr>
-                      <tr><td><code>abstain</code></td><td>输入超出训练分布，或置信区间跨阈值</td><td>不给出方向，转人工</td></tr>
-                      <tr><td><code>no_safe_option</code></td><td>可行集为空</td><td>输出该语义；流程置 <code>stop_and_review</code></td></tr>
-                      <tr><td><code>defer_to_human</code></td><td>成本参数未确认，或超出授权</td><td>交有权限的人签署</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span><code>no_safe_option</code> 与 <code>defer_to_human</code> 的边界由判定树固定；判定树变化必须发版。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-06">
-            <div class="rule-id"><span class="rule-tag">MTH-06</span><span class="rule-kind">可行集</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>可行性先于效用</h3><span class="rule-en">Feasibility before utility</span></div>
-              <p class="rule-desc">先过硬约束，再算效用，最后只在可行集内排序；不允许用高收益补偿违规动作。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">F = { a ∈ A | g_k(a) ≤ 0, ∀k = 1..K }
-if F = ∅ → no_safe_option + stop_and_review
-P(a) = exp(β · U(a)) / Σ exp(β · U(a')),  a, a' ∈ F
-β = 6
-a* = argmax P(a),  a ∈ F</div>
-                <p class="vars"><b>g_k</b> 为硬约束函数；<b>U</b> 为期望效用；<b>β=6</b> 是排序锐度，仅在可行集内生效。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>硬约束集合 K 是否完整，以及 β=6 在成本尺度变化后是否需要重标定。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-07">
-            <div class="rule-id"><span class="rule-tag">MTH-07</span><span class="rule-kind">证据冻结</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>哈希链冻结</h3><span class="rule-en">Hash-chain freeze</span></div>
-              <p class="rule-desc">决策与标签同构，任何字段变化都必须导致哈希变化；旧记录不可覆盖。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">h_i = fnv(prev_hash ‖ canonical(payload_i))
-canonical: key 字典序 · UTF-8 · 无冗余空白 · 十进制数字</div>
-                <p class="vars">payload 骨架含 <b>method_version</b>、<b>inputs_digest</b>、<b>output</b>、<b>decided_at</b>；标签使用同一骨架，可独立重算。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>FNV-1a-64 只提供篡改检测，不是抗碰撞承诺；外部锚定由客户另行决定；规范化实现变化必须升 MAJOR 并启新链。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-08">
-            <div class="rule-id"><span class="rule-tag">MTH-08</span><span class="rule-kind">碳足迹</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>小时级边际因子</h3><span class="rule-en">Hourly marginal factor</span></div>
-              <p class="rule-desc">只用计量电能，不用估算电量；标签保留小时级电量与因子版本。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">E_batch = Σ kWh_h · EF(h)   <span class="muted">h = 1..24</span>
-label = E_batch / yield_kg   <span class="muted">[kgCO2e/kg]</span></div>
-                <div class="table-wrap">
-                  <table class="data-table">
-                    <thead><tr><th>时段</th><th>EF(h) / kgCO2e·kWh⁻¹</th></tr></thead>
-                    <tbody>
-                      <tr><td>00:00–04:00</td><td class="num">0.31</td></tr>
-                      <tr><td>04:00–08:00</td><td class="num">0.38</td></tr>
-                      <tr><td>08:00–12:00</td><td class="num">0.44</td></tr>
-                      <tr><td>12:00–16:00</td><td class="num">0.47</td></tr>
-                      <tr><td>16:00–20:00</td><td class="num">0.58</td></tr>
-                      <tr><td>20:00–24:00</td><td class="num">0.41</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>因子是区域与年度相关的，六段常数不等于真小时曲线；自备光伏或绿电合同必须选择市场法或地区法并升版本。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-09">
-            <div class="rule-id"><span class="rule-tag">MTH-09</span><span class="rule-kind">数据品质</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>数据品质分级</h3><span class="rule-en">Data-quality grade</span></div>
-              <p class="rule-desc">计量占比决定等级，等级决定凭证价格与积分系数；不能拿估算数据换 A 级。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">q = metered_kWh / (metered_kWh + estimated_kWh)
-A: q ≥ 0.70   B: 0.45 ≤ q &lt; 0.70   C: q &lt; 0.45</div>
-                <div class="table-wrap">
-                  <table class="data-table">
-                    <thead><tr><th>等级</th><th>计量占比 q</th><th>价格系数 k</th><th>积分系数 κ</th></tr></thead>
-                    <tbody>
-                      <tr><td><code>A</code></td><td>≥ 70%</td><td class="num">1.00</td><td class="num">1.00</td></tr>
-                      <tr><td><code>B</code></td><td>45% ≤ q &lt; 70%</td><td class="num">0 &lt; k_B &lt; 1</td><td class="num">0 &lt; κ_B &lt; 1</td></tr>
-                      <tr><td><code>C</code></td><td>&lt; 45%</td><td class="num">0 &lt; k_C &lt; k_B</td><td class="num">0 &lt; κ_C &lt; κ_B</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p class="vars">系数符号必须在合同附件中固定，且只对新批次生效；已签发标签按原版本保留。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>分母是否包含估算电量、计量窗口是累计还是连续、采样丢失如何计入，三个选择都会改变等级，必须写进规则快照。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-10">
-            <div class="rule-id"><span class="rule-tag">MTH-10</span><span class="rule-kind">批次边界</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>批次完整性</h3><span class="rule-en">Batch integrity</span></div>
-              <p class="rule-desc">批次是最小签发单位，不是可拆分的计费单位。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">valid_batch ⇔ |B| ≥ 240
-  ∧ (max t_harvest − min t_harvest) ≤ 24h
-  ∧ harvest_windows(B) = 1</div>
-                <p class="vars">同谱系 24h 内合并为一个批次；一个批次只对应一个采收窗口；禁止拆分套取签发费。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>240 株下限是运营约束不是统计最优；24h 边界必须为闭区间；客户不共享谱系时该规则不可执行。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-11">
-            <div class="rule-id"><span class="rule-tag">MTH-11</span><span class="rule-kind">减排基线</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>基线共签</h3><span class="rule-en">Baseline co-sign</span></div>
-              <p class="rule-desc">减排基线由双方在合同签署时冻结，平台不得单方设定或追溯调整。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">B0 = (yield_ref, energy_ref, EF_ref, boundary, period)
-reduction = (E_ref − E_actual) / E_ref
-valid_reduction ⇔ sig_client(B0) ∧ sig_platform(B0)</div>
-                <p class="vars">缺任一方签名，不得签发减排声明；基线更新只能通过合同附件，不得在运行期静默替换。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>共签方是否有能力核验基线、历史数据缺失时用哪个参考年、基线更新是否只能走合同附件。</p>
-            </div>
-          </article>
-
-          <article class="rule-card" id="mth-12">
-            <div class="rule-id"><span class="rule-tag">MTH-12</span><span class="rule-kind">版本治理</span></div>
-            <div class="rule-body">
-              <div class="rule-head"><h3>版本不可追溯修改</h3><span class="rule-en">Non-retroactive versioning</span></div>
-              <p class="rule-desc">方法变更必须发新版本号；旧标签永久指向旧版本，禁止静默重算或覆盖。</p>
-              <div class="criterion">
-                <span class="label">判据</span>
-                <div class="formula">version = CJV-MTH-{MAJOR}.{MINOR}[.{PATCH}]
-MAJOR = 不可变项或语义变化
-MINOR = 阈值 / 参数变化
-PATCH = 不改变判据的文本勘误</div>
-                <p class="vars">旧标签的 <b>method_version</b> 不可修改；新版本只能生成新标签，不得回写旧记录。</p>
-              </div>
-              <p class="challenge"><span class="label">可挑战点</span>什么算“不改变判据的文本勘误”需要白名单；否则 PATCH 会被用来绕过版本记录。</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="section" id="version">
-        <div class="section-head">
-          <div class="sec-num">03</div>
-          <div>
-            <p class="sec-kicker">VERSION &amp; HASH / 版本</p>
-            <h2>版本与哈希</h2>
-            <p class="sec-desc">版本卡是审计入口：先看记录里的 method_version，再找对应规则快照，最后复算。当前版本不是复算依据。</p>
-          </div>
-        </div>
-
-        <div class="version-card">
-          <div class="v-head">
-            <div>
-              <span class="v-kicker">METHOD VERSION RECORD</span>
-              <h3>CJV-MTH-1.0</h3>
-            </div>
-            <span class="badge">CURRENT / 已发布</span>
-          </div>
-          <div class="v-grid">
-            <div class="v-item"><span class="v-label">版本号</span><span class="v-value mono">CJV-MTH-1.0</span></div>
-            <div class="v-item"><span class="v-label">生效日期</span><span class="v-value">2026-11-03</span></div>
-            <div class="v-item"><span class="v-label">规则数</span><span class="v-value">12</span></div>
-            <div class="v-item"><span class="v-label">方法哈希（短）</span><span class="v-value v-hash">9b12abef</span></div>
-            <div class="v-item"><span class="v-label">适用产品</span><span class="v-value">判断 / 碳标签</span></div>
-            <div class="v-item"><span class="v-label">变更状态</span><span class="v-value">不可追溯修改</span></div>
-          </div>
-          <p class="v-foot">完整 64-bit 哈希与方法快照一起归档；9b12abef 是人工引用用的前 8 位。</p>
-        </div>
-
-        <div class="audit-grid">
-          <div class="audit-copy">
-            <span class="label">AUDIT RULE</span>
-            <h3>按版本复算，不按当前版本复算</h3>
-            <p>决策记录与碳标签都带 <span class="mono">method_version</span> 与 <span class="mono">method_hash</span>。审计时先取记录里的版本，再加载同版本规则快照，最后重放输入。</p>
-            <ol class="audit-list">
-              <li><span>01</span>读取 method_version 与 inputs_digest。</li>
-              <li><span>02</span>加载该版本的不可变规则快照与阈值配置。</li>
-              <li><span>03</span>重放输入，复算 decision / label 与 ledger hash。</li>
-              <li><span>04</span>不一致则冻结相关签发并开 incident；不得改旧记录。</li>
-            </ol>
-          </div>
-          <pre class="code">{
-  "decision_id": "jev_dec_...",
-  "method_version": "CJV-MTH-1.0",
-  "method_hash": "9b12abef",
-  "rule_id": "MTH-04",
-  "inputs_digest": "fnv1a64:...",
-  "output": "quarantine",
-  "ledger_prev": "fnv1a64:...",
-  "ledger_hash": "fnv1a64:..."
-}</pre>
-        </div>
-      </section>
-
-      <section class="section" id="challenge">
-        <div class="section-head">
-          <div class="sec-num">04</div>
-          <div>
-            <p class="sec-kicker">CHALLENGE / 挑战</p>
-            <h2>如何挑战一条规则</h2>
-            <p class="sec-desc">挑战不是客服流程。它要求可复现的证据、明确的失效场景和可计算的影响面。30 天挑战窗口，受理后 14 天内裁决，结果公开归档。</p>
-          </div>
-        </div>
-
-        <div class="timeline">
-          <svg viewBox="0 0 920 138" role="img" aria-labelledby="timeline-title">
-            <title id="timeline-title">挑战时间线：D0 开启，D30 提交截止，D44 前裁决，之后公开归档</title>
-            <line x1="62" y1="60" x2="858" y2="60" stroke="#232931" stroke-width="2"/>
-            <rect x="62" y="57" width="260" height="6" rx="3" fill="#00c48c" fill-opacity=".38"/>
-            <rect x="322" y="57" width="276" height="6" rx="3" fill="#e0a24e" fill-opacity=".34"/>
-            <rect x="598" y="57" width="260" height="6" rx="3" fill="#3b9ef7" fill-opacity=".3"/>
-            <circle cx="62" cy="60" r="7" fill="#00c48c"/>
-            <circle cx="322" cy="60" r="7" fill="#e0a24e"/>
-            <circle cx="598" cy="60" r="7" fill="#3b9ef7"/>
-            <circle cx="858" cy="60" r="7" fill="#8b6cff"/>
-            <text x="62" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D0</text>
-            <text x="322" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D30</text>
-            <text x="598" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D44</text>
-            <text x="858" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D44+</text>
-            <text x="62" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">窗口开启</text>
-            <text x="322" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">提交截止</text>
-            <text x="598" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">裁决完成</text>
-            <text x="858" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">公开归档</text>
-            <text x="192" y="118" fill="#3fe0b0" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">SUBMISSION · 30 DAYS</text>
-            <text x="460" y="118" fill="#e0a24e" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">ADJUDICATION · ≤14 DAYS</text>
-            <text x="728" y="118" fill="#3b9ef7" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">PUBLIC ARCHIVE</text>
-          </svg>
-        </div>
-
-        <div class="steps">
-          <article class="step">
-            <div class="step-num">01</div>
-            <div>
-              <h3>提交挑战</h3>
-              <p class="step-time">D0–D30 / WINDOW</p>
-              <p>在 30 天窗口内一次交齐材料；窗口外提交进入下一版本讨论，不阻断当前签发。</p>
-            </div>
-          </article>
-          <article class="step">
-            <div class="step-num">02</div>
-            <div>
-              <h3>受理立案</h3>
-              <p class="step-time">COMPLETENESS CHECK</p>
-              <p>检查三项材料；齐全即立案，缺一项一次性退回，不进入裁决。</p>
-            </div>
-          </article>
-          <article class="step">
-            <div class="step-num">03</div>
-            <div>
-              <h3>裁决</h3>
-              <p class="step-time">≤ 14 DAYS</p>
-              <p>只允许三种结果：维持、修订、新增版本；理由与反例摘要必须公开。</p>
-            </div>
-          </article>
-          <article class="step">
-            <div class="step-num">04</div>
-            <div>
-              <h3>公开归档</h3>
-              <p class="step-time">D44+ / PUBLIC RECORD</p>
-              <p>归档 rule id、版本差异、影响面和需重算标签清单；旧标签保持原版本。</p>
-            </div>
-          </article>
-        </div>
-
-        <div class="evidence-grid">
-          <div class="evidence"><span>REQUIRED 01</span><h4>反例数据</h4><p>12 字段原始记录、时间戳、批次号；最小可复现样本。</p></div>
-          <div class="evidence"><span>REQUIRED 02</span><h4>失效场景</h4><p>规则在什么输入分布下产生错误动作，错误成本是多少。</p></div>
-          <div class="evidence"><span>REQUIRED 03</span><h4>影响面</h4><p>受影响的 label_id / decision_id 列表，以及需重算的标签与批次范围。</p></div>
-        </div>
-
-        <div class="subhead"><h3>裁决口径</h3><span>ONLY THREE OUTCOMES</span></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>结果</th><th>成立条件</th><th>版本动作</th></tr></thead>
-            <tbody>
-              <tr><td><code>维持</code></td><td>反例不成立，或影响不足以改变判据</td><td>归档驳回理由，无版本变更</td></tr>
-              <tr><td><code>修订</code></td><td>判据或参数需调整，但规则语义不变</td><td>发 MINOR / PATCH；旧标签不重算</td></tr>
-              <tr><td><code>新增版本</code></td><td>涉及不可变项、边界或输出语义变化</td><td>发 MAJOR；新链 genesis，旧链冻结</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="section" id="boundary">
-        <div class="section-head">
-          <div class="sec-num">05</div>
-          <div>
-            <p class="sec-kicker">BOUNDARY / 标准边界</p>
-            <h2>与外部标准的关系</h2>
-            <p class="sec-desc">引用标准用于对齐术语与证据要求，不用于暗示认证。认证结论只能由认可机构出具。</p>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table standards">
-            <thead><tr><th>标准</th><th>我们引用什么</th><th>不声称什么</th></tr></thead>
-            <tbody>
-              <tr><td>ISO 14067</td><td>产品碳足迹的量化框架：功能单位、系统边界、数据质量</td><td>未获 ISO 14067 认证，不声称符合</td></tr>
-              <tr><td>PAS 2050</td><td>生命周期温室气体评估的历史方法参照</td><td>未声称 PAS 2050 合规</td></tr>
-              <tr><td>GHG Protocol</td><td>范围 1 / 2 / 3 的划分与双重报告口径</td><td>不构成企业温室气体清单认证</td></tr>
-              <tr><td>ISO/IEC 17025</td><td>计量设备校准与测试能力要求</td><td>不是认可实验室，不出校准证书</td></tr>
-              <tr><td>ISO 19011</td><td>审核方案、证据与审计追溯的参考</td><td>不是认证审核，不出认证结论</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="notice-soft"><strong>关系声明：</strong>这些标准是参照系，不是合规包装。我们引用其术语和证据结构，但不声称已获任何认可机构的认证、认可或注册；客户如需认证，应另行委托认可机构，我们提供可复算的数据包，不代替认证机构。</p>
-      </section>
-
-      <section class="section" id="fixed">
-        <div class="section-head">
-          <div class="sec-num">06</div>
-          <div>
-            <p class="sec-kicker">CHANGE CONTROL / 变更控制</p>
-            <h2>什么可以改、什么不能改</h2>
-            <p class="sec-desc">可变项走版本，不可变项走新链；两者都不是“运营可以悄悄调”。</p>
-          </div>
-        </div>
-
-        <div class="fixed-grid">
-          <article class="fixed-col mutable">
-            <div class="fixed-head">
-              <span class="fixed-tag">MUTABLE / 可变</span>
-              <h3>可以改，但必须发版</h3>
-            </div>
-            <div class="fixed-list">
-              <div class="fixed-item"><span class="fixed-key">阈值</span><span class="fixed-detail">τ_min、τ_lo 系数、闸门常数；改动只对新决策生效。</span></div>
-              <div class="fixed-item"><span class="fixed-key">样本量</span><span class="fixed-detail">每批抽检株数、重复次数。</span></div>
-              <div class="fixed-item"><span class="fixed-key">采样率</span><span class="fixed-detail">IoT 上报频率、计量采样窗口。</span></div>
-              <div class="fixed-item"><span class="fixed-key">作物参数</span><span class="fixed-detail">品种、褐变基线、生育期参数。</span></div>
-              <div class="fixed-item"><span class="fixed-key">语言</span><span class="fixed-detail">标签与决策说明的翻译；语义不得改变。</span></div>
-            </div>
-          </article>
-          <article class="fixed-col immutable">
-            <div class="fixed-head">
-              <span class="fixed-tag">IMMUTABLE / 不可变</span>
-              <h3>不能改，只能新版本</h3>
-            </div>
-            <div class="fixed-list">
-              <div class="fixed-item"><span class="fixed-key">哈希算法</span><span class="fixed-detail">FNV-1a-64 + canonical JSON；改变即失效旧链。</span></div>
-              <div class="fixed-item"><span class="fixed-key">弃权语义</span><span class="fixed-detail">四种输出及优先级，不可折叠为二分类。</span></div>
-              <div class="fixed-item"><span class="fixed-key">版本不可追溯</span><span class="fixed-detail">旧标签永久指向旧版本，禁止静默重算。</span></div>
-              <div class="fixed-item"><span class="fixed-key">单批次完整性</span><span class="fixed-detail">≥ 240 株 / 24h 合并 / 一个采收窗口。</span></div>
-              <div class="fixed-item"><span class="fixed-key">基线共签</span><span class="fixed-detail">双签冻结；平台不得单方设定基线。</span></div>
-            </div>
-          </article>
-        </div>
-        <p class="fixed-note"><strong>注意：</strong>“样本量”指每批抽检株数，不是 MTH-10 的 240 株批次下限；后者在不可变列。任何变更都必须更新 method_version；旧记录不重算。</p>
-
-        <div class="subhead"><h3>变更矩阵</h3><span>VERSION BUMP RULE</span></div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead><tr><th>变更类型</th><th>版本位</th><th>旧标签处理</th></tr></thead>
-            <tbody>
-              <tr><td>可变参数</td><td class="num">MINOR</td><td>保留，指向旧版本</td></tr>
-              <tr><td>不可变项或输出语义</td><td class="num">MAJOR</td><td>冻结；新链 genesis</td></tr>
-              <tr><td>不改变判据的文本勘误</td><td class="num">PATCH</td><td>保留；不重算</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="section" id="claim">
-        <div class="section-head">
-          <div class="sec-num">07</div>
-          <div>
-            <p class="sec-kicker">CLAIM BOUNDARY / 宣称边界</p>
-            <h2>我们拒绝宣称的东西</h2>
-            <p class="sec-desc">以下六条是产品边界，不是法律免责声明；销售材料不得删除、改写或弱化。</p>
-          </div>
-        </div>
-        <div class="claims">
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 01</span>
-            <h3>不称 carbon credit</h3>
-            <p>签发物是基于实测能耗的碳足迹标签与决策记录，不是可交易信用，也不包含额外性论证。</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 02</span>
-            <h3>不称 offset</h3>
-            <p>没有基线额外性、泄漏与永久性安排，不用于抵销任何范围的排放。</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 03</span>
-            <h3>不称已认证</h3>
-            <p>引用 ISO 14067、PAS 2050、GHG Protocol、ISO/IEC 17025 与 ISO 19011，但未获任何认可机构认证，认证结论只能由认可机构出具。</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 04</span>
-            <h3>不预测产量</h3>
-            <p>本层只输出污染判断、驯化就绪与营养雾选择，产量归客户的农艺系统。</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 05</span>
-            <h3>不做农药处方</h3>
-            <p>只输出放行、复核或隔离，不给出农药品种、剂量与施用建议，植保决策归有资质人员。</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 06</span>
-            <h3>不做品种权判定</h3>
-            <p>谱系字段只用于批次合并与追溯，不用于品种真实性、权属或侵权判断。</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="manifest" id="manifest">
-        <div class="manifest-head">
-          <div>
-            <p class="sec-kicker">MACHINE-READABLE MANIFEST</p>
-            <h2>方法清单</h2>
-          </div>
-          <span class="chip mono">application/json</span>
-        </div>
-        <pre class="manifest-code">{"method":"CJV-MTH-1.0","hash":"9b12abef","effective":"2026-11-03","rules":12,"applies_to":["jev-decision","carbon-label"],"immutable":["hash","abstain-semantics","version-history","batch-integrity","baseline-cosign"]}</pre>
-        <p>清单用于集成与自动校验；与正文冲突时，以 CJV-MTH-1.0 的不可变规则快照为准。</p>
-      </section>
-
-      <footer class="footer">
-        <span><b>CJV-MTH-1.0</b> · effective 2026-11-03 · 12 rules</span>
-        <span>hash <b>9b12abef</b> · FNV-1a-64 canonical JSON</span>
-        <span>challenge 30 d · adjudication ≤ 14 d</span>
-      </footer>
-    </main>
-  </div>
+<a class="zc-back" href="../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="zc-idx">
+  <h1>方法学</h1>
+  <p class="lede">模型可以被替换，口径才是产品：12 条规则、版本哈希、挑战流程、可改与不可改。</p>
+  <div class="zc-cards"><a class="zc-card" href="thesis.html"><span class="n">01</span><span class="t">为什么口径才是资产</span></a><a class="zc-card" href="chain.html"><span class="n">02</span><span class="t">口径链 12 条</span></a><a class="zc-card" href="version.html"><span class="n">03</span><span class="t">版本与哈希</span></a><a class="zc-card" href="challenge.html"><span class="n">04</span><span class="t">如何挑战一条规则</span></a><a class="zc-card" href="boundary.html"><span class="n">05</span><span class="t">与外部标准的关系</span></a><a class="zc-card" href="fixed.html"><span class="n">06</span><span class="t">什么可以改、什么不能改</span></a><a class="zc-card" href="claim.html"><span class="n">07</span><span class="t">我们拒绝宣称的东西</span></a><a class="zc-card" href="manifest.html"><span class="n">08</span><span class="t">方法清单</span></a></div>
+  <a class="full" href="full.html">读完整版（单页）→</a>
 </div>
 </body>
 </html>

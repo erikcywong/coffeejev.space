@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>口径链 12 条 · 方法学 · CoffeeJeV</title>
+<meta name="description" content="方法学 — 口径链 12 条">
+<style>
+:root{
+  --bg:#08090b;
+  --card:#11141a;
+  --card2:#171b21;
+  --border:#232931;
+  --text:#e9ecf1;
+  --dim:#8d97a5;
+  --dim2:#64748b;
+  --accent:#00c48c;
+  --accent2:#3fe0b0;
+  --amber:#e0a24e;
+  --red:#ff5d6e;
+  --violet:#8b6cff;
+  --cyan:#3b9ef7;
+  --mono:ui-monospace,Consolas,"Cascadia Mono","SFMono-Regular",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --max:1180px;
+  --radius:8px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:28px}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 78% -10%,rgba(0,196,140,.08),transparent 34rem),
+    radial-gradient(circle at 6% 22%,rgba(59,158,247,.055),transparent 30rem),
+    var(--bg);
+  font-family:var(--sans);
+  font-size:15.5px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(0,196,140,.28);color:#fff}
+a{color:inherit;text-decoration:none}
+p{margin:0}
+h1,h2,h3,h4{font-weight:650;line-height:1.2;margin:0;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--card);border:1px solid var(--accent);padding:10px 14px;z-index:99}
+.skip:focus{left:16px;top:16px}
+.page{max-width:var(--max);margin:0 auto;padding:0 28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0 16px;border-bottom:1px solid var(--border)}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--text)}
+.brand span{color:var(--dim2);font-size:10px;letter-spacing:.12em;margin-left:8px}
+.topbar-meta{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.06em}
+.release{display:inline-flex;align-items:center;gap:6px;color:var(--accent2)}
+.release i{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(0,196,140,.12)}
+.notice{display:flex;align-items:flex-start;gap:14px;margin-top:16px;padding:12px 14px;border:1px solid rgba(0,196,140,.34);border-radius:6px;background:linear-gradient(90deg,rgba(0,196,140,.08),rgba(0,196,140,.015))}
+.notice-label{flex:0 0 auto;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--accent2);padding-top:3px}
+.notice p{font-size:12.5px;line-height:1.6;color:var(--dim)}
+.notice strong{color:var(--text);font-weight:600}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);gap:54px;padding:34px 0 68px}
+aside{min-width:0}
+.nav{position:sticky;top:24px}
+.nav-title{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim2);margin-bottom:10px}
+.nav a{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(35,41,49,.75);font-size:13px;color:var(--dim);transition:color .18s ease,border-color .18s ease}
+.nav a .n{font-family:var(--mono);font-size:9px;color:var(--dim2);min-width:18px}
+.nav a:hover{color:var(--accent2);border-color:rgba(0,196,140,.35)}
+.nav-meta{margin-top:22px;padding:12px 12px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-family:var(--mono);font-size:9.5px;line-height:1.9;color:var(--dim2)}
+.nav-meta b{display:block;color:var(--dim);font-weight:500}
+main{min-width:0}
+.hero{padding:10px 0 44px;border-bottom:1px solid var(--border)}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--accent2);text-transform:uppercase}
+h1{margin:18px 0 18px;font-size:clamp(40px,5.2vw,60px);line-height:1.06;letter-spacing:-.045em;max-width:860px}
+h1 em{font-style:normal;color:var(--accent2)}
+.hero-sub{max-width:790px;color:var(--dim);font-size:16px;line-height:1.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:rgba(17,20,26,.6);font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.02em;white-space:nowrap}
+.chip b{font-weight:500;color:var(--dim)}
+.chip.hash{color:var(--accent2);border-color:rgba(0,196,140,.3)}
+.section{padding-top:52px}
+.section-head{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);padding-top:4px}
+.sec-kicker{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim2);margin-bottom:7px;text-transform:uppercase}
+h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.025em}
+.sec-desc{max-width:760px;margin-top:9px;color:var(--dim);font-size:14px;line-height:1.75}
+.prose p{color:#cdd4de;font-size:16px;line-height:1.9}
+.prose p+p{margin-top:16px}
+.prose strong{color:var(--text);font-weight:650}
+.prose .mark{color:var(--accent2)}
+.copy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+.copy-card{padding:16px 17px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}
+.copy-card p{margin-top:7px;color:var(--dim);font-size:13px;line-height:1.7}
+.copy-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim2)}
+.copy-card:first-child .copy-tag{color:var(--amber)}
+.copy-card:last-child .copy-tag{color:var(--accent2)}
+.copy-card h3{margin-top:7px;font-size:15px}
+.pull{margin:26px 0 0;padding:14px 18px;border-left:2px solid var(--accent);background:rgba(0,196,140,.04);color:var(--accent2);font-size:15px}
+.chain-legend{display:flex;flex-wrap:wrap;gap:18px;margin:-4px 0 16px;font-family:var(--mono);font-size:9.5px;color:var(--dim2);letter-spacing:.03em}
+.chain-legend span::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;vertical-align:1px;background:var(--accent);border-radius:1px}
+.rule-list{display:flex;flex-direction:column;gap:12px}
+.rule-card{display:grid;grid-template-columns:94px minmax(0,1fr);border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden}
+.rule-id{padding:18px 13px;border-right:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.018),transparent)}
+.rule-tag{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--accent2)}
+.rule-kind{display:block;margin-top:6px;font-family:var(--mono);font-size:8.5px;line-height:1.6;color:var(--dim2);letter-spacing:.04em}
+.rule-body{padding:17px 19px 18px;min-width:0}
+.rule-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px}
+.rule-head h3{font-size:19px;letter-spacing:-.015em}
+.rule-en{font-family:var(--mono);font-size:8.5px;color:var(--dim2);letter-spacing:.06em;text-transform:uppercase}
+.rule-desc{margin-top:7px;color:var(--dim);font-size:13px;line-height:1.7}
+.criterion{margin-top:13px}
+.label{display:block;margin-bottom:6px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim2);text-transform:uppercase}
+.formula{padding:10px 12px;border:1px solid #1b212a;border-left:2px solid rgba(0,196,140,.72);border-radius:3px;background:#0b0d11;font-family:var(--mono);font-size:12px;line-height:1.85;color:#d9e7ef;overflow-x:auto;white-space:pre-wrap}
+.formula .muted{color:var(--dim2)}
+.formula .accent{color:var(--accent2)}
+.vars{margin-top:7px;color:var(--dim);font-size:12.5px;line-height:1.68}
+.vars b{font-family:var(--mono);font-weight:500;color:#c9d2de}
+.challenge{margin-top:13px;padding:9px 11px;border-left:2px solid rgba(224,162,78,.65);background:rgba(224,162,78,.035);color:var(--dim);font-size:12.5px;line-height:1.7}
+.challenge .label{color:var(--amber);margin-bottom:3px}
+.data-table{width:100%;margin-top:9px;border-collapse:collapse;font-size:12.5px}
+.data-table th{padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.08em;color:var(--dim2);white-space:nowrap}
+.data-table td{padding:6px 8px;border-bottom:1px solid rgba(35,41,49,.65);color:#c9d2de;vertical-align:top}
+.data-table tr:last-child td{border-bottom:0}
+.data-table code{font-family:var(--mono);font-size:11.5px;color:var(--accent2);white-space:nowrap}
+.data-table .num{font-family:var(--mono);color:var(--amber);white-space:nowrap}
+.table-wrap{overflow-x:auto}
+.version-card{border:1px solid rgba(0,196,140,.28);border-radius:var(--radius);background:linear-gradient(135deg,rgba(0,196,140,.055),rgba(17,20,26,.9) 48%);overflow:hidden}
+.v-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px 16px;border-bottom:1px solid var(--border)}
+.v-kicker{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--dim2);margin-bottom:5px}
+.v-head h3{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);letter-spacing:-.02em}
+.badge{display:inline-block;padding:4px 8px;border:1px solid rgba(0,196,140,.42);border-radius:3px;font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;color:var(--accent2);white-space:nowrap}
+.v-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.v-item{padding:14px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-width:0}
+.v-item:nth-child(3n){border-right:0}
+.v-label{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;color:var(--dim2);margin-bottom:4px}
+.v-value{display:block;font-size:14px;font-weight:550;color:#dbe2eb;line-height:1.5;overflow-wrap:anywhere}
+.v-hash{font-family:var(--mono);font-size:17px;font-weight:500;color:var(--accent2);letter-spacing:.04em}
+.v-foot{padding:10px 20px 12px;color:var(--dim2);font-family:var(--mono);font-size:9px;line-height:1.7;border-bottom:1px solid var(--border)}
+.audit-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:18px;margin-top:18px;align-items:start}
+.audit-copy h3{margin:5px 0 9px;font-size:18px}
+.audit-copy>p{color:var(--dim);font-size:13px;line-height:1.75}
+.audit-list{list-style:none;padding:0;margin:15px 0 0;display:flex;flex-direction:column;gap:8px}
+.audit-list li{display:flex;gap:10px;font-size:12.5px;color:#c9d2de;line-height:1.65}
+.audit-list li span{font-family:var(--mono);font-size:9px;color:var(--accent);padding-top:2px}
+.code{margin:0;padding:15px 16px;border:1px solid var(--border);border-radius:6px;background:#0b0d11;font-family:var(--mono);font-size:10.5px;line-height:1.8;color:#c6d6e2;overflow-x:auto;white-space:pre}
+.timeline{margin:0 0 20px;padding:10px 0 4px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow-x:auto}
+.timeline svg{display:block;width:100%;min-width:640px;height:auto}
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:14px 15px;border:1px solid var(--border);border-radius:6px;background:var(--card)}
+.step-num{font-family:var(--mono);font-size:10px;color:var(--accent);padding-top:2px}
+.step h3{font-size:15px}
+.step-time{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--amber);margin-top:3px}
+.step p{margin-top:6px;color:var(--dim);font-size:12.5px;line-height:1.7}
+.evidence-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.evidence{padding:13px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card2)}
+.evidence>span{font-family:var(--mono);font-size:8.5px;color:var(--violet);letter-spacing:.08em}
+.evidence h4{margin:5px 0 5px;font-size:13.5px}
+.evidence p{color:var(--dim);font-size:12px;line-height:1.65}
+.subhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:24px 0 0}
+.subhead h3{font-size:17px}
+.subhead span{font-family:var(--mono);font-size:9px;color:var(--dim2)}
+.notice-soft{margin-top:18px;padding:13px 15px;border:1px solid var(--border);border-left:2px solid var(--cyan);border-radius:4px;background:rgba(59,158,247,.035);color:var(--dim);font-size:12.5px;line-height:1.75}
+.notice-soft strong{color:#dbe5ef;font-weight:600}
+.standards td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--text);white-space:nowrap}
+.fixed-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fixed-col{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden}
+.fixed-col.mutable{border-top:2px solid rgba(0,196,140,.72)}
+.fixed-col.immutable{border-top:2px solid rgba(255,93,110,.62)}
+.fixed-head{padding:15px 16px 12px;border-bottom:1px solid var(--border)}
+.fixed-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim2)}
+.fixed-col.mutable .fixed-tag{color:var(--accent2)}
+.fixed-col.immutable .fixed-tag{color:var(--red)}
+.fixed-head h3{margin-top:5px;font-size:16px}
+.fixed-list{padding:5px 16px 8px}
+.fixed-item{padding:9px 0;border-bottom:1px solid rgba(35,41,49,.62)}
+.fixed-item:last-child{border-bottom:0}
+.fixed-key{display:block;font-family:var(--mono);font-size:10px;color:#dbe2eb;letter-spacing:.02em}
+.fixed-detail{display:block;margin-top:3px;color:var(--dim);font-size:12px;line-height:1.65}
+.fixed-note{margin-top:12px;padding:10px 12px;border:1px dashed #2c3440;border-radius:4px;color:var(--dim);font-size:12px;line-height:1.7}
+.fixed-note strong{color:var(--amber);font-weight:600}
+.claims{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.claim-card{padding:14px 15px;border:1px solid var(--border);border-radius:6px;background:var(--card);border-left:2px solid rgba(255,93,110,.55)}
+.claim-no{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--red)}
+.claim-card h3{margin:5px 0 6px;font-size:15px}
+.claim-card p{color:var(--dim);font-size:12.5px;line-height:1.72}
+.manifest{margin-top:52px;padding-top:24px;border-top:1px solid var(--border)}
+.manifest-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+.manifest-head h2{font-size:22px}
+.manifest-code{margin:0;padding:16px;border:1px solid var(--border);border-radius:6px;background:#0b0d11;font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--accent2);overflow-wrap:anywhere;word-break:break-all;white-space:pre-wrap}
+.manifest>p{margin-top:10px;color:var(--dim2);font-size:11.5px;line-height:1.7}
+.footer{margin-top:34px;padding:18px 0 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;line-height:1.8;color:var(--dim2);letter-spacing:.02em}
+.footer b{font-weight:500;color:var(--dim)}
+@media (max-width:960px){
+  .page{padding:0 20px}
+  .shell{grid-template-columns:1fr;gap:22px;padding-top:24px}
+  aside{order:-1}
+  .nav{position:static;border-bottom:1px solid var(--border);padding-bottom:15px}
+  .nav-title{margin-bottom:8px}
+  .nav a{display:inline-flex;border:1px solid var(--border);border-radius:4px;padding:6px 9px;margin:0 5px 5px 0;font-size:11.5px}
+  .nav a .n{min-width:0}
+  .nav-meta{display:none}
+  .topbar-meta span:nth-child(1),.topbar-meta span:nth-child(2){display:none}
+  .audit-grid{grid-template-columns:1fr}
+  .v-grid{grid-template-columns:1fr 1fr}
+  .v-item:nth-child(3n){border-right:1px solid var(--border)}
+  .v-item:nth-child(2n){border-right:0}
+}
+@media (max-width:700px){
+  h1{font-size:38px}
+  .hero-sub{font-size:14.5px}
+  .section-head{grid-template-columns:1fr;gap:7px}
+  .sec-num{padding-top:0}
+  .copy-grid,.steps,.fixed-grid,.claims{grid-template-columns:1fr}
+  .rule-card{grid-template-columns:1fr}
+  .rule-id{display:flex;align-items:center;gap:10px;border-right:0;border-bottom:1px solid var(--border);padding:11px 14px}
+  .rule-kind{margin-top:0}
+  .rule-body{padding:14px}
+  .evidence-grid{grid-template-columns:1fr}
+  .v-grid{grid-template-columns:1fr}
+  .v-item{border-right:0!important}
+  .notice{flex-direction:column;gap:4px}
+  .notice-label{padding-top:0}
+  .footer{flex-direction:column;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+
+<style>
+  /* --- subpage chrome (added by tools/split_docs.py) --- */
+  h1,h2,h3,h4{scroll-margin-top:90px}
+  .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+    padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
+    "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+    background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+    backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
+  .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+  .zc-back svg{width:13px;height:13px}
+  .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
+    grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
+  .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
+  .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
+    text-transform:uppercase;color:#64748b;margin-bottom:12px}
+  .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
+    text-decoration:none;color:#8d97a5;border:0}
+  .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
+  .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
+  .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
+  .zc-rail a.on b{color:#3fe0b0}
+  .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+  .zc-rail a.zc-full{color:#64748b;font-size:12px}
+  .zc-main{min-width:0}
+  .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
+  .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
+  .zc-crumb a:hover{color:#3fe0b0}
+  .zc-crumb b{color:#c9d2dd;font-weight:600}
+  .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
+  .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+    border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
+    background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+  .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+  .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
+    text-transform:uppercase;color:#64748b}
+  .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+  .zc-pager .r{align-items:flex-end;text-align:right}
+  /* paper-themed docs (trial-like) */
+  .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
+  @media (max-width:900px){
+    .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
+    .zc-rail{position:static}
+    .zc-back{top:12px;right:12px}
+  }
+</style>
+
+</head>
+<body>
+<a class="zc-back" href="../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="zc-wrap">
+<aside class="zc-rail"><div class="zc-brand">Method · 8 sections</div><a class="" href="thesis.html"><b>01</b>为什么口径才是资产</a><a class="on" href="chain.html"><b>02</b>口径链 12 条</a><a class="" href="version.html"><b>03</b>版本与哈希</a><a class="" href="challenge.html"><b>04</b>如何挑战一条规则</a><a class="" href="boundary.html"><b>05</b>与外部标准的关系</a><a class="" href="fixed.html"><b>06</b>什么可以改、什么不能改</a><a class="" href="claim.html"><b>07</b>我们拒绝宣称的东西</a><a class="" href="manifest.html"><b>08</b>方法清单</a><div class="zc-rule"></div><a class="zc-full" href="full.html">读完整版 →</a></aside>
+<div class="zc-main">
+<div class="zc-crumb"><a href="../index.html">CoffeeJeV</a> · <a href="index.html">方法学</a> · <b>口径链 12 条</b></div>
+<section class="section" id="chain">
+        <div class="section-head">
+          <div class="sec-num">02</div>
+          <div>
+            <p class="sec-kicker">RULE CHAIN / 口径链</p>
+            <h2>口径链 12 条</h2>
+            <p class="sec-desc">每条规则给出编号、判据和可挑战点。判据必须落到公式或阈值；挑战点必须指向可争议的输入或常数，而不是态度。</p>
+          </div>
+        </div>
+        <div class="chain-legend">
+          <span>判据 = 可执行公式 / 阈值</span>
+          <span>挑战点 = 可被反例推翻的假设</span>
+        </div>
+
+        <div class="rule-list">
+          <article class="rule-card" id="mth-01">
+            <div class="rule-id"><span class="rule-tag">MTH-01</span><span class="rule-kind">决策阈值</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>成本不对称阈值</h3><span class="rule-en">Cost-asymmetric threshold</span></div>
+              <p class="rule-desc">用两类错误的相对成本决定拦截概率，不先验设定“污染率”。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">τ_cost = C_FP / (C_FP + C_FN)
+<span class="muted">p ≥ τ_cost → 拦截侧；p &lt; τ_cost → 放行侧</span></div>
+                <p class="vars"><b>C_FP</b> = 一次误放行的期望成本；<b>C_FN</b> = 一次误隔离的期望成本；<b>p</b> = 污染后验概率。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>两个成本由谁定价、如何核价；若成本来自客户合同，阈值必须随合同附件重算并进入版本记录。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-02">
+            <div class="rule-id"><span class="rule-tag">MTH-02</span><span class="rule-kind">运营约束</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>运营下限</h3><span class="rule-en">Operational floor</span></div>
+              <p class="rule-desc">运营下限只允许抬高拦截概率，不允许被模型单独下调。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">τ_hi = max(τ_cost, τ_min)
+τ_min = 0.15  <span class="muted">// 默认值</span></div>
+                <p class="vars">任何低于默认值的 τ_min 必须由合同附件单独列明，并写入决策记录的 <b>method_version</b> 与标签元数据。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>下限是业务约束，不是统计结论；客户可替换，但必须写进合同，否则不得用于签发。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-03">
+            <div class="rule-id"><span class="rule-tag">MTH-03</span><span class="rule-kind">取证区间</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>双阈值取证</h3><span class="rule-en">Two-threshold evidence</span></div>
+              <p class="rule-desc">高阈值直接隔离，低阈值以上必须镜检复核，避免把不确定样本直接放行。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">τ_lo = max(0.06, 0.45 · τ_hi)</div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>p 区间</th><th>动作</th><th>记录要求</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>p &lt; τ_lo</code></td><td>放行 / release</td><td>常规决策记录</td></tr>
+                      <tr><td><code>τ_lo ≤ p &lt; τ_hi</code></td><td>镜检复核 / microscopy review</td><td>复核结论回写；未回写不得关闭</td></tr>
+                      <tr><td><code>p ≥ τ_hi</code></td><td>隔离处置 / quarantine</td><td>隔离批次号 + 处置凭证</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>0.06 与 0.45 是工程常数，不是从数据估计出来的；换作物或换复核成本后必须重新验证。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-04">
+            <div class="rule-id"><span class="rule-tag">MTH-04</span><span class="rule-kind">硬闸门</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>硬闸门压分</h3><span class="rule-en">Hard-gate score cap</span></div>
+              <p class="rule-desc">加权分只负责闸门之上的排序，不能覆盖硬约束。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">cap = 100
+if N_root &lt; 3:      cap = min(cap, 55)
+if browning &gt; 60%: cap = min(cap, 60)
+if p ≥ 0.5:        cap = min(cap, 40)
+S_final = min(S_weighted, cap)</div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>触发条件</th><th>分数上限</th></tr></thead>
+                    <tbody>
+                      <tr><td>根数 <code>N_root &lt; 3</code></td><td class="num">≤ 55</td></tr>
+                      <tr><td>褐变 <code>browning &gt; 60%</code></td><td class="num">≤ 60</td></tr>
+                      <tr><td>污染后验 <code>p ≥ 0.5</code></td><td class="num">≤ 40</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>三个 cap 来自事故复盘；多个闸门同时触发时只取最小值，是否足以覆盖交叉风险，需要用反例检验。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-05">
+            <div class="rule-id"><span class="rule-tag">MTH-05</span><span class="rule-kind">输出语义</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>弃权语义</h3><span class="rule-en">Abstention semantics</span></div>
+              <p class="rule-desc">弃权是正式输出，不是错误码；必须写入 ledger 并计入统计，不得用默认动作填充。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">precedence: need_more_info ≻ abstain ≻ no_safe_option ≻ defer_to_human ≻ decision</div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>输出</th><th>触发条件</th><th>下游动作</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>need_more_info</code></td><td>12 字段缺失或互相冲突</td><td>指定补件字段与截止时间</td></tr>
+                      <tr><td><code>abstain</code></td><td>输入超出训练分布，或置信区间跨阈值</td><td>不给出方向，转人工</td></tr>
+                      <tr><td><code>no_safe_option</code></td><td>可行集为空</td><td>输出该语义；流程置 <code>stop_and_review</code></td></tr>
+                      <tr><td><code>defer_to_human</code></td><td>成本参数未确认，或超出授权</td><td>交有权限的人签署</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span><code>no_safe_option</code> 与 <code>defer_to_human</code> 的边界由判定树固定；判定树变化必须发版。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-06">
+            <div class="rule-id"><span class="rule-tag">MTH-06</span><span class="rule-kind">可行集</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>可行性先于效用</h3><span class="rule-en">Feasibility before utility</span></div>
+              <p class="rule-desc">先过硬约束，再算效用，最后只在可行集内排序；不允许用高收益补偿违规动作。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">F = { a ∈ A | g_k(a) ≤ 0, ∀k = 1..K }
+if F = ∅ → no_safe_option + stop_and_review
+P(a) = exp(β · U(a)) / Σ exp(β · U(a')),  a, a' ∈ F
+β = 6
+a* = argmax P(a),  a ∈ F</div>
+                <p class="vars"><b>g_k</b> 为硬约束函数；<b>U</b> 为期望效用；<b>β=6</b> 是排序锐度，仅在可行集内生效。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>硬约束集合 K 是否完整，以及 β=6 在成本尺度变化后是否需要重标定。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-07">
+            <div class="rule-id"><span class="rule-tag">MTH-07</span><span class="rule-kind">证据冻结</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>哈希链冻结</h3><span class="rule-en">Hash-chain freeze</span></div>
+              <p class="rule-desc">决策与标签同构，任何字段变化都必须导致哈希变化；旧记录不可覆盖。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">h_i = fnv(prev_hash ‖ canonical(payload_i))
+canonical: key 字典序 · UTF-8 · 无冗余空白 · 十进制数字</div>
+                <p class="vars">payload 骨架含 <b>method_version</b>、<b>inputs_digest</b>、<b>output</b>、<b>decided_at</b>；标签使用同一骨架，可独立重算。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>FNV-1a-64 只提供篡改检测，不是抗碰撞承诺；外部锚定由客户另行决定；规范化实现变化必须升 MAJOR 并启新链。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-08">
+            <div class="rule-id"><span class="rule-tag">MTH-08</span><span class="rule-kind">碳足迹</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>小时级边际因子</h3><span class="rule-en">Hourly marginal factor</span></div>
+              <p class="rule-desc">只用计量电能，不用估算电量；标签保留小时级电量与因子版本。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">E_batch = Σ kWh_h · EF(h)   <span class="muted">h = 1..24</span>
+label = E_batch / yield_kg   <span class="muted">[kgCO2e/kg]</span></div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>时段</th><th>EF(h) / kgCO2e·kWh⁻¹</th></tr></thead>
+                    <tbody>
+                      <tr><td>00:00–04:00</td><td class="num">0.31</td></tr>
+                      <tr><td>04:00–08:00</td><td class="num">0.38</td></tr>
+                      <tr><td>08:00–12:00</td><td class="num">0.44</td></tr>
+                      <tr><td>12:00–16:00</td><td class="num">0.47</td></tr>
+                      <tr><td>16:00–20:00</td><td class="num">0.58</td></tr>
+                      <tr><td>20:00–24:00</td><td class="num">0.41</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>因子是区域与年度相关的，六段常数不等于真小时曲线；自备光伏或绿电合同必须选择市场法或地区法并升版本。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-09">
+            <div class="rule-id"><span class="rule-tag">MTH-09</span><span class="rule-kind">数据品质</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>数据品质分级</h3><span class="rule-en">Data-quality grade</span></div>
+              <p class="rule-desc">计量占比决定等级，等级决定凭证价格与积分系数；不能拿估算数据换 A 级。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">q = metered_kWh / (metered_kWh + estimated_kWh)
+A: q ≥ 0.70   B: 0.45 ≤ q &lt; 0.70   C: q &lt; 0.45</div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>等级</th><th>计量占比 q</th><th>价格系数 k</th><th>积分系数 κ</th></tr></thead>
+                    <tbody>
+                      <tr><td><code>A</code></td><td>≥ 70%</td><td class="num">1.00</td><td class="num">1.00</td></tr>
+                      <tr><td><code>B</code></td><td>45% ≤ q &lt; 70%</td><td class="num">0 &lt; k_B &lt; 1</td><td class="num">0 &lt; κ_B &lt; 1</td></tr>
+                      <tr><td><code>C</code></td><td>&lt; 45%</td><td class="num">0 &lt; k_C &lt; k_B</td><td class="num">0 &lt; κ_C &lt; κ_B</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="vars">系数符号必须在合同附件中固定，且只对新批次生效；已签发标签按原版本保留。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>分母是否包含估算电量、计量窗口是累计还是连续、采样丢失如何计入，三个选择都会改变等级，必须写进规则快照。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-10">
+            <div class="rule-id"><span class="rule-tag">MTH-10</span><span class="rule-kind">批次边界</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>批次完整性</h3><span class="rule-en">Batch integrity</span></div>
+              <p class="rule-desc">批次是最小签发单位，不是可拆分的计费单位。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">valid_batch ⇔ |B| ≥ 240
+  ∧ (max t_harvest − min t_harvest) ≤ 24h
+  ∧ harvest_windows(B) = 1</div>
+                <p class="vars">同谱系 24h 内合并为一个批次；一个批次只对应一个采收窗口；禁止拆分套取签发费。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>240 株下限是运营约束不是统计最优；24h 边界必须为闭区间；客户不共享谱系时该规则不可执行。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-11">
+            <div class="rule-id"><span class="rule-tag">MTH-11</span><span class="rule-kind">减排基线</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>基线共签</h3><span class="rule-en">Baseline co-sign</span></div>
+              <p class="rule-desc">减排基线由双方在合同签署时冻结，平台不得单方设定或追溯调整。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">B0 = (yield_ref, energy_ref, EF_ref, boundary, period)
+reduction = (E_ref − E_actual) / E_ref
+valid_reduction ⇔ sig_client(B0) ∧ sig_platform(B0)</div>
+                <p class="vars">缺任一方签名，不得签发减排声明；基线更新只能通过合同附件，不得在运行期静默替换。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>共签方是否有能力核验基线、历史数据缺失时用哪个参考年、基线更新是否只能走合同附件。</p>
+            </div>
+          </article>
+
+          <article class="rule-card" id="mth-12">
+            <div class="rule-id"><span class="rule-tag">MTH-12</span><span class="rule-kind">版本治理</span></div>
+            <div class="rule-body">
+              <div class="rule-head"><h3>版本不可追溯修改</h3><span class="rule-en">Non-retroactive versioning</span></div>
+              <p class="rule-desc">方法变更必须发新版本号；旧标签永久指向旧版本，禁止静默重算或覆盖。</p>
+              <div class="criterion">
+                <span class="label">判据</span>
+                <div class="formula">version = CJV-MTH-{MAJOR}.{MINOR}[.{PATCH}]
+MAJOR = 不可变项或语义变化
+MINOR = 阈值 / 参数变化
+PATCH = 不改变判据的文本勘误</div>
+                <p class="vars">旧标签的 <b>method_version</b> 不可修改；新版本只能生成新标签，不得回写旧记录。</p>
+              </div>
+              <p class="challenge"><span class="label">可挑战点</span>什么算“不改变判据的文本勘误”需要白名单；否则 PATCH 会被用来绕过版本记录。</p>
+            </div>
+          </article>
+        </div>
+      </section
+<div class="zc-pager"><a href="thesis.html"><span class="k">← 上一节</span><span class="t">为什么口径才是资产</span></a><a class="r" href="version.html"><span class="k">下一节 →</span><span class="t">版本与哈希</span></a></div>
+</div>
+</div>
+
+</body>
+</html>
