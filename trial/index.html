@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>试点与收益分成试验协议（预注册版） · CoffeeJeV</title>
+<meta name="description" content="可签署的预注册试验协议：设计、终点、基线冻结、随机化单位、归因规则与分成计算。">
+<style>
+  :root{
+    --paper:#fbfaf7; --ink:#15181b; --ink2:#3f464d; --dim:#71767d; --rule:#ddd9cf; --rule2:#c9c4b7;
+    --green:#0f6b4f; --amber:#9a6a1c; --red:#9c3a2c;
+    --serif:"Source Serif 4","Iowan Old Style","Songti SC",Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",system-ui,sans-serif;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#eceae4;color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.75;padding:28px 0}
+  .sheet{max-width:880px;margin:0 auto;background:var(--paper);padding:52px 58px 64px;
+    box-shadow:0 2px 24px rgba(0,0,0,.10);border:1px solid #e2ded4}
+  h1{font-family:var(--serif);font-size:27px;font-weight:600;letter-spacing:-.4px;line-height:1.25;margin-bottom:6px}
+  .sub{font-family:var(--serif);font-size:15px;color:var(--ink2);margin-bottom:22px}
+  .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;padding:14px 0;
+    border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:26px}
+  .meta div{font-size:11px;color:var(--dim);letter-spacing:.3px}
+  .meta b{display:block;font-family:var(--mono);font-size:12.5px;color:var(--ink);margin-top:2px;font-weight:600}
+  h2{font-family:var(--serif);font-size:17px;font-weight:600;margin:30px 0 10px;padding-top:16px;
+    border-top:1px solid var(--rule)}
+  h2:first-of-type{border-top:0;padding-top:0}
+  h2 .n{font-family:var(--mono);font-size:11px;color:var(--green);margin-right:8px}
+  p{margin-bottom:11px}
+  ul,ol{margin:0 0 12px 20px}
+  li{margin-bottom:5px}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 16px}
+  th{text-align:left;font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;color:var(--dim);
+    padding:7px 9px;border-bottom:1.5px solid var(--rule2);font-weight:600}
+  td{padding:8px 9px;border-bottom:1px solid var(--rule);vertical-align:top}
+  td.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+  code{font-family:var(--mono);font-size:.92em;background:rgba(21,24,27,.055);padding:1px 5px;border-radius:3px}
+  .box{border-left:3px solid var(--green);background:#f4f2ec;padding:13px 17px;margin:16px 0;font-size:13.5px}
+  .box.amber{border-left-color:var(--amber)}
+  .sig{margin-top:34px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  .sig .line{border-bottom:1px solid var(--ink2);height:44px;margin-bottom:5px}
+  .sig .cap{font-size:11.5px;color:var(--dim)}
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--dim)}
+  .tag{display:inline-block;font-family:var(--mono);font-size:9.5px;letter-spacing:.8px;padding:1px 6px;
+    border:1px solid var(--amber);color:var(--amber);border-radius:2px;vertical-align:2px}
+  @media print{ body{background:#fff;padding:0} .sheet{box-shadow:none;border:0;padding:0} }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+<h1>试点与收益分成试验协议</h1>
+<div class="sub">Pre-registered pilot and shared-savings agreement · 供签署</div>
+
+<div class="meta">
+  <div>文件编号<b>CJV-TRIAL-2026-01</b></div>
+  <div>版本<b>v1.0（预注册）</b></div>
+  <div>适用作物<b>雾培咖啡苗</b></div>
+  <div>依据方法学<b>CJV-MTH-1.0</b></div>
+  <div>核证方<b>ZeroCoffee Verification (HK)</b></div>
+</div>
+
+<h2><span class="n">01</span>目的与当事人</h2>
+<p>本协议约定：在<b>同一苗场、同一批次谱系、同一环境</b>下，对比"接入判断层"与"按现行 SOP 作业"的差异，
+并以可复算的方法把差异折算为分成。协议签署即完成<b>预注册</b>：终点、样本量、随机化单位、归因规则
+在开跑前锁定，事后不得更改。</p>
+<table>
+  <tbody>
+    <tr><td style="width:22%"><b>甲方（实施方）</b></td><td>苗场 / 种植者，以下简称"场方"</td></tr>
+    <tr><td><b>乙方（提供方）</b></td><td>CoffeeJeV，提供判断层、设备与账本</td></tr>
+    <tr><td><b>见证（核证方）</b></td><td>ZeroCoffee Verification (HK) Limited，负责基线共签、终点复核与争议复算</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="n">02</span>预注册设计</h2>
+<table>
+  <thead><tr><th style="width:20%">阶段</th><th style="width:46%">内容</th><th class="n" style="width:16%">时长</th><th style="width:18%">判定</th></tr></thead>
+  <tbody>
+    <tr><td><b>A · 影子期</b></td><td>系统接入但<b>不执行</b>其决策，只记录"若按它做会怎样"，与现场实际作业并行</td><td class="n">30 天</td><td>人机一致率 ≥ 0.85 才进入 B</td></tr>
+    <tr><td><b>B · 随机对照</b></td><td>按<b>架层</b>随机分组（treatment / control），每组目标 550 盘（90% 功效需 830 盘）</td><td class="n">一个完整周期</td><td>主要终点在 B 末评估</td></tr>
+    <tr><td><b>C · 盲抽核验</b></td><td>每日盲抽 20 条/架层送镜检，抽样员不知分组</td><td class="n">贯穿 B</td><td>抽检一致性 ≥ 0.90</td></tr>
+    <tr><td><b>D · 结算</b></td><td>核证方复算、出具报告、计算分成</td><td class="n">B 结束后 30 天</td><td>报告 + 标签</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="n">03</span>终点定义</h2>
+<table>
+  <thead><tr><th style="width:14%">类型</th><th style="width:30%">指标</th><th style="width:34%">定义</th><th style="width:22%">数据来源</th></tr></thead>
+  <tbody>
+    <tr><td><b>主要</b></td><td>污染率</td><td>周期内确认为污染并隔离的盘数 ÷ 总盘数</td><td>镜检记录 + 账本事件</td></tr>
+    <tr><td>次要</td><td>移栽成活率</td><td>移栽后 30 天存活株数 ÷ 移栽株数</td><td>移栽记录 + 抽查</td></tr>
+    <tr><td>次要</td><td>每株能耗</td><td>kWh ÷ 出圃株数</td><td>电表计量（小时级）</td></tr>
+    <tr><td>次要</td><td>每株碳足迹</td><td>按 CJV-MTH-1.0 计算</td><td>批次碳账本</td></tr>
+    <tr><td>安全</td><td>误隔离率</td><td>被隔离后镜检阴性的盘数 ÷ 隔离盘数</td><td>镜检记录</td></tr>
+  </tbody>
+</table>
+<div class="box amber">
+  <b>为什么必须预注册。</b>如果终点在看到数据后才定，任何"改善"都能被解释出来。
+  预注册的代价是失去事后调整的自由，换来的是结果可以被第三方复核。
+</div>
+
+<h2><span class="n">04</span>基线冻结（双方共签）</h2>
+<p>分成以<b>基线</b>为分母，所以基线必须在开跑前冻结，且不由任何一方单方设定。</p>
+<table>
+  <thead><tr><th style="width:30%">冻结项</th><th style="width:44%">取值方式</th><th style="width:26%">签字方</th></tr></thead>
+  <tbody>
+    <tr><td>历史污染率</td><td>前 12 个月该场方镜检记录的中位数（不足则用同期同品种区域值）</td><td>场方 + 核证方</td></tr>
+    <tr><td>历史成活率</td><td>前 12 个月移栽后 30 天存活统计</td><td>场方 + 核证方</td></tr>
+    <tr><td>单位损失价值</td><td>盘均成本 × 隔离处置成本（含重做周期）</td><td>场方 + 乙方</td></tr>
+    <tr><td>电网排放因子</td><td>当地公布的年度均值；调度部分用小时级曲线</td><td>核证方</td></tr>
+  </tbody>
+</table>
+<p><b>冻结后的修改规则：</b>仅在发现①原始数据错误②口径适用错误 时可申请修订，
+须三方书面同意并<b>重新预注册</b>，已产生的数据不得回溯重算。</p>
+
+<h2><span class="n">05</span>随机化单位：架层，不是单盘</h2>
+<p>按<b>架层</b>随机，因为雾化、气流、人员动线在同一架层内高度相关：同一层的盘互相影响，
+若按盘随机，处理组的雾化/操作会"漏"进对照组（contamination of treatment）。</p>
+<div class="box">
+  代价是有效样本量下降（设计效应 ≈ 1 + (m−1)·ICC，m 为每层盘数，ICC 按 0.15 计）。
+  因此<b>盘数目标从 550 上调到 830</b> 才能达到 90% 功效；本协议按 830 盘/组签署。
+</div>
+
+<h2><span class="n">06</span>归因与分成</h2>
+<p>归因只承认两部分：<b>基线冻结</b>（04 条）与<b>随机化分组</b>（05 条）。环境协变量
+（温度、光照、电价、季节）作为调整项列出，但不用于解释差异。</p>
+<table>
+  <thead><tr><th style="width:34%">项目</th><th style="width:36%">计算</th><th class="n" style="width:30%">参数</th></tr></thead>
+  <tbody>
+    <tr><td>避免损失</td><td>(对照组污染率 − 处理组污染率) × 总盘数 × 盘均损失价值</td><td class="n">按 04 条冻结值</td></tr>
+    <tr><td>分成比例</td><td>避免损失 × 比例</td><td class="n">20% / 25% / 30%（按签约年数递减）</td></tr>
+    <tr><td>下限与上限</td><td>单周期分成不低于 0、不高于该周期服务费的 3 倍</td><td class="n">封顶防套利</td></tr>
+    <tr><td>结算周期</td><td>每周期结束后 30 天内，凭核证报告结算</td><td class="n">—</td></tr>
+    <tr><td>争议</td><td>核证方复算一次；仍有争议提交 HKIAC 仲裁</td><td class="n">复算费 ¥3,000</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="n">07</span>数据共享与访问</h2>
+<ul>
+  <li><b>原始数据归场方。</b>乙方仅在授权范围内处理；核证方为核证目的可调阅，不得留存副本。</li>
+  <li>去标识后的聚合数据可用于方法学研究与行业基准，须在本协议签字时勾选同意（见附录 B）。</li>
+  <li>试验期间任何一方不得选择性披露中间结果；全部终点数据在 D 阶段一次性公开给三方。</li>
+  <li>设备故障、校准漂移、断网期间的数据须标记为"降级"，不参与主要终点计算。</li>
+</ul>
+
+<h2><span class="n">08</span>中止与退出</h2>
+<ul>
+  <li><b>安全中止：</b>出现疑似病原或不可逆处置需求，立即中止 B 阶段，由场方决定处置，数据保留。</li>
+  <li><b>效力中止：</b>影子期人机一致率 &lt; 0.85，不得进入 B 阶段，协议终止且不产生分成。</li>
+  <li><b>任一方退出：</b>提前 30 天书面通知；已产生的数据仍按第 07 条处理，已发生的费用不退还。</li>
+</ul>
+
+<h2><span class="n">09</span>签署</h2>
+<p>签署即表示三方已阅读并接受第 02–08 条；任何修改须以书面补充协议形式，并重新预注册。</p>
+<div class="sig">
+  <div><div class="line"></div><div class="cap">场方（甲方）· 授权代表 / 日期</div></div>
+  <div><div class="line"></div><div class="cap">CoffeeJeV（乙方）· 授权代表 / 日期</div></div>
+  <div><div class="line"></div><div class="cap">ZeroCoffee Verification（见证）· 核证员 / 日期</div></div>
+  <div><div class="line"></div><div class="cap">基线冻结确认（三方签署）· 日期</div></div>
+</div>
+
+<h2><span class="n">附录 A</span>参数表（签署时填写）</h2>
+<table>
+  <thead><tr><th style="width:34%">参数</th><th style="width:30%">取值</th><th style="width:36%">备注</th></tr></thead>
+  <tbody>
+    <tr><td>总盘数</td><td class="n">1,660</td><td>830 × 2 组</td></tr>
+    <tr><td>每架层盘数 (m)</td><td class="n">___</td><td>影响设计效应</td></tr>
+    <tr><td>组内相关系数 (ICC)</td><td class="n">0.15</td><td>预设，试验后可估</td></tr>
+    <tr><td>盘均损失价值</td><td class="n">¥___</td><td>04 条冻结</td></tr>
+    <tr><td>分成比例</td><td class="n">___%</td><td>20 / 25 / 30 三档择一</td></tr>
+    <tr><td>影子期起止</td><td class="n">____-__-__ 至 ____-__-__</td><td>30 天</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="n">附录 B</span>同意项（勾选）</h2>
+<p>☐ 同意去标识聚合数据用于行业基准研究　　☐ 不同意，仅用于本协议目的</p>
+
+<div class="foot">
+  本协议为模板，不构成法律意见；签署前应由各方各自的律师审阅。
+  数据与标签口径见 <a href="../method/">CJV-MTH-1.0</a>，核证主体见
+  <a href="https://erikcywong.github.io/zerocoffee.hk/">ZeroCoffee Verification</a>。
+  文件编号 CJV-TRIAL-2026-01 · v1.0 · 2026-11-03
+</div>
+
+</div>
+</body>
+</html>

@@ -133,6 +133,8 @@
       <div style="min-width:0">
         <div class="kid">扫码验证 · SCAN TO VERIFY</div>
         <div class="note mono" id="qrUrl" style="word-break:break-all;margin-top:3px"></div>
+        <div class="kid" style="margin-top:10px">核证方 · VERIFIER</div>
+        <div class="note" id="verifier" style="margin-top:2px"></div>
       </div>
     </div>
   </div>
@@ -330,6 +332,9 @@ function render(label, payload, localOnly) {
   const qr = $('qrImg');
   if (label.qr) { qr.src = label.qr; qr.hidden = false; } else { qr.hidden = true; }
   $('qrUrl').textContent = BASE_URL + label.label_id;
+  const vb = label.verifier_body || 'ZeroCoffee Verification (HK) Limited';
+  const vs = label.verifier_status === 'pending accreditation' ? '（设立中 · 未获认可）' : '';
+  $('verifier').innerHTML = `<a href="https://erikcywong.github.io/zerocoffee.hk/" target="_blank" rel="noopener">${esc(vb)}</a> ${vs}`;
 
   $('raw').textContent = JSON.stringify({ label, payload, recomputed_hash: expect }, null, 2);
   document.title = `${label.label_id} · 已验证 · CoffeeJeV`;
