@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IoT 设备手册 · 气雾栽培咖啡 · CoffeeJeV</title>
+<meta name="description" content="CoffeeJeV / Napell Agent 气雾栽培咖啡 IoT 硬件选型手册：8 设备、7 个 profile 标签、拓扑、规格卡、BOM 估算、数据入口与工程注意。">
+<style>
+:root{
+  --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
+  --line:#232931; --line2:#313945;
+  --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+  --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
+  --amber:#e0a24e; --amber-dk:rgba(224,162,78,.12);
+  --red:#ff5d6e; --cyan:#3b9ef7; --violet:#8b6cff;
+  --r:14px; --r2:11px;
+  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+a{color:#8ec7ff;text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(0,196,140,.28)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0b0d10}
+::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#3a434f}
+b,strong{font-weight:700;color:#fff}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;color:#cfe0ee;overflow-wrap:anywhere}
+
+/* ---------- 布局 ---------- */
+.app{display:grid;grid-template-columns:258px minmax(0,1fr)}
+.nav{position:sticky;top:0;height:100vh;padding:18px 14px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;background:linear-gradient(180deg,#0a0c0f,#08090b 60%)}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 16px}
+.brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,196,140,.05) inset}
+.brand .mark svg{width:22px;height:22px}
+.brand .txt b{display:block;font-size:15.5px;letter-spacing:.2px;line-height:1.25}
+.brand .txt span{display:block;font-size:10.5px;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;font-family:var(--mono)}
+.navlabel{font-size:10.5px;letter-spacing:1.3px;color:var(--dim2);text-transform:uppercase;padding:10px 10px 6px;font-family:var(--mono)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;color:var(--dim);font-size:13.5px;border:1px solid transparent;transition:.15s}
+.navitem:hover{background:rgba(255,255,255,.045);color:var(--tx);text-decoration:none}
+.navitem .n{font-family:var(--mono);font-size:11px;color:var(--dim2);width:16px;flex-shrink:0}
+.navitem.active{background:rgba(0,196,140,.1);border-color:rgba(0,196,140,.28);color:#fff;font-weight:600}
+.navitem.active .n{color:var(--green)}
+.navfoot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--dim2);line-height:1.7}
+.navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 8px var(--green)}
+main{min-width:0}
+.wrap{max-width:1200px;padding:0 48px 0 44px}
+
+/* ---------- 页首 ---------- */
+.hero{padding:52px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -10% auto -10%;height:520px;background:
+  radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.16),transparent 62%),
+  radial-gradient(620px 300px at 92% -20%,rgba(224,162,78,.12),transparent 62%),
+  radial-gradient(520px 260px at 55% 10%,rgba(59,158,247,.07),transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:16px}
+.eyebrow .sep{color:var(--dim2)}
+.eyebrow .mut{color:var(--dim)}
+h1.title{font-size:clamp(29px,4.4vw,48px);line-height:1.12;letter-spacing:-1.2px;font-weight:850;margin-bottom:10px}
+h1.title em{font-style:normal;background:linear-gradient(96deg,#00c48c 8%,#7fe0b6 46%,#e0a24e 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .zh{font-size:clamp(15px,2.1vw,20px);color:var(--dim);font-weight:600;letter-spacing:.4px;margin-bottom:18px}
+.lede{font-size:16px;color:#c3cbd6;max-width:78ch;line-height:1.78}
+.lede b{color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
+.chip .k{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase}
+.chip.g{border-color:rgba(0,196,140,.32);background:rgba(0,196,140,.07);color:#a9f3d8}
+.chip.a{border-color:rgba(224,162,78,.32);background:rgba(224,162,78,.07);color:#f0d3a5}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:10px;margin-top:28px}
+.tile{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:13px;padding:13px 14px}
+.tile .k{font-size:11.5px;color:var(--dim);letter-spacing:.3px}
+.tile .v{font-size:23px;font-weight:800;letter-spacing:-.6px;margin-top:3px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:12px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:2px}
+.tile .s{font-size:11px;color:var(--dim2);margin-top:2px}
+
+/* ---------- 区块 ---------- */
+.sec{padding:54px 0 20px;border-top:1px solid var(--line);scroll-margin-top:10px}
+.sechead{margin-bottom:24px}
+.sechead .num{font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:2px;margin-bottom:9px}
+.sechead h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;line-height:1.2;font-weight:800}
+.sechead .zh{font-size:14px;color:var(--dim);font-weight:600;margin-top:5px;letter-spacing:.5px}
+.sechead p{margin-top:13px;color:#b9c2ce;max-width:92ch;font-size:14.6px;line-height:1.78}
+h3.sub{font-size:16.5px;font-weight:750;margin:28px 0 12px;letter-spacing:-.2px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+h3.sub::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--green);display:inline-block}
+h3.sub .mut{font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:0;font-family:var(--mono)}
+
+/* ---------- 卡片 ---------- */
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:13px}
+.grid2b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+@media (max-width:900px){.grid2b{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:17px 18px 15px}
+.card h4{font-size:14.8px;font-weight:750;margin-bottom:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.6px;color:#b4bdc9;line-height:1.7}
+.card p+p{margin-top:7px}
+.card.note{border-left:2px solid var(--amber);background:linear-gradient(90deg,rgba(224,162,78,.07),transparent 55%)}
+.card.good{border-left:2px solid var(--green);background:linear-gradient(90deg,rgba(0,196,140,.07),transparent 55%)}
+.card .cl{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;border:1px solid;white-space:nowrap}
+.pill.ok{color:var(--green2);border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.1)}
+.pill.warn{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.pill.info{color:#8ec7ff;border-color:rgba(59,158,247,.45);background:rgba(59,158,247,.1)}
+.pill.gray{color:var(--dim);border-color:var(--line2);background:rgba(255,255,255,.03)}
+.pill.vio{color:#c0adff;border-color:rgba(139,108,255,.45);background:rgba(139,108,255,.12)}
+.tbc{display:inline-block;font-family:var(--mono);font-size:10px;color:#ffbe72;border:1px solid rgba(224,162,78,.45);background:rgba(224,162,78,.1);border-radius:4px;padding:0 4px;letter-spacing:.3px;vertical-align:1px;white-space:nowrap}
+
+/* ---------- 表格 ---------- */
+.tblscroll{overflow-x:auto;border-radius:var(--r);max-width:100%}
+.tblscroll:has(thead th:nth-child(6)) .tbl{min-width:680px}
+.tblscroll:has(thead th:nth-child(7)) .tbl{min-width:780px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.9px;margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.tbl th{background:rgba(255,255,255,.035);text-align:left;padding:9px 11px;font-size:11.2px;letter-spacing:.5px;color:var(--dim);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 11px;border-bottom:1px solid rgba(35,41,49,.75);vertical-align:top;color:#bcc5d0;line-height:1.55}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.022)}
+.tbl td b{color:#fff}
+.tbl .mono,.tbl code{font-size:11.2px}
+.tbl td code{white-space:nowrap;overflow-wrap:normal}
+.tbl .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tgrow td,.tbl tr.grp td{background:rgba(0,196,140,.055);color:#a9f3d8;font-weight:700;font-size:11.5px;letter-spacing:.6px;font-family:var(--mono);padding:7px 11px}
+.tbl tfoot td{background:rgba(255,255,255,.04);border-top:1px solid var(--line2);font-weight:700;color:#fff}
+.tbl tfoot tr.total td{background:rgba(0,196,140,.1);color:#c9ffe9;font-size:13.4px;border-top:1px solid rgba(0,196,140,.35)}
+
+/* ---------- 设备卡 ---------- */
+.devcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 20px 16px;margin-bottom:13px;scroll-margin-top:12px}
+.devhead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:13px}
+.devhead .ix{font-family:var(--mono);font-size:11.5px;color:var(--green);letter-spacing:1px}
+.devhead h3{font-size:18.5px;font-family:var(--mono);letter-spacing:-.3px;font-weight:750}
+.devhead .sp{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap}
+.role{font-size:13.7px;color:#b6bfcc;line-height:1.74;margin-bottom:14px}
+.role b{color:#fff}
+.cols2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.blk{margin-bottom:14px;min-width:0}
+.blk:last-child{margin-bottom:2px}
+.blk>h6{font-size:10.5px;letter-spacing:1.2px;color:var(--dim2);text-transform:uppercase;font-family:var(--mono);margin-bottom:7px;display:flex;gap:7px;align-items:center}
+.blk>h6::before{content:"";width:2px;height:10px;background:var(--green);border-radius:1px;flex-shrink:0}
+.iolist{list-style:none;display:flex;flex-direction:column;gap:5px}
+.iolist li{font-size:12.9px;color:#b4bdc9;padding-left:13px;position:relative;line-height:1.55}
+.iolist li::before{content:"";position:absolute;left:2px;top:7px;width:4px;height:4px;border-radius:50%;background:var(--line2)}
+.iolist li b{color:#e9ecf1;font-weight:650}
+.iolist li .k{font-family:var(--mono);font-size:11.5px;color:#9fe8d0}
+.pairs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 12px;font-size:12.7px}
+.pairs dt{color:var(--dim2);font-family:var(--mono);font-size:11.3px;white-space:nowrap}
+.pairs dd{color:#c3cbd6;overflow-wrap:anywhere}
+.note{font-size:13px;color:#b4bdc9;line-height:1.7}
+.tiny{font-size:11.3px;color:var(--dim2);margin-top:6px;line-height:1.6}
+.json{background:#0a0d11;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.json .jh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.4px;flex-wrap:wrap}
+.json pre{margin:0;padding:10px 12px;overflow-x:auto;font-family:var(--mono);font-size:11.4px;line-height:1.62;color:#c9d4e0}
+.json pre .s{color:#8fd8b8}
+.json pre .n{color:#e8c98f}
+
+/* ---------- 代码块 ---------- */
+.code{background:#0a0d11;border:1px solid var(--line2);border-radius:11px;overflow:hidden;margin:10px 0}
+.code .ch2{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px;flex-wrap:wrap;gap:6px}
+.code pre{margin:0;padding:11px 13px;overflow-x:auto;font-family:var(--mono);font-size:11.8px;line-height:1.72;color:#c9d4e0;white-space:pre}
+.formula{background:linear-gradient(180deg,rgba(0,196,140,.07),rgba(0,196,140,.015));border:1px solid rgba(0,196,140,.24);border-radius:12px;padding:15px 16px;font-family:var(--mono);font-size:12.4px;line-height:1.9;color:#cfe0ee;overflow-x:auto;white-space:pre}
+.formula b{color:#a9f3d8}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:12.8px}
+.kv dt{color:var(--dim2);font-family:var(--mono);font-size:11.4px;padding-top:2px;white-space:nowrap}
+.kv dd{color:#c0c9d5}
+
+/* ---------- SVG 图 ---------- */
+.diagram{background:linear-gradient(180deg,#0b0d11,#08090b);border:1px solid var(--line);border-radius:16px;padding:10px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:760px;height:auto}
+.caption{font-size:11.8px;color:var(--dim2);margin-top:9px;line-height:1.7}
+.caption b{color:var(--dim)}
+
+/* ---------- 注意条 ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:11px}
+.note-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px 13px;border-top:2px solid rgba(224,162,78,.55)}
+.note-card h4{font-size:14.2px;font-weight:750;margin-bottom:7px;display:flex;gap:8px;align-items:baseline;line-height:1.45}
+.note-card h4 .ni{font-family:var(--mono);font-size:10.5px;color:var(--amber);flex-shrink:0}
+.note-card p{font-size:13px;color:#b4bdc9;line-height:1.68}
+.note-card p+p{margin-top:6px}
+.note-card .fix{color:#9fe8d0}
+.note-card .fix::before{content:"做法 → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2)}
+
+/* ---------- 页脚 ---------- */
+.foot{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 56px;font-size:12.3px;color:var(--dim2);line-height:1.85}
+.foot b{color:var(--dim)}
+.foot .rule{color:#ffbe72}
+.fadein{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.fadein.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.fadein{opacity:1;transform:none}}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1080px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .nav{position:static;height:auto;flex-direction:column;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;width:100%}
+  .navlabel,.navfoot{display:none}
+  .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;width:100%}
+  .navlist::-webkit-scrollbar{display:none}
+  .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
+  .navitem .n{display:none}
+  .brand{padding-bottom:8px}
+  .wrap{padding:0 20px}
+  .diagram svg{min-width:720px}
+}
+@media (max-width:900px){
+  .cols2{grid-template-columns:1fr}
+  .devcard{padding:16px 14px 12px}
+  .devhead h3{font-size:16.5px}
+}
+@media (max-width:620px){
+  .wrap{padding:0 14px}
+  .hero{padding:34px 0 26px}
+  .sec{padding:40px 0 16px}
+  .tile .v{font-size:20px}
+  .json pre,.code pre{font-size:10.8px}
+  .tbl{font-size:12.2px}
+  .tbl th,.tbl td{padding:8px 9px}
+}
+@media print{
+  .nav{display:none}
+  .app{grid-template-columns:1fr}
+  .sec{page-break-inside:avoid}
+  body{background:#fff;color:#111}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="nav">
+  <div class="brand">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10s-5-1-5-5c3.4 0 5 2 5 5Z"/><path d="M12 13s5-1 5-5c-3.4 0-5 2-5 5Z"/>
+        <path d="M8 21h8" stroke-opacity=".55"/><circle cx="12" cy="4.2" r="1.1" fill="#3fe0b0" stroke="none" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="txt"><b>CoffeeJeV</b><span>hardware appendix</span></div>
+  </div>
+  <div class="navlabel">设备手册 · 6 节</div>
+  <nav class="navlist" id="navlist">
+    <a class="navitem" href="#overview"><span class="n">01</span>总览</a>
+    <a class="navitem" href="#topology"><span class="n">02</span>拓扑图</a>
+    <a class="navitem" href="#devices"><span class="n">03</span>设备规格卡</a>
+    <a class="navitem" href="#bom"><span class="n">04</span>BOM 表</a>
+    <a class="navitem" href="#ingress"><span class="n">05</span>数据入口</a>
+    <a class="navitem" href="#ops"><span class="n">06</span>工程注意</a>
+  </nav>
+  <div class="navfoot">
+    <span class="dot"></span>清单冻结 v1.0<br>
+    8 设备 · 7 个 profile 标签<br>
+    与软件平台同一版<br>
+    <span style="color:var(--dim2)">更新 2026-11-03</span>
+  </div>
+</aside>
+
+<main>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">
+    <span>aeroponic coffee</span><span class="sep">/</span><span>iot fleet</span><span class="sep">/</span><span class="mut">hardware selection handbook</span>
+  </div>
+  <h1 class="title">气雾栽培咖啡 <em>IoT 设备手册</em></h1>
+  <div class="zh">CoffeeJeV / Napell Agent — 物理感知层与执行层选型</div>
+  <p class="lede">
+    本页是决策层的<b>硬件附录</b>：把"根区化学—气候—成像—能耗/实验"四类观测与"加肥、雾化、阀门"三类执行，落成 8 个可采购、可寻址、可校准的物理设备。
+    设备名、遥测键与采样周期已与软件平台冻结对齐，<b>不得改名</b>；参数、价格与型号为本轮选型的工程估算，凡未经核实的数字均标注 <span class="tbc">待确认</span>。
+  </p>
+  <div class="chips">
+    <span class="chip g"><span class="k">fleet</span>8 devices</span>
+    <span class="chip"><span class="k">profiles</span>5 + 2</span>
+    <span class="chip"><span class="k">interval</span>30 s – 3600 s</span>
+    <span class="chip"><span class="k">fieldbus</span>RS-485 · Modbus RTU</span>
+    <span class="chip a"><span class="k">uplink</span>MQTT over TLS</span>
+    <span class="chip"><span class="k">edge</span>Jetson Orin Nano</span>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="k">设备节点</div><div class="v">8</div><div class="s">现场可控可观测单元</div></div>
+    <div class="tile"><div class="k">profile 标签</div><div class="v">7</div><div class="s">5 传感/控制 + 2 执行/网关</div></div>
+    <div class="tile"><div class="k">遥测键</div><div class="v">42</div><div class="s">8 设备合计，键名冻结</div></div>
+    <div class="tile"><div class="k">最快采样</div><div class="v">30<small>s</small></div><div class="s">fog-ctrl-A3 / valve-4A</div></div>
+    <div class="tile"><div class="k">日上行流量</div><div class="v">1.10<small>MB</small></div><div class="s">10,536 报文 / 日</div></div>
+    <div class="tile"><div class="k">离线缓冲</div><div class="v">72<small>h</small></div><div class="s">store-and-forward</div></div>
+    <div class="tile"><div class="k">BOM 估算</div><div class="v">5.55<small>万元</small></div><div class="s">¥55,540 含施工与备件</div></div>
+    <div class="tile"><div class="k">网关算力</div><div class="v">8<small>GB</small></div><div class="s">Orin Nano，7–25 W</div></div>
+  </div>
+</header>
+
+<!-- ================= 01 总览 ================= -->
+<section class="sec" id="overview">
+  <div class="sechead">
+    <div class="num">01 / OVERVIEW</div>
+    <h2>总览：这 8 台设备到底要测什么、动什么</h2>
+    <div class="zh">what the fleet must sense and actuate</div>
+    <p>
+      决策层要能对一棚气雾咖啡下判断，至少需要四类输入：根区化学是否还在窗口内、冠层 VPD 是否可被雾化调控、根系与组培托盘是否出现可见异常、以及单位产量的能耗与生物安全是否越界。
+      所以这套机队的设计目标不是"多测"，而是<b>每一类观测至少有一个冗余源、每一条执行都有可回执的物理通道、并且在网关断网 72 小时内一条数据都不丢</b>。
+      8 个设备对应 <b>7 个 profile 标签</b>：其中 <b>5 个传感/控制 profile</b>（<code>fog-controller</code>、<code>vision-edge</code>、<code>climate</code>、<code>energy</code>、<code>lab</code>）负责观测与闭环，<b>2 个执行/基础设施 profile</b>（<code>actuator</code>、<code>gateway</code>）负责动作与协议转换。立项清单里的"5 个 device profile"指的是前者；平台建表时 <code>actuator</code> / <code>gateway</code> 不可漏。
+    </p>
+  </div>
+
+  <div class="grid2">
+    <div class="card good">
+      <div class="cl">class 01 · root-zone chemistry</div>
+      <h4>根区化学 <span class="pill ok">fog-ctrl-A3</span></h4>
+      <p>
+        气雾栽培没有基质缓冲，根区液相在分钟级就会变化：EC 决定根表渗透势，pH 决定铁/锰/磷的有效性，DO 决定根呼吸，水温决定溶氧上限与病原活性。
+        这四项必须在同一时刻、同一水样上被采样，否则"EC 正常但 pH 漂移"这类组合故障无法归因。
+      </p>
+      <p style="color:var(--dim);font-size:12.5px">→ 12 键 · 30 s · 独占闭环执行权限</p>
+    </div>
+    <div class="card">
+      <div class="cl">class 02 · climate / vpd</div>
+      <h4>气候与 VPD <span class="pill ok">climate-PuEr-01</span> <span class="pill gray">+ fog-ctrl-A3</span></h4>
+      <p>
+        VPD 是"雾化该开多久"的主控变量：雾滴蒸发降低叶温、抬高叶面湿度，VPD 过低则蒸腾停滞、钙运输受阻，过高则气孔关闭。
+        因此 <code>air_temp / rh / vpd</code> 必须同时存在于控制器（用于闭环）与独立气候站（用于交叉校验），两套读数不一致本身就是故障信号。
+      </p>
+      <p style="color:var(--dim);font-size:12.5px">→ 7 键 · 60 s · DLI 由 PPFD 积分得到</p>
+    </div>
+    <div class="card">
+      <div class="cl">class 03 · imaging</div>
+      <h4>成像（边缘视觉）<span class="pill vio">root-cam-A3</span> <span class="pill vio">tray-scan-TC118</span></h4>
+      <p>
+        根系褐变、根量、雾滴粒度等级、组培托盘污染，这些量无法用单一传感器测得，只能用相机 + 边缘模型压成概率与计数。
+        关键约束是<b>只上传标量</b>：图像留在网关侧（按需人工调阅缩略图），否则带宽与隐私成本都不可接受。
+      </p>
+      <p style="color:var(--dim);font-size:12.5px">→ 5 + 3 键 · 300 s / 600 s · 不上传原图</p>
+    </div>
+    <div class="card">
+      <div class="cl">class 04 · energy / lab</div>
+      <h4>能耗与实验 <span class="pill warn">micro-lab-01</span> <span class="pill gray">power-meter-PuEr-01</span></h4>
+      <p>
+        智能电表把"每公斤鲜重耗多少 kWh"变成可运营的 KPI，并用 <code>tariff</code> 把雾化与加肥排到谷电时段；微生物快检则是低频、高权重的生物安全闸门——一次大肠菌群阳性就应触发整批隔离，而不是靠视觉概率。
+      </p>
+      <p style="color:var(--dim);font-size:12.5px">→ 3 + 3 键 · 60 s / 3600 s（事件驱动）</p>
+    </div>
+  </div>
+
+  <h3 class="sub">机队清单 <span class="mut">8 devices · 7 profile tags · keys frozen</span></h3>
+  <div class="tblscroll">
+    <table class="tbl">
+      <thead>
+        <tr><th>设备名</th><th>profile</th><th>采样</th><th class="num">键</th><th>在系统中的唯一职责</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>fog-ctrl-A3</code></td><td><b>fog-controller</b></td><td class="mono">30 s</td><td class="num">12</td><td>营养雾闭环：EC/pH/DO 剂量、雾化时序、安全联锁；5 个 RPC</td></tr>
+        <tr><td><code>root-cam-A3</code></td><td>vision-edge</td><td class="mono">300 s</td><td class="num">5</td><td>根区图像 → 根系概率/褐变/雾滴等级；带 <code>model_version</code></td></tr>
+        <tr><td><code>tray-scan-TC118</code></td><td>vision-edge</td><td class="mono">600 s</td><td class="num">3</td><td>组培托盘污染初筛 → 隔离建议（不替代实验室）</td></tr>
+        <tr><td><code>climate-PuEr-01</code></td><td>climate</td><td class="mono">60 s</td><td class="num">7</td><td>独立气候站：VPD/DLI 交叉校验源，与控制器互校</td></tr>
+        <tr><td><code>power-meter-PuEr-01</code></td><td>energy</td><td class="mono">60 s</td><td class="num">3</td><td>分路能耗计量 + 分时电价，供能效 KPI 与移峰</td></tr>
+        <tr><td><code>micro-lab-01</code></td><td>lab</td><td class="mono">3600 s</td><td class="num">3</td><td>微生物快检，CFU/大肠菌群，批次隔离闸门</td></tr>
+        <tr><td><code>valve-4A</code></td><td>actuator</td><td class="mono">30 s</td><td class="num">3</td><td>4 路分区阀组 + 阀后压力反馈；2 个 RPC</td></tr>
+        <tr><td><code>gateway-edge-01</code></td><td>gateway</td><td class="mono">60 s</td><td class="num">6</td><td>Modbus 主站 · MQTT 出口 · 72 h 缓存 · 边缘推理</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tiny" style="margin-top:10px">
+    合计 42 个遥测键；采样周期为上报周期，实际传感器内部刷新率更高（见各设备卡"响应时间"列）。键名与 <code>profile</code> 为软件平台契约，<b>不得改写</b>。
+  </p>
+</section>
+
+<!-- ================= 02 拓扑图 ================= -->
+<section class="sec" id="topology">
+  <div class="sechead">
+    <div class="num">02 / TOPOLOGY</div>
+    <h2>拓扑图：从 4–20 mA 到 RPC 的一条闭环</h2>
+    <div class="zh">sensors → RS-485 → edge gateway → MQTT/TLS → platform → decision → RPC</div>
+    <p>
+      五个协议边界（①–⑤）而不是五层软件抽象：每一跳都是可以单独验收、单独压测、单独失效的物理/协议边界。
+      上行用实线，下行 RPC 用虚线；网关是唯一出口，也是唯一允许在断网时保持自治的节点。
+    </p>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 940 960" role="img" aria-labelledby="topoTitle topoDesc" xmlns="http://www.w3.org/2000/svg">
+      <title id="topoTitle">气雾咖啡 IoT 拓扑：传感器与执行器经 RS-485 接入边缘网关，再经 MQTT over TLS 上行平台与决策层，RPC 下行控制</title>
+      <desc id="topoDesc">五个协议跳：模拟量/现场总线接入、RS-485 Modbus RTU、MQTT over TLS 8883、HTTPS/gRPC 至决策层、RPC 下行至执行器。</desc>
+      <style>
+        .bx{fill:#11141a;stroke:#232931;stroke-width:1}
+        .bx2{fill:#0d1015;stroke:#2b333d;stroke-width:1}
+        .ttl{fill:#e9ecf1;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;font-weight:700}
+        .ln{fill:#9aa4b1;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:10.6px}
+        .lnm{fill:#8fd8b8;font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:10.4px}
+        .hop{fill:#c3ccd8;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:10.7px}
+        .hopm{fill:#9fe8d0;font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:10.2px}
+        .up{stroke:#00c48c;stroke-width:1.7;fill:none}
+        .dn{stroke:#e0a24e;stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+        .sub{fill:#7f8895;font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:9.8px}
+        .dlab{fill:#e0a24e;font-family:ui-monospace,Consolas,"Courier New",monospace;font-size:10.2px}
+      </style>
+      <defs>
+        <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 0 L10 5 L0 10 Z" fill="#00c48c"/>
+        </marker>
+        <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 0 L10 5 L0 10 Z" fill="#e0a24e"/>
+        </marker>
+      </defs>
+
+      <!-- legend -->
+      <line x1="150" y1="22" x2="188" y2="22" class="up"/>
+      <text x="196" y="26" class="sub">数据上行（telemetry）</text>
+      <line x1="330" y1="22" x2="368" y2="22" class="dn" marker-end="url(#arA)"/>
+      <text x="378" y="26" class="sub">控制下行（RPC / 写寄存器）</text>
+
+      <!-- B1 现场层 -->
+      <rect x="150" y="40" width="640" height="150" rx="12" class="bx"/>
+      <text x="166" y="62" class="ttl">现场层：传感器 / 执行器（被测物理量与被驱动部件）</text>
+      <rect x="166" y="74" width="300" height="104" rx="8" class="bx2"/>
+      <text x="180" y="92" class="lnm">传感器 · 4 类测点</text>
+      <text x="180" y="112" class="ln">根区化学 EC / pH / DO / 水温 / 压力</text>
+      <text x="180" y="129" class="ln">气候 air_temp / rh / vpd / co2 / ppfd</text>
+      <text x="180" y="146" class="ln">成像 vision_p / browning / droplet_class</text>
+      <text x="180" y="163" class="ln">能耗 power_kw · 微检 sample_cfu / coliform</text>
+      <rect x="474" y="74" width="300" height="104" rx="8" class="bx2"/>
+      <text x="488" y="92" class="lnm">执行器 · 4 类动作</text>
+      <text x="488" y="112" class="ln">A/B 计量泵 ×2 · 电磁阀 ×2</text>
+      <text x="488" y="129" class="ln">超声雾化喷嘴 1.7 MHz ×4</text>
+      <text x="488" y="146" class="ln">循环泵 · 排废 / 冲洗阀组</text>
+      <text x="488" y="163" class="ln">fog_duty 闭环（本地 30 s 节奏）</text>
+
+      <!-- ① -->
+      <path class="up" d="M470 190 V240" marker-end="url(#arG)"/>
+      <text x="496" y="204" class="hop">① 模拟量 4–20 mA / 0–10 V / 干接点 · SDI-12 · I²C/UART</text>
+      <text x="496" y="218" class="hop">经 RS-485 接入 Modbus RTU 从站（地址 11–17）</text>
+
+      <!-- B2 现场节点 -->
+      <rect x="150" y="246" width="640" height="126" rx="12" class="bx"/>
+      <text x="166" y="268" class="ttl">现场控制节点：7 个 Modbus 从站 + 2 路视觉直连</text>
+      <text x="166" y="290" class="lnm">fog-ctrl-A3 · fog-controller · 30 s</text>
+      <text x="166" y="306" class="lnm">root-cam-A3 · vision-edge · 300 s</text>
+      <text x="166" y="322" class="lnm">climate-PuEr-01 · climate · 60 s</text>
+      <text x="166" y="338" class="lnm">micro-lab-01 · lab · 3600 s</text>
+      <text x="480" y="290" class="lnm">valve-4A · actuator · 30 s</text>
+      <text x="480" y="306" class="lnm">tray-scan-TC118 · vision-edge · 600 s</text>
+      <text x="480" y="322" class="lnm">power-meter-PuEr-01 · energy · 60 s</text>
+      <text x="480" y="338" class="lnm">（RPC 落地点：阀 / 泵 / 喷嘴）</text>
+      <text x="166" y="360" class="sub">注：root-cam / tray-scan 经 USB3 / CSI-2 直连网关，其余 5 类走 RS-485。</text>
+
+      <!-- ② -->
+      <path class="up" d="M470 372 V422" marker-end="url(#arG)"/>
+      <text x="496" y="386" class="hop">② RS-485 · Modbus RTU 半双工 · 9600–115200 bps · 8N1</text>
+      <text x="496" y="400" class="hop">A/B 双绞屏蔽，两端 120 Ω；单帧轮询约 30–50 ms</text>
+
+      <!-- B3 网关 -->
+      <rect x="150" y="428" width="640" height="118" rx="12" class="bx"/>
+      <text x="166" y="450" class="ttl">gateway-edge-01 · Jetson Orin Nano 8GB（边缘网关）</text>
+      <text x="166" y="474" class="ln">Modbus 主站轮询 → 单位归一 → JSON（42 个遥测键，键名不可改）</text>
+      <text x="166" y="492" class="ln">本地缓存 ≥72 h（SQLite WAL + NVMe），buffer_depth 随遥测上报</text>
+      <text x="166" y="510" class="ln">边缘推理：根区视觉 / 托盘污染物（models_loaded=3）</text>
+      <text x="166" y="528" class="ln">RPC 落地：request/{id} → Modbus 写寄存器 → 执行器 → response/{id}</text>
+
+      <!-- ③ -->
+      <path class="up" d="M470 546 V596" marker-end="url(#arG)"/>
+      <text x="496" y="560" class="hop">③ MQTT over TLS 1.2/1.3 · 8883 · mTLS 双向证书</text>
+      <text x="496" y="574" class="hopm">v1/devices/me/telemetry · 4G / Wi-Fi / 以太网</text>
+
+      <!-- B4 平台 -->
+      <rect x="150" y="602" width="640" height="112" rx="12" class="bx"/>
+      <text x="166" y="624" class="ttl">平台层：MQTT broker · 时序库 · 规则引擎 · 设备影子</text>
+      <text x="166" y="648" class="ln">8 设备 / 7 profiles · 10,536 报文/日 · 1.10 MB/日（估算）</text>
+      <text x="166" y="666" class="ln">topic 路由：v1/gateway/telemetry（网关代理）· 规则 / 告警 / 限速</text>
+      <text x="166" y="684" class="ln">RPC：request/{id} → 执行 → response/{id}（回执、超时与重放保护）</text>
+      <text x="166" y="702" class="ln">特征：VPD 窗口 / EC-pH 漂移 / 病害概率（1 min 聚合）</text>
+
+      <!-- ④ -->
+      <path class="up" d="M470 714 V764" marker-end="url(#arG)"/>
+      <text x="496" y="728" class="hop">④ HTTPS / 内网 gRPC · 状态与特征（不回传原始报文）</text>
+      <text x="496" y="742" class="hop">决策层只依赖聚合态，降低与设备耦合</text>
+
+      <!-- B5 决策层 -->
+      <rect x="150" y="770" width="640" height="112" rx="12" class="bx"/>
+      <text x="166" y="792" class="ttl">决策层：CoffeeJeV / Napell Agent</text>
+      <text x="166" y="816" class="ln">输入：telemetry + 视觉概率 + 能耗 + 微检 + 人工复核结论</text>
+      <text x="166" y="834" class="ln">输出：fog recipe / 加肥量 / 阀组时序 / 批次隔离 / dry_back 窗口</text>
+      <text x="166" y="852" class="ln">动作经 RPC 下行（⑤）；高风险动作走人工闸门（HITL）</text>
+      <text x="166" y="868" class="ln">全链路口径：设备名 / 键名 / 采样周期与本页冻结版本一致</text>
+
+      <!-- ⑤ RPC 下行 -->
+      <path class="dn" d="M470 882 V922 H30 V112 H144" marker-end="url(#arA)"/>
+      <path class="dn" d="M30 309 H144" marker-end="url(#arA)"/>
+      <path class="dn" d="M30 487 H144" marker-end="url(#arA)"/>
+      <text transform="translate(14,700) rotate(-90)" class="dlab">⑤ RPC 下行 · v1/devices/me/rpc/request/{id} · set_fog_recipe / dry_back / open / close</text>
+    </svg>
+  </div>
+  <p class="caption">
+    <b>读法：</b>实线为遥测上行，虚线为 RPC 下行。①② 是现场总线跳（可被电磁干扰），③ 是唯一跨公网跳（必须 TLS + 证书），④ 是平台内跳（可不加密但需鉴权），⑤ 是控制回路（必须有回执与超时）。图中数值取本页 §5 的计算结果；窄屏下此图可横向滑动。
+  </p>
+
+  <h3 class="sub">逐跳协议与降级 <span class="mut">5 hops</span></h3>
+  <div class="tblscroll">
+    <table class="tbl">
+      <thead>
+        <tr><th>跳</th><th>区间</th><th>方向</th><th>协议 / 介质</th><th>典型负载</th><th>失效时的降级</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">①</td><td>传感器 / 执行器 → fog-ctrl-A3</td><td>双向（模拟 / 干接点）</td>
+          <td>4–20 mA、0–10 V、干接点、SDI-12、I²C、UART</td>
+          <td>12 键 / 30 s；执行回路本地 10 ms 级</td>
+          <td>控制器保持上一版 recipe 本地闭环，遥测标记 <code>stale</code></td>
+        </tr>
+        <tr>
+          <td class="mono">②</td><td>7 个从站 → 网关</td><td>上行轮询</td>
+          <td>RS-485 双绞屏蔽 · Modbus RTU 9600–115200 8N1</td>
+          <td>8 节点 / 轮询周期 ≤5 s，单帧约 30–50 ms <span class="tbc">待确认</span></td>
+          <td>重试 3 次 → 该设备进入 <code>offline</code>，其余设备继续</td>
+        </tr>
+        <tr>
+          <td class="mono">③</td><td>网关 → 平台</td><td>上行</td>
+          <td>MQTT over TLS 1.2/1.3 · 8883 · mTLS</td>
+          <td>10,536 报文 / 日 · 1.10 MB / 日</td>
+          <td>本地 72 h 缓冲，重连后限速补发</td>
+        </tr>
+        <tr>
+          <td class="mono">④</td><td>平台 → 决策层</td><td>上行（读）</td>
+          <td>HTTPS / 内网 gRPC，只读聚合特征</td>
+          <td>1 min 聚合态，约 42 列 / 设备</td>
+          <td>决策层读最后状态，超时降级为人工兜底</td>
+        </tr>
+        <tr>
+          <td class="mono">⑤</td><td>决策层 → 网关 → 执行器</td><td>下行 RPC</td>
+          <td>MQTT RPC → Modbus 写寄存器（FC 06/16）</td>
+          <td>单次 6 个方法，端到端目标 &lt;2 s <span class="tbc">待确认</span></td>
+          <td><code>stop_fog</code> 本地最高优先级，硬件联锁旁路软件</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tiny" style="margin-top:10px">
+    拓扑约束：① 网关是唯一上行出口，不允许设备直连平台（便于统一鉴权与限速）；② <code>fog-ctrl-A3</code> 必须在网关失联时自治，否则一次 4G 抖动就会中断雾化；③ 所有 RPC 必须带 <code>{id}</code> 回执，无回执即视为失败并重试。
+  </p>
+</section>
+
+<!-- ================= 03 设备规格卡 ================= -->
+<section class="sec" id="devices">
+  <div class="sechead">
+    <div class="num">03 / DEVICE SPECS</div>
+    <h2>设备规格卡 ×8</h2>
+    <div class="zh">one card per device · role / IO / models / parameters / payload / placement / maintenance</div>
+    <p>
+      每张卡按同一模板写：<b>职责 → IO 清单 → 关键参数（量程/精度/分辨率/响应时间/接口）→ 推荐型号 → 遥测报文 → 放置 → 校准</b>。
+      型号示例为工程选型参考，<b>不是订货清单</b>；凡标注 <span class="tbc">待确认</span> 的数字，均需在打样或送检后回填。
+    </p>
+    <div class="chips" style="margin-top:16px">
+      <a class="chip" href="#dev-fog"><span class="k">D01</span>fog-ctrl-A3</a>
+      <a class="chip" href="#dev-rootcam"><span class="k">D02</span>root-cam-A3</a>
+      <a class="chip" href="#dev-tray"><span class="k">D03</span>tray-scan-TC118</a>
+      <a class="chip" href="#dev-climate"><span class="k">D04</span>climate-PuEr-01</a>
+      <a class="chip" href="#dev-power"><span class="k">D05</span>power-meter-PuEr-01</a>
+      <a class="chip" href="#dev-lab"><span class="k">D06</span>micro-lab-01</a>
+      <a class="chip" href="#dev-valve"><span class="k">D07</span>valve-4A</a>
+      <a class="chip" href="#dev-gw"><span class="k">D08</span>gateway-edge-01</a>
+    </div>
+  </div>
+
+  <!-- D01 -->
+  <article class="devcard" id="dev-fog">
+    <div class="devhead">
+      <span class="ix">D01</span>
+      <h3>fog-ctrl-A3</h3>
+      <span class="sp">
+        <span class="pill ok">profile: fog-controller</span>
+        <span class="pill gray">30 s</span>
+        <span class="pill info">12 keys</span>
+        <span class="pill warn">4 RPC</span>
+      </span>
+    </div>
+    <p class="role">
+      营养雾闭环控制器，也是机队中<b>唯一持有执行权限</b>的设备。气雾咖啡的根区没有基质缓冲，EC / pH / DO 与雾化时序必须在同一节点上闭环，否则"配好液、送不到根"会以根尖褐变的形式延迟 2–3 天才暴露。
+      fog-ctrl-A3 读 12 个键、驱动 4 类执行器（计量泵 / 电磁阀 / 超声喷嘴 / 循环泵），并对外暴露 4 个 RPC：<code>set_fog_recipe</code>、<code>dry_back</code>、<code>flush_reservoir</code>、<code>stop_fog</code>。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>EC</b> <span class="k">ec</span> — EZO-EC（UART），K=1.0 电极装于旁通 flow cell</li>
+          <li><b>pH</b> <span class="k">ph</span> — EZO-pH + BNC 可更换工业电极，3 M KCl 湿态保存</li>
+          <li><b>溶解氧</b> <span class="k">do</span> — EZO-DO 原电池型，旁通流速 ≥3 cm/s</li>
+          <li><b>水温</b> <span class="k">water_temp</span> — PT100 A 级 + MAX31865</li>
+          <li><b>空气温湿度</b> <span class="k">air_temp / rh</span> — HMP110 用于控制，SHT45 作冗余</li>
+          <li><b>VPD</b> <span class="k">vpd</span> — 由 T/RH 计算（Magnus 公式，叶温≈气温）</li>
+          <li><b>PPFD</b> <span class="k">ppfd</span> — SQ-520，冠层高度水平安装</li>
+          <li><b>CO2</b> <span class="k">co2</span> — SCD41（NDIR，含 T/RH 补偿）</li>
+          <li><b>雾滴粒径</b> <span class="k">droplet_um</span> — 外协激光衍射季度标定 + 相机软测量回归</li>
+          <li><b>管路压力</b> <span class="k">pressure_bar</span> — 0–10 bar 变送器，雾化主管阀后取压</li>
+          <li><b>雾化占空比</b> <span class="k">fog_duty</span> — 控制器内部按通断时间比计算</li>
+          <li><b>执行输出</b> — A/B 计量泵 ×2（PWM）、电磁阀 ×2（DO）、超声喷嘴 ×4（1.7 MHz 驱动板）、循环泵 ×1</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>24 V DC / 5 A；喷嘴驱动单独 24 V / 8 A <span class="tbc">待确认</span></dd>
+          <dt>防护等级</dt><dd>控制箱 IP65；电极本体 IP68 <span class="tbc">待确认</span></dd>
+          <dt>工作环境</dt><dd>5–40 °C，箱内 ≤45 °C，避阳光直射</dd>
+          <dt>通信</dt><dd>RS-485 Modbus RTU 从站 · 地址 12 · 115200 8N1</dd>
+          <dt>安装</dt><dd>400×500×200 mm 壁挂箱，距地 1.2 m，内置干燥剂/呼吸阀</dd>
+          <dt>RPC</dt><dd><code>set_fog_recipe</code> · <code>dry_back</code> · <code>flush_reservoir</code> · <code>stop_fog</code></dd>
+          <dt>采样</dt><dd>30 s / 12 键；紧凑单行报文约 175 B（见 §5）</dd>
+          <dt>本地闭环</dt><dd>网关失联时保持最后 recipe，独立保护逻辑 ≤10 ms</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead>
+            <tr><th>测点</th><th>量程 / 规格</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>EC</b></td><td>0.07–50,000 µS/cm（K=1.0）</td><td>±2% 读数 <span class="tbc">待确认</span></td><td>0.1 µS/cm <span class="tbc">待确认</span></td><td>&lt;1 s（连续）</td><td>UART → RS-485</td></tr>
+            <tr><td><b>pH</b></td><td>0.001–14.000</td><td>±0.002（模块标称）/ ±0.05 现场实际 <span class="tbc">待确认</span></td><td>0.001</td><td>&lt;1 s</td><td>UART → RS-485</td></tr>
+            <tr><td><b>DO</b></td><td>0–20 mg/L</td><td>±0.05 mg/L <span class="tbc">待确认</span></td><td>0.01 mg/L</td><td>30–60 s 稳定</td><td>UART</td></tr>
+            <tr><td><b>水温</b></td><td>−10–+60 °C</td><td>±0.15 °C（PT100 A 级）</td><td>0.01 °C</td><td>5–10 s</td><td>MAX31865 / 1-Wire</td></tr>
+            <tr><td><b>空气温湿度</b></td><td>−20–+60 °C / 0–100 %RH</td><td>±0.2 °C / ±1.5 %RH <span class="tbc">待确认</span></td><td>0.01 °C / 0.1 %RH</td><td>8 s（HMP110）</td><td>模拟 / RS-485</td></tr>
+            <tr><td><b>VPD</b></td><td>0–5 kPa（派生量）</td><td>派生误差 &lt;±0.05 kPa <span class="tbc">待确认</span></td><td>0.01 kPa</td><td>随 T/RH</td><td>内部计算</td></tr>
+            <tr><td><b>CO2</b></td><td>400–5,000 ppm</td><td>±(50 ppm + 5%) <span class="tbc">待确认</span></td><td>1 ppm</td><td>5 s <span class="tbc">待确认</span></td><td>I²C / UART</td></tr>
+            <tr><td><b>PPFD</b></td><td>0–2,500 µmol/m²/s <span class="tbc">待确认</span></td><td>±5% <span class="tbc">待确认</span></td><td>0.1 µmol</td><td>&lt;1 ms</td><td>SDI-12 / I²C</td></tr>
+            <tr><td><b>雾滴粒径</b></td><td>1–2,000 µm（激光衍射）</td><td>±1–2% <span class="tbc">待确认</span></td><td>0.1 µm</td><td>10 Hz 采样</td><td>外协 / 相机软测量</td></tr>
+            <tr><td><b>管路压力</b></td><td>0–10 bar</td><td>±0.5% FS</td><td>0.01 bar</td><td>&lt;10 ms</td><td>4–20 mA / RS-485</td></tr>
+            <tr><td><b>fog_duty</b></td><td>0–100%</td><td>计算量（通断时间比）</td><td>0.1%</td><td>30 s 窗口</td><td>内部计算</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每测点 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>测点</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>EC</td><td>Atlas Scientific EZO-EC + 工业 EC 电极 K=1.0</td><td>国产工业 EC 变送器 4–20 mA（雷磁 / 华科仪类 <span class="tbc">待确认</span>）</td><td>EZO 易集成；国产变送器抗干扰更好</td></tr>
+            <tr><td>pH</td><td>Atlas Scientific EZO-pH + 可更换 pH 电极</td><td>工业 pH 变送器 + 复合电极（4–20 mA）</td><td>电极才是耗材，模块选易换的</td></tr>
+            <tr><td>DO</td><td>Atlas Scientific EZO-DO + 原电池 DO 电极</td><td>荧光法（LDO）工业 DO 传感器</td><td>LDO 免维护但贵 2–3 倍</td></tr>
+            <tr><td>水温</td><td>PT100 A 级 + MAX31865</td><td>防水 DS18B20 探头</td><td>±0.15 °C vs ±0.5 °C</td></tr>
+            <tr><td>空气温湿度</td><td>Vaisala HMP110</td><td>Sensirion SHT45 + 防辐射罩</td><td>HMP110 用于闭环，SHT45 作冗余</td></tr>
+            <tr><td>CO2</td><td>Sensirion SCD41</td><td>工业 NDIR 模块 0–5,000 ppm <span class="tbc">待确认</span></td><td>SCD41 自带补偿，适合直连</td></tr>
+            <tr><td>PPFD</td><td>Apogee SQ-520</td><td>国产 PAR 量子传感器（4–20 mA）<span class="tbc">待确认</span></td><td>校准系数随货，勿混用厂家系数</td></tr>
+            <tr><td>雾滴粒径</td><td>Malvern Spraytec 激光衍射（外协，季度）</td><td>在线光学阵列探针（本期不部署，成本高）</td><td>控制侧先用相机 + 喷雾模型软测量</td></tr>
+            <tr><td>压力</td><td>0–10 bar 压力变送器 4–20 mA（南华 / 上自仪类 <span class="tbc">待确认</span>）</td><td>RS-485 Modbus 压力变送器</td><td>4–20 mA 简单；RS-485 可多参量</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>fog-ctrl-A3 · 30 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"ec"</span>: 1.42,
+  <span class="s">"ph"</span>: 5.86,
+  <span class="s">"do"</span>: 7.4,
+  <span class="s">"water_temp"</span>: 21.5,
+  <span class="s">"air_temp"</span>: 23.1,
+  <span class="s">"rh"</span>: 78.2,
+  <span class="s">"vpd"</span>: 0.62,
+  <span class="s">"ppfd"</span>: 412,
+  <span class="s">"co2"</span>: 812,
+  <span class="s">"droplet_um"</span>: 18.4,
+  <span class="s">"pressure_bar"</span>: 4.2,
+  <span class="s">"fog_duty"</span>: 0.35
+}</pre>
+        </div>
+        <p class="tiny">
+          展示为格式化 JSON；线上报文为无空格单行，UTF-8 共 175 B。<code>ts</code> 为网关注入的 Unix 秒，12 个业务键严格按约定命名。
+        </p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          挂箱装在混肥间外侧、紧邻雾化泵组，缩短管路滞后。EC / pH / DO 三支探头共用一个<b>旁通 flow cell</b>，不要直接插在雾化罐死水区（气泡与沉积会让 pH 漂 0.2 以上）。
+          pH 电极<b>不可干放</b>，停机超 2 h 需拆下浸入 3 M KCl。压力取压点在雾化主管阀后 20 cm，避免泵脉动直接打到膜片。
+          喷嘴驱动板与 RS-485 走线分离 ≥30 cm，交叉处垂直过线。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每日</b> — EC / pH 与手持笔比对 1 次；偏差 &gt;0.1 pH 或 &gt;5% EC 立即标定</li>
+        <li><b>每 2 周</b> — pH 两点校准（4.01 / 7.00），电极 0.1 M HCl 清洗 2 min；斜率 &lt;92% 或响应 &gt;60 s 即更换</li>
+        <li><b>每月</b> — EC 单点校验（12.88 mS/cm 或 1413 µS/cm）；DO 零点 + 空气饱和两点；喷嘴柠檬酸除垢</li>
+        <li><b>每季</b> — 液滴粒径外协标定 1 次；计量泵泵管检查；箱内干燥剂更换</li>
+        <li><b>每 3–6 月</b> — pH 电极更换、泵管更换；压力变送器零点复核</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D02 -->
+  <article class="devcard" id="dev-rootcam">
+    <div class="devhead">
+      <span class="ix">D02</span>
+      <h3>root-cam-A3</h3>
+      <span class="sp">
+        <span class="pill vio">profile: vision-edge</span>
+        <span class="pill gray">300 s</span>
+        <span class="pill info">5 keys</span>
+        <span class="pill gray">attr: model_version</span>
+      </span>
+    </div>
+    <p class="role">
+      根区相机 + 边缘视觉节点。固定视角拍摄根系与雾场，输出 5 个标量：<code>vision_p</code>（根系/健康概率）、<code>image_quality</code>、<code>roots_count</code>、<code>browning</code>（褐变比例）、<code>droplet_class</code>（雾滴等级）。
+      <b>原图不出网关</b>：只在人工复核时按需抓取缩略图，否则一条 4G 链路上传 12 MP 图像会让整个机队的遥测延迟。
+      设备属性 <code>model_version</code> 必须随遥测一起入库——模型换版会造成 <code>vision_p</code> 整体漂移，没有版本号就无法回溯。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>成像</b> <span class="k">→ vision_p / roots_count / browning</span> — CSI-2 或 USB3 UVC 相机，优先全局快门</li>
+          <li><b>图像质量</b> <span class="k">image_quality</span> — 由边缘侧清晰度/对比度/反光比评估，0–1</li>
+          <li><b>雾滴等级</b> <span class="k">droplet_class</span> — 模型分类输出（coarse / medium / fine），与 laser 值互为校验</li>
+          <li><b>补光</b> — 660 nm ×4 + 白光，恒流驱动，与曝光硬件同步</li>
+          <li><b>视窗加热</b> — 2–5 W 加热片 + NTC，防结露</li>
+          <li><b>参考色卡</b> — 每帧入画，用于白平衡与漂移校正</li>
+          <li><b>触发</b> — 网关定时器（300 s）/ GPIO 外部触发</li>
+          <li><b>外壳</b> — 遮光罩 + 哑光黑内壁 + 挡水檐</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>5 V / 3 A（相机）+ 12 V（补光与加热）</dd>
+          <dt>防护等级</dt><dd>IP65 外壳；视窗 IP67 <span class="tbc">待确认</span></dd>
+          <dt>工作环境</dt><dd>5–40 °C / 95–100 %RH（持续高湿）</dd>
+          <dt>通信</dt><dd>CSI-2 2-lane（≤2 m）或 USB3（≤5 m，有源延长）</dd>
+          <dt>安装</dt><dd>根区侧面导轨/三脚，距根板 30–45 cm，下倾 10–15°</dd>
+          <dt>属性</dt><dd><code>model_version</code>：边缘模型版本号，随遥测入库</dd>
+          <dt>采样</dt><dd>300 s 触发一次；推理 1–2 fps 即可</dd>
+          <dt>数据量</dt><dd>约 110 B/包，30.9 KB/日；原图仅按需回传</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>规格 / 量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>成像</b></td><td>4056×3040（12.3 MP）<span class="tbc">待确认</span></td><td>—</td><td>30 cm 处约 0.1 mm/px <span class="tbc">待确认</span></td><td>单帧 &lt;80 ms</td><td>CSI-2 2-lane</td></tr>
+            <tr><td><b>帧率</b></td><td>10–30 fps <span class="tbc">待确认</span></td><td>—</td><td>—</td><td>推理 1 帧 / 300 s</td><td>CSI-2 / USB3</td></tr>
+            <tr><td><b>快门 / 曝光</b></td><td>全局快门优先</td><td>—</td><td>曝光 0.1–2 ms 可调</td><td>—</td><td>GPIO 同步</td></tr>
+            <tr><td><b>视场</b></td><td>约 300×400 mm（根板窗口）</td><td>—</td><td>—</td><td>—</td><td>6 mm 镜头</td></tr>
+            <tr><td><b>景深</b></td><td>80–150 mm <span class="tbc">待确认</span></td><td>—</td><td>—</td><td>—</td><td>f/2.8–f/4</td></tr>
+            <tr><td><b>补光照度</b></td><td>≥2,000 lx @30 cm <span class="tbc">待确认</span></td><td>—</td><td>660 nm 窄带 + 白光</td><td>与曝光同步</td><td>GPIO 同步</td></tr>
+            <tr><td><b>量化精度</b></td><td><code>vision_p</code> 0–1</td><td>目标 F1 ≥0.85 <span class="tbc">待确认</span></td><td>0.01</td><td>&lt;2 s（Orin Nano）</td><td>MQTT</td></tr>
+            <tr><td><b>roots_count</b></td><td>0–200 条</td><td>计数误差 &lt;10% <span class="tbc">待确认</span></td><td>1 条</td><td>同上</td><td>MQTT</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每测点 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>相机</td><td>Arducam IMX477 12.3 MP（CSI-2）</td><td>e-con Systems / 国产 USB3 全局快门 <span class="tbc">待确认</span></td><td>全局快门抗振动与运动模糊</td></tr>
+            <tr><td>镜头</td><td>6 mm 低畸变 M12 + 近摄接圈</td><td>8 mm 定焦（视场更窄、畸变更小）</td><td>30 cm 处畸变 &lt;2% <span class="tbc">待确认</span></td></tr>
+            <tr><td>补光</td><td>660 nm LED ×4 + 恒流驱动</td><td>白光 COB + 漫射板</td><td>窄带减少色偏，叶片反光更易控</td></tr>
+            <tr><td>外壳</td><td>IP65 铝壳 + 加热视窗</td><td>亚克力罩 + 雨刷（不推荐，结露是首因）</td><td>结露是根区相机第一失效模式</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>root-cam-A3 · 300 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"vision_p"</span>: 0.87,
+  <span class="s">"image_quality"</span>: 0.91,
+  <span class="s">"roots_count"</span>: 23,
+  <span class="s">"browning"</span>: 0.12,
+  <span class="s">"droplet_class"</span>: <span class="n">"fine"</span>
+}</pre>
+        </div>
+        <p class="tiny">紧凑单行 110 B。<code>model_version</code> 走设备属性（attributes），不进遥测体，避免每包重复。</p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          相机与雾化喷嘴成 <b>90°</b>，不要正对喷口——正对会让视窗在 5–10 min 内挂满水珠。镜头下倾 10–15° 利用重力排水，视窗加挡水檐。
+          遮光罩内壁哑光黑、补光从侧面掠射，可显著提高根系与雾滴的对比度；每帧带参考色卡，让 <code>image_quality</code> 能解释"是雾太浓还是镜面脏"。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每周</b> — 擦拭视窗（无绒布 + 去离子水）；检查加热片是否工作</li>
+        <li><b>每 2 周</b> — 灰卡白平衡复核；补光亮度/色温记录</li>
+        <li><b>每月</b> — 棋盘格重标畸变（镜头受振会松动）；<code>image_quality</code> 分布回看</li>
+        <li><b>模型升级时</b> — 记录 <code>model_version</code>，回放 24 h 历史帧做前后对比，避免"换了模型以为根变好了"</li>
+        <li><b>告警线</b> — <code>image_quality &lt;0.6</code> 连续 3 帧触发清洁/结露检查</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D03 -->
+  <article class="devcard" id="dev-tray">
+    <div class="devhead">
+      <span class="ix">D03</span>
+      <h3>tray-scan-TC118</h3>
+      <span class="sp">
+        <span class="pill vio">profile: vision-edge</span>
+        <span class="pill gray">600 s</span>
+        <span class="pill info">3 keys</span>
+        <span class="pill gray">event-capable</span>
+      </span>
+    </div>
+    <p class="role">
+      组培托盘污染物初筛。托盘进出培养架时触发拍照（可带条形码/托盘号），输出污染概率与三类概率分布，用于"<b>先隔离、后确认</b>"：把可疑托盘挪到观察区，再由 <code>micro-lab-01</code> 出结论。
+      它<b>不替代实验室</b>，也不直接报废批次——漏检代价远高于误检，所以阈值默认偏保守。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>成像</b> <span class="k">→ contaminated_p / class_probs_json</span> — 全局快门相机，俯拍托盘</li>
+          <li><b>图像质量</b> <span class="k">image_quality</span> — 清晰度/背景均匀度/反光比</li>
+          <li><b>光源</b> — 平板背光 + 同轴环光，DC 恒流（无频闪）</li>
+          <li><b>触发</b> — 光电对射 / 扫码枪 / 网关软触发（600 s 兜底轮询）</li>
+          <li><b>定位治具</b> — 托盘重复定位 ±0.5 mm <span class="tbc">待确认</span></li>
+          <li><b>遮光</b> — 遮光帘 + 统一背景板（黑或白，不可混用）</li>
+          <li><b>通信</b> — USB3 / GbE 至网关，本地推理</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>12–24 V DC / 2 A（相机 + 光源）</dd>
+          <dt>防护等级</dt><dd>IP54（洁净间内使用）</dd>
+          <dt>工作环境</dt><dd>18–26 °C / 40–70 %RH</dd>
+          <dt>通信</dt><dd>USB3（≤3 m）或 GbE；网关本地推理</dd>
+          <dt>安装</dt><dd>培养架入口，镜头距托盘 250–350 mm</dd>
+          <dt>采样</dt><dd>600 s 轮询；实际按事件触发（进出各 1 次）</dd>
+          <dt>数据量</dt><dd>约 123 B/包，17.3 KB/日</dd>
+          <dt>阈值</dt><dd>告警阈值由平台下发并与微检对齐</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>规格 / 量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>视野</b></td><td>220×160 mm <span class="tbc">待确认</span></td><td>—</td><td>—</td><td>—</td><td>定焦 8–12 mm</td></tr>
+            <tr><td><b>成像</b></td><td>1920×1200（2.3 MP）全局快门</td><td>—</td><td>约 0.11 mm/px <span class="tbc">待确认</span></td><td>单帧 &lt;20 ms</td><td>USB3 / GbE</td></tr>
+            <tr><td><b>帧率</b></td><td>30–60 fps</td><td>—</td><td>—</td><td>触发到输出 300–800 ms <span class="tbc">待确认</span></td><td>USB3</td></tr>
+            <tr><td><b>景深</b></td><td>±8 mm <span class="tbc">待确认</span></td><td>—</td><td>—</td><td>—</td><td>f/4–f/5.6</td></tr>
+            <tr><td><b>照度</b></td><td>3,000–8,000 lx <span class="tbc">待确认</span></td><td>—</td><td>DC 恒流，无频闪</td><td>与曝光同步</td><td>GPIO</td></tr>
+            <tr><td><b>污染概率</b></td><td><code>contaminated_p</code> 0–1</td><td>目标召回 ≥0.90 <span class="tbc">待确认</span></td><td>0.01</td><td>&lt;1 s（含推理）</td><td>MQTT</td></tr>
+            <tr><td><b>分类输出</b></td><td><code>class_probs_json</code>（clean / contam / unclear）</td><td>三分类</td><td>0.01</td><td>同上</td><td>MQTT</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每部件 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>相机</td><td>Basler dart daA1920-160um（USB3 全局快门）<span class="tbc">待确认</span></td><td>Arducam 12 MP / 国产 GigE 工业相机</td><td>全局快门避免托盘运动模糊</td></tr>
+            <tr><td>光源</td><td>平板背光 + 同轴环光（DC 恒流）</td><td>高显色 LED 面板 + 漫射板</td><td>消灭 100 Hz 工频频闪</td></tr>
+            <tr><td>治具</td><td>亚光阳极氧化铝定位框</td><td>3D 打印治具 + 黑白参考块</td><td>重复定位一致性决定召回</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>tray-scan-TC118 · 600 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"contaminated_p"</span>: 0.06,
+  <span class="s">"image_quality"</span>: 0.88,
+  <span class="s">"class_probs_json"</span>: {
+    <span class="s">"clean"</span>: 0.88,
+    <span class="s">"contam"</span>: 0.06,
+    <span class="s">"unclear"</span>: 0.06
+  }
+}</pre>
+        </div>
+        <p class="tiny">
+          若平台侧把 <code>class_probs_json</code> 约定为字符串，则整体转义为一个字符串值，<b>键名不变</b>；两种形态二选一后写入接口契约。
+        </p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          装在培养架入口的遮光帘内，背景板颜色与托盘边缘强对比。光源与相机近似同轴，能压掉组培瓶肩部的阴影——阴影是误判"污染"的主因。
+          托盘每次通过只触发一次，避免同一托盘被重复计数。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每班次</b> — 开机自检：白平衡、背景均匀度、参考块灰阶</li>
+        <li><b>每月</b> — 与 <code>micro-lab-01</code> 做 ≥100 例混淆矩阵比对，回填召回/精确率</li>
+        <li><b>每季</b> — 阈值复核（漏检优先级高于误检）；光源衰减测量</li>
+        <li><b>每 6 月</b> — 治具磨损检查与相机紧固；镜头清洁</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D04 -->
+  <article class="devcard" id="dev-climate">
+    <div class="devhead">
+      <span class="ix">D04</span>
+      <h3>climate-PuEr-01</h3>
+      <span class="sp">
+        <span class="pill ok">profile: climate</span>
+        <span class="pill gray">60 s</span>
+        <span class="pill info">7 keys</span>
+        <span class="pill gray">交叉校验源</span>
+      </span>
+    </div>
+    <p class="role">
+      棚内独立气候站。它的价值不在"多一个温湿度"，而在<b>与 fog-ctrl-A3 完全独立的第二套观测</b>：控制器挂在混肥间箱内、探头贴近雾化区，读数容易被箱温与饱和空气污染；气候站装在冠层上方，是决策层计算 VPD 窗口与 DLI 排程的主输入。
+      两套 <code>air_temp / rh / vpd</code> 的差值持续扩大，本身就是传感器漂移或雾化失常的早期信号。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>空气温湿度</b> <span class="k">air_temp / rh</span> — HMP110，防辐射罩内强制通风 <span class="tbc">待确认</span></li>
+          <li><b>VPD</b> <span class="k">vpd</span> — Magnus 公式由 T/RH 计算，与控制器同算法</li>
+          <li><b>CO2</b> <span class="k">co2</span> — SCD41，疏水膜 + 防虫网</li>
+          <li><b>PPFD</b> <span class="k">ppfd</span> — SQ-520，余弦校正头水平</li>
+          <li><b>DLI</b> <span class="k">dli</span> — 按 60 s 采样积分累积（mol/m²/d），网关侧日复位</li>
+          <li><b>风速</b> <span class="k">wind_ms</span> — 三杯或超声，0–30 m/s</li>
+          <li><b>立杆与线缆</b> — 2.5 m 立杆、下垂滴水弯、屏蔽线</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>12–24 V DC 或 PoE <span class="tbc">待确认</span></dd>
+          <dt>防护等级</dt><dd>IP65（探头本体 IP66 以上 <span class="tbc">待确认</span>）</dd>
+          <dt>工作环境</dt><dd>−20–+60 °C / 0–100 %RH</dd>
+          <dt>通信</dt><dd>RS-485 Modbus RTU 从站 · 地址 14</dd>
+          <dt>安装</dt><dd>冠层上方 0.5–1.0 m，距雾化喷嘴 ≥2 m</dd>
+          <dt>采样</dt><dd>60 s / 7 键；紧凑单行报文约 99 B</dd>
+          <dt>冗余</dt><dd>与 fog-ctrl-A3 的 T/RH 互校，差值入告警规则</dd>
+          <dt>数据量</dt><dd>142.6 KB / 日（占机队 12.4%）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>测点</th><th>量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>air_temp</b></td><td>−40–+80 °C</td><td>±0.2 °C <span class="tbc">待确认</span></td><td>0.01 °C</td><td>8 s（带滤膜）</td><td>RS-485 / 模拟</td></tr>
+            <tr><td><b>rh</b></td><td>0–100 %RH</td><td>±1.5 %RH（0–90 %RH）<span class="tbc">待确认</span></td><td>0.1 %RH</td><td>8 s</td><td>RS-485 / 模拟</td></tr>
+            <tr><td><b>vpd</b></td><td>0–5 kPa（派生）</td><td>派生误差 &lt;±0.05 kPa <span class="tbc">待确认</span></td><td>0.01 kPa</td><td>随 T/RH</td><td>计算</td></tr>
+            <tr><td><b>co2</b></td><td>400–5,000 ppm</td><td>±(50 ppm + 5%) <span class="tbc">待确认</span></td><td>1 ppm</td><td>5 s <span class="tbc">待确认</span></td><td>I²C / UART</td></tr>
+            <tr><td><b>ppfd</b></td><td>0–2,500 µmol/m²/s <span class="tbc">待确认</span></td><td>±5% <span class="tbc">待确认</span></td><td>0.1 µmol</td><td>&lt;1 ms</td><td>SDI-12 / I²C</td></tr>
+            <tr><td><b>dli</b></td><td>0–60 mol/m²/d</td><td>积分误差 &lt;3% <span class="tbc">待确认</span></td><td>0.1 mol</td><td>日累积（60 s 步进）</td><td>计算</td></tr>
+            <tr><td><b>wind_ms</b></td><td>0–30 m/s</td><td>±(0.3 + 3% 读数) <span class="tbc">待确认</span></td><td>0.1 m/s</td><td>1–3 s <span class="tbc">待确认</span></td><td>RS-485 / 脉冲</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每测点 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>测点</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>空气温湿度</td><td>Vaisala HMP110</td><td>Sensirion SHT45 + 防辐射罩</td><td>高湿段 HMP110 更稳，SHT45 便宜一个数量级</td></tr>
+            <tr><td>CO2</td><td>Sensirion SCD41</td><td>工业 NDIR 0–5,000 ppm <span class="tbc">待确认</span></td><td>户外需疏水膜 + 防虫网，否则光腔污染</td></tr>
+            <tr><td>PPFD</td><td>Apogee SQ-520</td><td>国产 PAR 量子传感器（4–20 mA）<span class="tbc">待确认</span></td><td>余弦校正与校准系数决定可比性</td></tr>
+            <tr><td>风速</td><td>三杯式风速计 0–30 m/s</td><td>超声波风速（无转动件，免维护）<span class="tbc">待确认</span></td><td>三杯便宜但启动风速高、易卡死</td></tr>
+            <tr><td>防辐射</td><td>百叶罩 + 强制通风</td><td>简易百叶罩（无风扇）</td><td>无通风时辐射误差可达 1 °C <span class="tbc">待确认</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>climate-PuEr-01 · 60 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"air_temp"</span>: 23.4,
+  <span class="s">"rh"</span>: 76.1,
+  <span class="s">"vpd"</span>: 0.66,
+  <span class="s">"co2"</span>: 805,
+  <span class="s">"ppfd"</span>: 436,
+  <span class="s">"dli"</span>: 8.7,
+  <span class="s">"wind_ms"</span>: 0.4
+}</pre>
+        </div>
+        <p class="tiny">紧凑单行 99 B。<code>dli</code> 是当日累积量，凌晨归零；平台侧按 <code>ppfd</code> 重算可做一致性校验。</p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          装在冠层上方 0.5–1.0 m、距雾化喷嘴 <b>≥2 m</b>——太近会长期读 95 %RH 以上，VPD 永远"过低"，雾化控制会被自己带偏。传感器头朝北（避免正午辐射），线缆做下垂滴水弯防止毛细吸水。
+          立杆避免与金属棚架直接刚性连接，否则正午热传导会抬高气温读数。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每月</b> — 防辐射罩清洁（积尘会让气温偏高 0.5–1 °C <span class="tbc">待确认</span>）；疏水膜检查</li>
+        <li><b>每季</b> — 与 fog-ctrl-A3 的 T/RH 做差值分析，差值 &gt;0.5 °C / 5 %RH 持续 24 h 即送检</li>
+        <li><b>每 6 月</b> — CO2 新鲜空气 400 ppm 基线校准</li>
+        <li><b>每年</b> — 温湿度送检（可溯源）；PPFD 与备用表比对；风速启动风速测试</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D05 -->
+  <article class="devcard" id="dev-power">
+    <div class="devhead">
+      <span class="ix">D05</span>
+      <h3>power-meter-PuEr-01</h3>
+      <span class="sp">
+        <span class="pill ok">profile: energy</span>
+        <span class="pill gray">60 s</span>
+        <span class="pill info">3 keys</span>
+        <span class="pill gray">KPI 输入</span>
+      </span>
+    </div>
+    <p class="role">
+      分路能耗计量。三项用途：把"每公斤鲜重耗多少 kWh"变成可运营 KPI；用 <code>tariff</code> 把雾化与加肥窗口推到谷电段；用夜间基载突增发现泵空转、阀门内漏或加热器误开。
+      雾化系统的能耗占比高且波动大，没有分路计量就无法判断"省电"是策略有效还是产量下降。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>瞬时功率</b> <span class="k">power_kw</span> — 三相有功功率，1 s 内部刷新</li>
+          <li><b>累计电量</b> <span class="k">kwh_total</span> — 正向有功总电能，掉电保持</li>
+          <li><b>电价</b> <span class="k">tariff</span> — 当前分时电价（元/kWh），由平台下发时段表</li>
+          <li><b>电流采样</b> — 3× 开口式 CT（雾化泵 / 循环泵 / 补光 分路）</li>
+          <li><b>通信</b> — RS-485 Modbus RTU 从站 · 地址 15 · 9600 8N1</li>
+          <li><b>DI</b> — 可选 1 路干接点区分"生产/待机"工况</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>220 V AC（三相四线 3×220/380 V）</dd>
+          <dt>防护等级</dt><dd>表体 IP20；装表箱整体 IP54</dd>
+          <dt>工作环境</dt><dd>−10–+55 °C，箱内通风</dd>
+          <dt>通信</dt><dd>RS-485 · Modbus RTU（FC 03/04 读寄存器）</dd>
+          <dt>安装</dt><dd>主配电箱内 DIN 导轨；CT 卡在分路相线</dd>
+          <dt>采样</dt><dd>60 s / 3 键；紧凑单行报文约 67 B</dd>
+          <dt>数据量</dt><dd>94.2 KB / 日（占机队 8.4%）</dd>
+          <dt>计量方向</dt><dd>只计正向有功，不做双向（无并网）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>电压</b></td><td>3×220/380 V（±20%）</td><td>±0.5% <span class="tbc">待确认</span></td><td>0.1 V</td><td>≤1 s</td><td>RS-485</td></tr>
+            <tr><td><b>电流</b></td><td>0–100 A（CT 变比决定）<span class="tbc">待确认</span></td><td>±0.5% <span class="tbc">待确认</span></td><td>0.01 A</td><td>≤1 s</td><td>RS-485</td></tr>
+            <tr><td><b>power_kw</b></td><td>0–50 kW</td><td>±0.5% 读数（0.5S 级）<span class="tbc">待确认</span></td><td>0.01 kW</td><td>≤1 s</td><td>RS-485</td></tr>
+            <tr><td><b>功率因数</b></td><td>−1–+1</td><td>±1% <span class="tbc">待确认</span></td><td>0.001</td><td>≤1 s</td><td>RS-485</td></tr>
+            <tr><td><b>kwh_total</b></td><td>0–99,999,999 kWh</td><td>按有功电能等级</td><td>0.01 kWh</td><td>累积</td><td>RS-485</td></tr>
+            <tr><td><b>tariff</b></td><td>0–9.99 元/kWh</td><td>平台下发值</td><td>0.01</td><td>时段切换即时</td><td>平台写入</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每部件 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>电表</td><td>安科瑞 APM 系列（Modbus，0.5S）<span class="tbc">待确认</span></td><td>正泰 DTSU666 导轨表 <span class="tbc">待确认</span></td><td>三相四线 + 分时电价支持</td></tr>
+            <tr><td>电表（高端）</td><td>施耐德 PM5560</td><td>—</td><td>贵 3–4 倍，本项目不必</td></tr>
+            <tr><td>CT</td><td>开口式 100/5 0.5 级</td><td>闭口式 CT（需断电安装）</td><td>开口式可不停电加装</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>power-meter-PuEr-01 · 60 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"power_kw"</span>: 1.84,
+  <span class="s">"kwh_total"</span>: 18234.6,
+  <span class="s">"tariff"</span>: 0.68
+}</pre>
+        </div>
+        <p class="tiny">
+          紧凑单行 67 B。<code>tariff</code> 由平台按分时电价表下发写入电表，再回读上报，避免"平台算了谷电、设备还在峰电"的错配。<span class="tbc">待确认</span> 字段归属。
+        </p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          装在主配电箱内，CT 分别卡在<b>雾化泵、循环泵、补光灯</b>三条分路上——合成一路会让"雾化能效"永远算不清。
+          电表与 CT 的变比必须写进台账并同步到平台，否则 <code>power_kw</code> 会整体差一个倍数（这类错误最常见且最难发现）。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每月</b> — 与总表读数比对，偏差 &gt;1% 即查 CT 变比与接线相序</li>
+        <li><b>每季</b> — 分路能耗拆分复核（雾化 / 循环 / 补光之和 ≈ 总表）</li>
+        <li><b>每年</b> — 检定/送检（按当地计量要求）；CT 二次线紧固</li>
+        <li><b>电价变更时</b> — 平台重下发时段表并回读确认，历史 KPI 按变更日期分段</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D06 -->
+  <article class="devcard" id="dev-lab">
+    <div class="devhead">
+      <span class="ix">D06</span>
+      <h3>micro-lab-01</h3>
+      <span class="sp">
+        <span class="pill warn">profile: lab</span>
+        <span class="pill gray">3600 s</span>
+        <span class="pill info">3 keys</span>
+        <span class="pill bad">event driven</span>
+      </span>
+    </div>
+    <p class="role">
+      微生物快速检测节点，属于低频但<b>高权重</b>的一类观测：<code>coliform</code> 为 <code>true</code> 时直接触发批次隔离与复检，不参与任何概率加权；<code>sample_cfu</code> 用于趋势与阈值。
+      它是"生物安全闸门"而不是"又一个传感器"——所以采样必须绑定 <code>sample_id</code>（批次 / 托盘 / 回液口），否则结果无法回溯到具体作物。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>菌落总数</b> <span class="k">sample_cfu</span> — 测试片培养后读数 / ATP 换算 <span class="tbc">待确认</span></li>
+          <li><b>大肠菌群</b> <span class="k">coliform</span> — 布尔量（检出 / 未检出）</li>
+          <li><b>样品编号</b> <span class="k">sample_id</span> — Code128 扫码绑定批次/托盘/取样点</li>
+          <li><b>ATP 荧光仪</b> — 15 s 出 RLU，作为现场快筛</li>
+          <li><b>培养箱 / 测试片</b> — 24–48 h 出 CFU，作为确认</li>
+          <li><b>通信</b> — USB / 蓝牙至网关，事件上报</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>5 V USB / 内置电池</dd>
+          <dt>防护等级</dt><dd>IP54（实验台面，非湿区）</dd>
+          <dt>工作环境</dt><dd>18–28 °C，洁净操作台</dd>
+          <dt>通信</dt><dd>USB HID / 蓝牙 → 网关；离线可手工录入</dd>
+          <dt>采样</dt><dd>3600 s 为轮询下限；实际按事件（取样即报）</dd>
+          <dt>样品到检测</dt><dd>取样后 30 min 内完成快筛</dd>
+          <dt>数据量</dt><dd>约 79 B/包，1.9 KB/日（占机队 0.2%）</dd>
+          <dt>阈值</dt><dd>由平台下发，与作物/标准对齐 <span class="tbc">待确认</span></dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>ATP 快筛</b></td><td>1–10⁶ RLU <span class="tbc">待确认</span></td><td>±20%（相对）<span class="tbc">待确认</span></td><td>1 RLU</td><td>15 s <span class="tbc">待确认</span></td><td>USB / 蓝牙</td></tr>
+            <tr><td><b>sample_cfu</b></td><td>1–10⁶ CFU/mL（对数）</td><td>半定量（±0.5 log）<span class="tbc">待确认</span></td><td>1 CFU</td><td>24–48 h（培养）</td><td>手工/扫码录入</td></tr>
+            <tr><td><b>coliform</b></td><td>检出 / 未检出</td><td>定性</td><td>布尔</td><td>18–24 h <span class="tbc">待确认</span></td><td>手工/扫码录入</td></tr>
+            <tr><td><b>sample_id</b></td><td>字符串（批次-日期-序号）</td><td>—</td><td>—</td><td>扫码 &lt;1 s</td><td>Code128</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每部件 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>快筛仪</td><td>Hygiena SystemSURE Plus（ATP）<span class="tbc">待确认</span></td><td>手持式 ATP 荧光仪（国产同级）<span class="tbc">待确认</span></td><td>ATP 是相对量，必须做趋势而非绝对值</td></tr>
+            <tr><td>菌落计数</td><td>3M Petrifilm + 自动菌落计数（外协）</td><td>人工计数 + 标准平板</td><td>外协精度高、周期 24–48 h</td></tr>
+            <tr><td>大肠菌群</td><td>快速显色培养基测试片</td><td>外协 MPN 法</td><td>定性结果，优先保召回</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>micro-lab-01 · event</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"sample_cfu"</span>: 12,
+  <span class="s">"coliform"</span>: false,
+  <span class="s">"sample_id"</span>: <span class="n">"ML-20261103-07"</span>
+}</pre>
+        </div>
+        <p class="tiny">
+          紧凑单行 79 B。<code>coliform=true</code> 走独立告警通道（优先级高于普通规则），不等批量聚合。
+        </p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          设备在实验台，样品从<b>回液口</b>取（不是新配液）：回液才是根区实际接触的液体。取样后 30 min 内完成快筛，否则 CFU 会因温度与营养残留继续变化。
+          操作台与混肥区分开，避免检测过程本身成为污染源。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每月</b> — ATP 仪阳性对照（已知 ATP 标准液）；拭子批次抽检</li>
+        <li><b>每季</b> — 与第三方菌落计数比对 ≥1 次，回填偏差</li>
+        <li><b>每季</b> — 阈值复核：与 <code>tray-scan-TC118</code> 的污染概率联合评审</li>
+        <li><b>每年</b> — 快筛仪送检/校准；耗材效期盘点</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D07 -->
+  <article class="devcard" id="dev-valve">
+    <div class="devhead">
+      <span class="ix">D07</span>
+      <h3>valve-4A</h3>
+      <span class="sp">
+        <span class="pill ok">profile: actuator</span>
+        <span class="pill gray">30 s</span>
+        <span class="pill info">3 keys</span>
+        <span class="pill warn">2 RPC</span>
+      </span>
+    </div>
+    <p class="role">
+      4 路分区执行器节点。它<b>不属于 fog-ctrl-A3</b>：分区供液、排废、冲洗由独立节点执行，一是避免单点故障（控制器死机时阀组仍可手动/远程动作），二是拿到两处独立的 <code>pressure_bar</code>（雾化主管 vs 分区阀后），压差本身就能定位堵/漏。
+      <code>cycles</code> 是健康指标：短时间激增说明阀在抖动或指令风暴。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>阀位状态</b> <span class="k">state</span> — 4 路阀位反馈干接点，报 <code>open</code>/<code>closed</code></li>
+          <li><b>阀后压力</b> <span class="k">pressure_bar</span> — 0–2.5 bar 变送器，取压点阀后 20 cm</li>
+          <li><b>动作计数</b> <span class="k">cycles</span> — 累计动作次数，掉电保持</li>
+          <li><b>输出</b> — 4× 继电器/固态 24 V DC 0.5 A，直动式电磁阀</li>
+          <li><b>输入</b> — 4× 干接点（阀位/手动开关）</li>
+          <li><b>通信</b> — RS-485 Modbus RTU 从站 · 地址 13</li>
+          <li><b>RPC</b> — <code>open</code> / <code>close</code>，带 <code>channel</code> 参数</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>24 V DC / 2 A（阀线圈峰值另计 <span class="tbc">待确认</span>）</dd>
+          <dt>防护等级</dt><dd>IP65 阀组箱；箱底留排水孔</dd>
+          <dt>工作环境</dt><dd>5–45 °C / ≤95 %RH</dd>
+          <dt>通信</dt><dd>RS-485 Modbus RTU · FC 01/05/06</dd>
+          <dt>安装</dt><dd>分区入口阀组箱，阀体垂直、线圈朝上</dd>
+          <dt>采样</dt><dd>30 s / 3 键；紧凑单行报文约 66 B</dd>
+          <dt>寿命</dt><dd>阀体 ≥50 万次 <span class="tbc">待确认</span>；密封件 12 月更换</dd>
+          <dt>数据量</dt><dd>185.6 KB / 日（占机队 16.5%，因 30 s 高频）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>量程 / 规格</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>state</b></td><td>open / closed（4 路独立）</td><td>—</td><td>布尔</td><td>10–20 ms 动作 <span class="tbc">待确认</span></td><td>RS-485 / DO</td></tr>
+            <tr><td><b>pressure_bar</b></td><td>0–2.5 bar</td><td>±0.5% FS</td><td>0.01 bar</td><td>&lt;10 ms</td><td>4–20 mA / RS-485</td></tr>
+            <tr><td><b>cycles</b></td><td>0–4,294,967,295</td><td>计数（软件去抖 20 ms）</td><td>1 次</td><td>—</td><td>RS-485</td></tr>
+            <tr><td><b>输出驱动</b></td><td>4× 24 V DC / 0.5 A</td><td>—</td><td>—</td><td>&lt;5 ms</td><td>继电器 / MOSFET</td></tr>
+            <tr><td><b>阀体</b></td><td>DN8–DN15 常闭，EPDM 密封</td><td>—</td><td>—</td><td>开 10 ms / 关 15 ms <span class="tbc">待确认</span></td><td>螺纹 / 快插</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每部件 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>阀控节点</td><td>研华 ADAM-4055（8DI/8DO，Modbus）<span class="tbc">待确认</span></td><td>国产 4 路 Modbus IO 模块</td><td>只要 4 路，8 路模块留扩展余量</td></tr>
+            <tr><td>电磁阀</td><td>直动式常闭 DC24V，EPDM 密封</td><td>先导式（需最小压差，雾化低压时不可靠）</td><td>气雾系统压力低，优先直动式</td></tr>
+            <tr><td>压力变送器</td><td>0–2.5 bar 4–20 mA</td><td>RS-485 Modbus 型</td><td>与 fog-ctrl 主管压力量程区分，便于互校</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>valve-4A · 30 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"state"</span>: <span class="n">"open"</span>,
+  <span class="s">"pressure_bar"</span>: 1.92,
+  <span class="s">"cycles"</span>: 3841
+}</pre>
+        </div>
+        <p class="tiny">紧凑单行 66 B。多路时 <code>state</code> 为当前各通道状态的聚合字符串（如 <code>"open,closed,closed,open"</code>），键名不变 <span class="tbc">待确认</span>。</p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          阀组箱靠近分区入口，缩短阀后管路死体积；取压点阀后 20 cm。阀体垂直安装、线圈朝上，避免冷凝水积在线圈腔内。箱底开排水孔并加防虫网。
+          与 <code>fog-ctrl-A3</code> 的 0–10 bar 主管压力形成<b>压差互校</b>：主管有压而阀后零压 = 阀未开或堵。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每季</b> — 4 路全行程手动测试 + 泄漏检查（保压 5 min 看压力衰减）</li>
+        <li><b>每季</b> — <code>cycles</code> 增长速率复核，异常激增查指令重发/阀抖动</li>
+        <li><b>每年</b> — 密封件与线圈更换；压力变送器零点复核</li>
+        <li><b>告警线</b> — <code>cycles</code> 超过 50 万次 <span class="tbc">待确认</span> 提前备件</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- D08 -->
+  <article class="devcard" id="dev-gw">
+    <div class="devhead">
+      <span class="ix">D08</span>
+      <h3>gateway-edge-01</h3>
+      <span class="sp">
+        <span class="pill ok">profile: gateway</span>
+        <span class="pill gray">60 s</span>
+        <span class="pill info">6 keys</span>
+        <span class="pill vio">Jetson Orin Nano</span>
+      </span>
+    </div>
+    <p class="role">
+      边缘网关，整条链路的<b>唯一收敛点</b>：Modbus 主站轮询 7 个从站、接 2 路相机、把 42 个键归一成 JSON、断网时缓存 ≥72 h、本地跑 3 个视觉模型、并把 RPC 翻译成 Modbus 写寄存器。
+      它同时是<b>自治边界</b>：与平台失联时，<code>fog-ctrl-A3</code> 继续按最后 recipe 运行，网关负责补发与告警，不允许"云挂了雾化就停"。
+    </p>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>IO 清单</h6>
+        <ul class="iolist">
+          <li><b>CPU 占用</b> <span class="k">cpu_pct</span> — 用于判断推理是否把算力吃满</li>
+          <li><b>内存占用</b> <span class="k">mem_pct</span> — 8 GB 统一内存，视觉模型驻留</li>
+          <li><b>核心温度</b> <span class="k">temp_c</span> — 触及降频阈值前的预警</li>
+          <li><b>运行时长</b> <span class="k">uptime_s</span> — 重启即归零，用于发现看门狗复位</li>
+          <li><b>模型数</b> <span class="k">models_loaded</span> — 加载失败必须显式降级</li>
+          <li><b>缓存深度</b> <span class="k">buffer_depth</span> — 待补发报文条数，健康核心指标</li>
+          <li><b>物理接口</b> — 2× GbE、4× USB3、2× CSI-2、HDMI、RS-485（USB 转 485）、NVMe、4G/5G 模块</li>
+        </ul>
+      </div>
+      <div class="blk">
+        <h6>整机与环境</h6>
+        <dl class="pairs">
+          <dt>供电</dt><dd>12–19 V DC / 5 A，配迷你 UPS 与看门狗</dd>
+          <dt>防护等级</dt><dd>IP54（控制柜内，非直接喷雾区）</dd>
+          <dt>工作环境</dt><dd>−10–+60 °C；建议柜内 ≤45 °C</dd>
+          <dt>通信</dt><dd>GbE / 4G / Wi-Fi；RS-485 主站</dd>
+          <dt>存储</dt><dd>512 GB NVMe（缓存 + 模型 + 7 天原图）</dd>
+          <dt>采样</dt><dd>60 s / 6 键；紧凑单行报文约 115 B</dd>
+          <dt>缓存能力</dt><dd>≥72 h ≈ 3.29 MB（按 §5 估算，NVMe 余量三个数量级）</dd>
+          <dt>数据量</dt><dd>165.6 KB / 日（占机队 14.4%）</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>关键参数 · 量程 / 精度 / 分辨率 / 响应时间 / 接口</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>参数</th><th>规格 / 量程</th><th>精度</th><th>分辨率</th><th>响应时间</th><th>接口</th></tr></thead>
+          <tbody>
+            <tr><td><b>AI 算力</b></td><td>20–40 TOPS（Super 模式 67 TOPS）<span class="tbc">待确认</span></td><td>—</td><td>—</td><td>单帧推理 30–120 ms <span class="tbc">待确认</span></td><td>CUDA / TensorRT</td></tr>
+            <tr><td><b>内存 / 存储</b></td><td>8 GB LPDDR5 / 512 GB NVMe</td><td>—</td><td>—</td><td>—</td><td>板载</td></tr>
+            <tr><td><b>功耗</b></td><td>7–25 W（模块 TDP）</td><td>—</td><td>—</td><td>—</td><td>12–19 V DC</td></tr>
+            <tr><td><b>Modbus 轮询</b></td><td>7 从站 / 42 寄存器组</td><td>—</td><td>—</td><td>轮询周期 ≤5 s</td><td>RS-485</td></tr>
+            <tr><td><b>上行</b></td><td>10,536 报文 / 日 · 1.10 MB / 日</td><td>—</td><td>—</td><td>平均 0.11 kbit/s</td><td>MQTT/TLS</td></tr>
+            <tr><td><b>缓存</b></td><td>≥72 h（可配 7 天）</td><td>—</td><td>—</td><td>重连补发 ≤50 msg/s <span class="tbc">待确认</span></td><td>SQLite WAL</td></tr>
+            <tr><td><b>models_loaded</b></td><td>0–3</td><td>—</td><td>1</td><td>启动加载 &lt;90 s <span class="tbc">待确认</span></td><td>本地</td></tr>
+            <tr><td><b>buffer_depth</b></td><td>0–∞（告警阈值 5,000）</td><td>—</td><td>1 条</td><td>实时</td><td>本地</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>推荐型号 · 每部件 2 方案</h6>
+      <div class="tblscroll">
+        <table class="tbl">
+          <thead><tr><th>部件</th><th>方案 A（推荐）</th><th>方案 B（备选 / 降本）</th><th>取舍说明</th></tr></thead>
+          <tbody>
+            <tr><td>计算模块</td><td>Jetson Orin Nano 8GB 开发者套件</td><td>工业级 Orin Nano 载板（研华 / 凌华类）<span class="tbc">待确认</span></td><td>工业载板宽温、带看门狗与 485</td></tr>
+            <tr><td>蜂窝链路</td><td>4G Cat.4 工业路由 + 外置天线</td><td>5G 模块（成本高，带宽用不上）</td><td>1.10 MB/日不需要 5G</td></tr>
+            <tr><td>供电</td><td>12 V 迷你 UPS + 看门狗</td><td>普通 12 V 电源 + 软件心跳</td><td>断电重启会丢未落盘缓存</td></tr>
+            <tr><td>机箱</td><td>IP54 铝箱 + 风扇 + 防尘棉</td><td>柜内开放式安装（不推荐）</td><td>混肥间腐蚀性气溶胶会腐蚀裸板</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cols2">
+      <div class="blk">
+        <h6>MQTT telemetry 示例</h6>
+        <div class="json">
+          <div class="jh"><span>v1/devices/me/telemetry</span><span>gateway-edge-01 · 60 s</span></div>
+<pre>{
+  <span class="s">"ts"</span>: 1793600000,
+  <span class="s">"cpu_pct"</span>: 23.4,
+  <span class="s">"mem_pct"</span>: 47.1,
+  <span class="s">"temp_c"</span>: 52.6,
+  <span class="s">"uptime_s"</span>: 88412,
+  <span class="s">"models_loaded"</span>: 3,
+  <span class="s">"buffer_depth"</span>: 128
+}</pre>
+        </div>
+        <p class="tiny">紧凑单行 115 B。<code>buffer_depth</code> 持续上升即链路故障的早期信号，不必等设备离线。</p>
+      </div>
+      <div class="blk">
+        <h6>放置要点</h6>
+        <p class="note">
+          装在控制柜内，与 <code>fog-ctrl-A3</code> 同一 RS-485 总线（A/B 双绞屏蔽、两端 120 Ω）。<b>远离变频器与 1.7 MHz 超声驱动板</b>，面板接地排单点接地。
+          天线引出柜外金属罩，否则 4G 信号会被柜体衰减 10–20 dB <span class="tbc">待确认</span>。机箱进风口加防尘棉，混肥间气溶胶会腐蚀裸板。
+        </p>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h6>校准 / 维护</h6>
+      <ul class="iolist">
+        <li><b>每月</b> — 看门狗复位演练（kill 主进程，验证 60 s 内自动拉起）；机箱除尘</li>
+        <li><b>每季</b> — 断网 72 h 演练：拔网后确认 <code>buffer_depth</code> 线性增长、恢复后无丢包</li>
+        <li><b>每季</b> — NTP 校时偏差 &lt;1 s；mTLS 证书有效期检查（12 个月轮换）</li>
+        <li><b>每半年</b> — 固件/镜像升级演练（A/B 分区回滚）；模型版本回滚演练</li>
+      </ul>
+    </div>
+  </article>
+</section>
+
+<!-- ================= 04 BOM ================= -->
+<section class="sec" id="bom">
+  <div class="sechead">
+    <div class="num">04 / BILL OF MATERIALS</div>
+    <h2>BOM 表：单棚 1 套的估算成本</h2>
+    <div class="zh">indicative estimate · not a quotation</div>
+    <p>
+      按 <b>1 套 8 设备</b>（单棚单雾化区）估算，单价为 2026 年小批量（1–10 套）采购价、含运杂、<b>不含 13% 增值税</b>。
+      合计 <b>¥55,540</b>，折合每设备约 ¥6,155。价格为估算，随供货、汇率与批量浮动，<b>不可作为报价使用</b>。
+    </p>
+  </div>
+
+  <div class="tblscroll">
+    <table class="tbl">
+      <thead>
+        <tr><th style="width:38px">#</th><th>项目 / 规格</th><th class="num" style="width:60px">数量</th><th class="num" style="width:96px">单价 ¥</th><th class="num" style="width:104px">小计 ¥</th></tr>
+      </thead>
+      <tbody>
+        <tr class="grp"><td colspan="5">A · fog-ctrl-A3（营养雾控制器）</td></tr>
+        <tr><td class="num">A1</td><td>EC 测量：EZO-EC 电路 + 工业 EC 电极 K=1.0</td><td class="num">1</td><td class="num">1,600</td><td class="num">1,600</td></tr>
+        <tr><td class="num">A2</td><td>pH 测量：EZO-pH 电路 + 可更换 pH 电极</td><td class="num">1</td><td class="num">1,900</td><td class="num">1,900</td></tr>
+        <tr><td class="num">A3</td><td>DO 测量：EZO-DO 电路 + 原电池型 DO 电极</td><td class="num">1</td><td class="num">2,600</td><td class="num">2,600</td></tr>
+        <tr><td class="num">A4</td><td>水温：PT100 A 级 + MAX31865</td><td class="num">1</td><td class="num">120</td><td class="num">120</td></tr>
+        <tr><td class="num">A5</td><td>CO2：Sensirion SCD41 模块</td><td class="num">1</td><td class="num">380</td><td class="num">380</td></tr>
+        <tr><td class="num">A6</td><td>空气温湿度：Vaisala HMP110（备选 SHT45）</td><td class="num">1</td><td class="num">2,800</td><td class="num">2,800</td></tr>
+        <tr><td class="num">A7</td><td>PPFD：Apogee SQ-520 量子传感器</td><td class="num">1</td><td class="num">2,400</td><td class="num">2,400</td></tr>
+        <tr><td class="num">A8</td><td>A/B 计量泵（蠕动 / 隔膜）</td><td class="num">2</td><td class="num">260</td><td class="num">520</td></tr>
+        <tr><td class="num">A9</td><td>电磁阀（常闭，耐肥液）</td><td class="num">2</td><td class="num">180</td><td class="num">360</td></tr>
+        <tr><td class="num">A10</td><td>超声雾化喷嘴 1.7 MHz</td><td class="num">4</td><td class="num">150</td><td class="num">600</td></tr>
+        <tr><td class="num">A11</td><td>雾化喷嘴驱动板</td><td class="num">1</td><td class="num">400</td><td class="num">400</td></tr>
+        <tr><td class="num">A12</td><td>循环泵</td><td class="num">1</td><td class="num">380</td><td class="num">380</td></tr>
+        <tr><td class="num">A13</td><td>压力变送器 0–10 bar（4–20 mA）</td><td class="num">1</td><td class="num">320</td><td class="num">320</td></tr>
+        <tr><td class="num">A14</td><td>RS-485 8DI/8DO 模块</td><td class="num">1</td><td class="num">420</td><td class="num">420</td></tr>
+        <tr><td class="num">A15</td><td>IP65 控制箱 + 24 V / 5 A 电源</td><td class="num">1</td><td class="num">800</td><td class="num">800</td></tr>
+        <tr><td class="num">A16</td><td>管路 / 接头 / 线材 / 端子</td><td class="num">1</td><td class="num">600</td><td class="num">600</td></tr>
+        <tr class="grp"><td colspan="4">A 小计（fog-ctrl-A3）</td><td class="num">16,200</td></tr>
+
+        <tr class="grp"><td colspan="5">B · root-cam-A3（根区视觉）</td></tr>
+        <tr><td class="num">B1</td><td>IMX477 12.3 MP 相机模组（CSI-2）</td><td class="num">1</td><td class="num">1,200</td><td class="num">1,200</td></tr>
+        <tr><td class="num">B2</td><td>6 mm 低畸变镜头 + IP65 视窗（加热）</td><td class="num">1</td><td class="num">380</td><td class="num">380</td></tr>
+        <tr><td class="num">B3</td><td>补光模组（660 nm ×4 + 白光）+ 恒流驱动</td><td class="num">1</td><td class="num">320</td><td class="num">320</td></tr>
+        <tr><td class="num">B4</td><td>USB3/CSI 延长 + 防护壳 + 遮光罩</td><td class="num">1</td><td class="num">260</td><td class="num">260</td></tr>
+        <tr class="grp"><td colspan="4">B 小计（root-cam-A3）</td><td class="num">2,160</td></tr>
+
+        <tr class="grp"><td colspan="5">C · tray-scan-TC118（组培托盘扫描）</td></tr>
+        <tr><td class="num">C1</td><td>1200 万像素全局快门工业相机</td><td class="num">1</td><td class="num">1,800</td><td class="num">1,800</td></tr>
+        <tr><td class="num">C2</td><td>平板背光 + 同轴光源（DC 恒流）</td><td class="num">1</td><td class="num">600</td><td class="num">600</td></tr>
+        <tr><td class="num">C3</td><td>定位治具（亚光阳极氧化铝）</td><td class="num">1</td><td class="num">400</td><td class="num">400</td></tr>
+        <tr><td class="num">C4</td><td>外壳 + 遮光罩</td><td class="num">1</td><td class="num">300</td><td class="num">300</td></tr>
+        <tr class="grp"><td colspan="4">C 小计（tray-scan-TC118）</td><td class="num">3,100</td></tr>
+
+        <tr class="grp"><td colspan="5">D · climate-PuEr-01（气候站）</td></tr>
+        <tr><td class="num">D1</td><td>Vaisala HMP110 温湿度</td><td class="num">1</td><td class="num">2,800</td><td class="num">2,800</td></tr>
+        <tr><td class="num">D2</td><td>Sensirion SCD41 CO2 模块</td><td class="num">1</td><td class="num">380</td><td class="num">380</td></tr>
+        <tr><td class="num">D3</td><td>Apogee SQ-520（PPFD / DLI）</td><td class="num">1</td><td class="num">2,400</td><td class="num">2,400</td></tr>
+        <tr><td class="num">D4</td><td>风速传感器（三杯 / 超声）</td><td class="num">1</td><td class="num">900</td><td class="num">900</td></tr>
+        <tr><td class="num">D5</td><td>防辐射罩（百叶 + 通风）</td><td class="num">1</td><td class="num">350</td><td class="num">350</td></tr>
+        <tr><td class="num">D6</td><td>立杆 + 接线箱 + 屏蔽线</td><td class="num">1</td><td class="num">600</td><td class="num">600</td></tr>
+        <tr class="grp"><td colspan="4">D 小计（climate-PuEr-01）</td><td class="num">7,430</td></tr>
+
+        <tr class="grp"><td colspan="5">E · power-meter-PuEr-01（能耗计量）</td></tr>
+        <tr><td class="num">E1</td><td>智能电表（Modbus，0.5S 级）</td><td class="num">1</td><td class="num">680</td><td class="num">680</td></tr>
+        <tr><td class="num">E2</td><td>开口式 CT 100/5（0.5 级）</td><td class="num">3</td><td class="num">120</td><td class="num">360</td></tr>
+        <tr><td class="num">E3</td><td>表箱 + 二次线</td><td class="num">1</td><td class="num">200</td><td class="num">200</td></tr>
+        <tr class="grp"><td colspan="4">E 小计（power-meter-PuEr-01）</td><td class="num">1,240</td></tr>
+
+        <tr class="grp"><td colspan="5">F · micro-lab-01（微生物快检）</td></tr>
+        <tr><td class="num">F1</td><td>ATP 荧光检测仪（SystemSURE 类）</td><td class="num">1</td><td class="num">9,800</td><td class="num">9,800</td></tr>
+        <tr><td class="num">F2</td><td>拭子耗材（支 / 年）</td><td class="num">100</td><td class="num">20</td><td class="num">2,000</td></tr>
+        <tr><td class="num">F3</td><td>菌落计数外协（次 / 年）</td><td class="num">12</td><td class="num">待确认</td><td class="num">—</td></tr>
+        <tr class="grp"><td colspan="4">F 小计（micro-lab-01，不含外协）</td><td class="num">11,800</td></tr>
+
+        <tr class="grp"><td colspan="5">G · valve-4A（分区执行器）</td></tr>
+        <tr><td class="num">G1</td><td>4 路 Modbus RTU 阀控节点</td><td class="num">1</td><td class="num">520</td><td class="num">520</td></tr>
+        <tr><td class="num">G2</td><td>压力变送器 0–2.5 bar</td><td class="num">1</td><td class="num">320</td><td class="num">320</td></tr>
+        <tr><td class="num">G3</td><td>电源 + IP65 防护盒</td><td class="num">1</td><td class="num">400</td><td class="num">400</td></tr>
+        <tr class="grp"><td colspan="4">G 小计（valve-4A）</td><td class="num">1,240</td></tr>
+
+        <tr class="grp"><td colspan="5">H · gateway-edge-01（边缘网关）</td></tr>
+        <tr><td class="num">H1</td><td>Jetson Orin Nano 8GB 套件</td><td class="num">1</td><td class="num">3,800</td><td class="num">3,800</td></tr>
+        <tr><td class="num">H2</td><td>NVMe 512 GB</td><td class="num">1</td><td class="num">420</td><td class="num">420</td></tr>
+        <tr><td class="num">H3</td><td>4G 工业路由 + 外置天线</td><td class="num">1</td><td class="num">800</td><td class="num">800</td></tr>
+        <tr><td class="num">H4</td><td>迷你 UPS + 看门狗模块</td><td class="num">1</td><td class="num">350</td><td class="num">350</td></tr>
+        <tr><td class="num">H5</td><td>IP54 机箱 + 风扇 + 防尘棉</td><td class="num">1</td><td class="num">500</td><td class="num">500</td></tr>
+        <tr><td class="num">H6</td><td>交换机 + 网线</td><td class="num">1</td><td class="num">200</td><td class="num">200</td></tr>
+        <tr class="grp"><td colspan="4">H 小计（gateway-edge-01）</td><td class="num">6,070</td></tr>
+
+        <tr class="grp"><td colspan="5">I · 通用：施工 / 标液 / 备件</td></tr>
+        <tr><td class="num">I1</td><td>安装 / 调试 / 走线</td><td class="num">1</td><td class="num">3,000</td><td class="num">3,000</td></tr>
+        <tr><td class="num">I2</td><td>标液耗材（pH 4/7/10、EC、DO 零点）</td><td class="num">1</td><td class="num">800</td><td class="num">800</td></tr>
+        <tr><td class="num">I3</td><td>备件包（电极、喷嘴、保险、密封件）</td><td class="num">1</td><td class="num">2,500</td><td class="num">2,500</td></tr>
+        <tr class="grp"><td colspan="4">I 小计（通用）</td><td class="num">6,300</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="4">设备本体合计（A–H，8 台设备）</td><td class="num">49,240</td></tr>
+        <tr><td colspan="4">通用与施工（I）</td><td class="num">6,300</td></tr>
+        <tr class="total"><td colspan="4">合计估算（1 套 8 设备，不含税、不含未标价的外协项）</td><td class="num">55,540</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:13px">
+    <div class="card note">
+      <h4>价格假设与不含项</h4>
+      <p>
+        单价为 2026 年小批量（1–10 套）估算，含运杂、<b>不含 13% 增值税</b>；批量 ≥50 套预计可降 15–25% <span class="tbc">待确认</span>。
+        未含：液滴粒径外协标定（Malvern Spraytec，按次计价 <span class="tbc">待确认</span>）、菌落计数外协、土建与桥架、运营商流量费、平台侧服务器与人力。
+      </p>
+    </div>
+    <div class="card good">
+      <h4>成本结构观察</h4>
+      <p>
+        A 组（控制器）占 29.2%，其中光学/电化学传感器（A1–A3、A6–A7）就占 ¥11,300；F 组微检仪占 21.2% 但可多棚共享。
+        若要把单套成本压到 ¥45,000 以内，现实做法是：HMP110 换 SHT45（−2,800）、SQ-520 换国产（−1,600）、微检仪按 3 棚共享（−6,500/棚）。
+      </p>
+    </div>
+  </div>
+  <p class="tiny" style="margin-top:8px">
+    校验：A 16,200 + B 2,160 + C 3,100 + D 7,430 + E 1,240 + F 11,800 + G 1,240 + H 6,070 = 49,240；49,240 + 6,300 = <b>55,540</b>。每设备均值 55,540 ÷ 8 ≈ 6,943。
+  </p>
+</section>
+
+<!-- ================= 05 数据入口 ================= -->
+<section class="sec" id="ingress">
+  <div class="sechead">
+    <div class="num">05 / DATA INGRESS</div>
+    <h2>数据入口：topic、endpoint 与流量预算</h2>
+    <div class="zh">one contract per profile · payload budget computed from sampling rates</div>
+    <p>
+      三个入口覆盖全部 7 个 profile 标签（5 个传感/控制 + 2 个执行/网关）：MQTT 遥测（主）、HTTP 遥测（降级/诊断）、RPC（下行）。设备名与 profile 决定 topic 与权限，<b>采样周期决定流量预算</b>——下面所有数字都由 §3 的实际报文长度与采样周期算出，不是拍脑袋的量级估计。
+    </p>
+  </div>
+
+  <h3 class="sub">三个入口 <span class="mut">telemetry / http / rpc</span></h3>
+  <div class="grid2b">
+    <div class="card good">
+      <div class="cl">ingress 01 · mqtt（主通道）</div>
+      <h4>MQTT telemetry <span class="pill ok">QoS 1</span></h4>
+      <div class="code">
+        <div class="ch2"><span>publish</span><span>tls 8883</span></div>
+<pre>v1/devices/me/telemetry
+
+v1/gateway/telemetry        # 网关代理多设备
+{ "fog-ctrl-A3": { "ec": 1.42 } }</pre>
+      </div>
+      <p>一个 accessToken 对应一台设备；网关代理时用 <code>deviceName</code> 作键批量上报。重连用 <code>clean_session=false</code>，去重键 <code>(device, ts)</code>。</p>
+    </div>
+    <div class="card">
+      <div class="cl">ingress 02 · http（降级）</div>
+      <h4>HTTP telemetry <span class="pill warn">fallback</span></h4>
+      <div class="code">
+        <div class="ch2"><span>POST</span><span>application/json</span></div>
+<pre>POST /api/v1/{accessToken}/telemetry
+Content-Type: application/json
+
+{ "ts": 1793600000, "ec": 1.42, "ph": 5.86 }</pre>
+      </div>
+      <p>仅用于现场诊断与网关故障时的手工补录。<b>每请求头开销 300–500 B</b>，按 60 s 设备算约为 MQTT 的 3 倍线上字节，不适合做主通道。</p>
+    </div>
+    <div class="card">
+      <div class="cl">ingress 03 · rpc（下行）</div>
+      <h4>RPC <span class="pill vio">request / response</span></h4>
+      <div class="code">
+        <div class="ch2"><span>pub → device</span><span>id 递增</span></div>
+<pre>v1/devices/me/rpc/request/{id}
+v1/devices/me/rpc/response/{id}
+
+{ "method": "set_fog_recipe",
+  "params": { "duty": 0.35, "interval_s": 180 } }</pre>
+      </div>
+      <p>网关代理时用 <code>v1/gateway/rpc</code>。所有方法必须回 <code>{id}</code>；无回执按失败处理，<code>stop_fog</code> 例外（不等回执，走硬件联锁）。</p>
+    </div>
+    <div class="card note">
+      <div class="cl">约束</div>
+      <h4>入口一致性</h4>
+      <p>
+        同一设备在三条入口上的<b>键名完全相同</b>，只有传输层不同。平台侧按 profile 建 5 张 schema 表，任何未注册键应拒收并计数——这是防止设备固件私自加字段、把时序库撑爆的唯一有效手段。
+      </p>
+    </div>
+  </div>
+
+  <h3 class="sub">按 profile 的路由 <span class="mut">8 rows · 7 profile tags</span></h3>
+  <div class="tblscroll">
+    <table class="tbl">
+      <thead>
+        <tr><th>profile</th><th>设备</th><th>采样</th><th>MQTT topic</th><th>HTTP endpoint</th><th>RPC</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>fog-controller</b></td><td><code>fog-ctrl-A3</code></td><td class="mono">30 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td><code>v1/devices/me/rpc/request/{id}</code> · 4 方法</td>
+        </tr>
+        <tr>
+          <td>vision-edge</td><td><code>root-cam-A3</code></td><td class="mono">300 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td>—（只读；模型版本走 attributes）</td>
+        </tr>
+        <tr>
+          <td>vision-edge</td><td><code>tray-scan-TC118</code></td><td class="mono">600 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>climate</td><td><code>climate-PuEr-01</code></td><td class="mono">60 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>energy</td><td><code>power-meter-PuEr-01</code></td><td class="mono">60 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td>—（<code>tariff</code> 由平台写回设备）</td>
+        </tr>
+        <tr>
+          <td>lab</td><td><code>micro-lab-01</code></td><td class="mono">3600 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td>—（事件上报，非轮询）</td>
+        </tr>
+        <tr>
+          <td><b>actuator</b></td><td><code>valve-4A</code></td><td class="mono">30 s</td>
+          <td><code>v1/devices/me/telemetry</code></td><td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td><code>v1/devices/me/rpc/request/{id}</code> · open / close</td>
+        </tr>
+        <tr>
+          <td>gateway</td><td><code>gateway-edge-01</code></td><td class="mono">60 s</td>
+          <td><code>v1/devices/me/telemetry</code>（自身）+ <code>v1/gateway/telemetry</code>（代理）</td>
+          <td><code>POST /api/v1/{accessToken}/telemetry</code></td>
+          <td><code>v1/gateway/rpc</code>（转发至从站）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">RPC 方法契约 <span class="mut">6 methods</span></h3>
+  <div class="tblscroll">
+    <table class="tbl">
+      <thead><tr><th>method</th><th>设备</th><th>params 示例</th><th>作用</th><th>幂等</th><th>失败处理</th></tr></thead>
+      <tbody>
+        <tr><td><code>set_fog_recipe</code></td><td>fog-ctrl-A3</td><td class="mono">{"duty":0.35,"interval_s":180,"ec_target":1.42,"ph_target":5.86}</td><td>切换雾化配方与目标 EC/pH</td><td>是</td><td>3 s 超时重试 2 次，超限保留旧配方并告警</td></tr>
+        <tr><td><code>dry_back</code></td><td>fog-ctrl-A3</td><td class="mono">{"duration_s":600}</td><td>停雾干燥，抑制根区过湿与藻膜</td><td>是</td><td>同上；与 <code>stop_fog</code> 冲突时后者优先</td></tr>
+        <tr><td><code>flush_reservoir</code></td><td>fog-ctrl-A3</td><td class="mono">{"volume_l":120}</td><td>冲洗储液罐与主管路</td><td>否</td><td>用批次号做幂等键，重复执行会多耗液</td></tr>
+        <tr><td><code>stop_fog</code></td><td>fog-ctrl-A3</td><td class="mono">{}</td><td>立即停雾（最高优先级）</td><td>是</td><td>不重试；硬件联锁旁路软件，回执仅作记录</td></tr>
+        <tr><td><code>open</code></td><td>valve-4A</td><td class="mono">{"channel":1}</td><td>打开分区阀（目标态）</td><td>是</td><td>3 s 超时后读 <code>state</code> 确认，不一致即告警</td></tr>
+        <tr><td><code>close</code></td><td>valve-4A</td><td class="mono">{"channel":1}</td><td>关闭分区阀（目标态）</td><td>是</td><td>同上</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">流量预算 <span class="mut">payload budget from sampling rates</span></h3>
+  <div class="formula"><b>记法</b>
+  i       设备序号（8 台）
+  T_i     采样周期（s）
+  L_i     单条遥测「紧凑单行」UTF-8 字节数（含 ts，见 §3 各卡）
+
+<b>日字节</b>  B_day = Σ_i  (86400 / T_i) × L_i
+
+= 2880×175   (fog-ctrl-A3,      30 s, 12 键)
++  288×110   (root-cam-A3,     300 s,  5 键)
++  144×123   (tray-scan-TC118, 600 s,  3 键)
++ 1440×99    (climate-PuEr-01,  60 s,  7 键)
++ 1440×67    (power-meter,      60 s,  3 键)
++   24×79    (micro-lab-01,   3600 s,  3 键)
++ 2880×66    (valve-4A,         30 s,  3 键)
++ 1440×115   (gateway-edge-01,  60 s,  6 键)
+
+= 504,000 + 31,680 + 17,712 + 142,560
++ 96,480 + 1,896 + 190,080 + 165,600
+
+= <b>1,150,008 B/日 ≈ 1,123 KiB ≈ 1.10 MB/日</b>   （1 MB = 1,048,576 B）
+  校验：10,536 报文/日 × 平均 109.2 B/包 ≈ 1,150,200 B（差 &lt;0.02%，为取整）</div>
+
+  <div class="tblscroll" style="margin-top:12px">
+    <table class="tbl">
+      <thead>
+        <tr><th>设备</th><th>采样</th><th class="num">报文 / 日</th><th class="num">键</th><th class="num">单包 B</th><th class="num">字节 / 日</th><th class="num">占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>fog-ctrl-A3</code></td><td class="mono">30 s</td><td class="num">2,880</td><td class="num">12</td><td class="num">175</td><td class="num">504,000</td><td class="num">43.8%</td></tr>
+        <tr><td><code>valve-4A</code></td><td class="mono">30 s</td><td class="num">2,880</td><td class="num">3</td><td class="num">66</td><td class="num">190,080</td><td class="num">16.5%</td></tr>
+        <tr><td><code>gateway-edge-01</code></td><td class="mono">60 s</td><td class="num">1,440</td><td class="num">6</td><td class="num">115</td><td class="num">165,600</td><td class="num">14.4%</td></tr>
+        <tr><td><code>climate-PuEr-01</code></td><td class="mono">60 s</td><td class="num">1,440</td><td class="num">7</td><td class="num">99</td><td class="num">142,560</td><td class="num">12.4%</td></tr>
+        <tr><td><code>power-meter-PuEr-01</code></td><td class="mono">60 s</td><td class="num">1,440</td><td class="num">3</td><td class="num">67</td><td class="num">96,480</td><td class="num">8.4%</td></tr>
+        <tr><td><code>root-cam-A3</code></td><td class="mono">300 s</td><td class="num">288</td><td class="num">5</td><td class="num">110</td><td class="num">31,680</td><td class="num">2.8%</td></tr>
+        <tr><td><code>tray-scan-TC118</code></td><td class="mono">600 s</td><td class="num">144</td><td class="num">3</td><td class="num">123</td><td class="num">17,712</td><td class="num">1.5%</td></tr>
+        <tr><td><code>micro-lab-01</code></td><td class="mono">3600 s</td><td class="num">24</td><td class="num">3</td><td class="num">79</td><td class="num">1,896</td><td class="num">0.2%</td></tr>
+      </tbody>
+      <tfoot>
+        <tr class="total"><td>合计</td><td class="mono">—</td><td class="num">10,536</td><td class="num">42</td><td class="num">109.2</td><td class="num">1,150,008</td><td class="num">100%</td></tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:13px">
+    <div class="card">
+      <div class="cl">derived · 网络</div>
+      <h4>换算与余量</h4>
+      <dl class="kv">
+        <dt>平均码率</dt><dd>1,150,008 × 8 ÷ 86,400 ≈ <b>106.5 bit/s</b>（0.11 kbit/s）</dd>
+        <dt>线上开销</dt><dd>topic 30–40 B + TLS 记录 20–30 B + TCP/IP 40 B，约 ×1.35</dd>
+        <dt>线上合计</dt><dd>≈ <b>1.48 MB/日</b>（10,536 报文，平均 147 B）</dd>
+        <dt>30 日</dt><dd>≈ 33 MB</dd>
+        <dt>365 日</dt><dd>≈ 400 MB（原始未压缩）</dd>
+        <dt>72 h 缓冲</dt><dd>3 × 1.10 ≈ <b>3.29 MB</b>（原始）/ ≈4.44 MB（含开销）</dd>
+        <dt>5 年原始</dt><dd>≈ 2.0 GB（未压缩，压缩比按 4–8× <span class="tbc">待确认</span>）</dd>
+        <dt>峰值补发</dt><dd>重连瞬间按 ≤50 msg/s 限速，避免平台雪崩 <span class="tbc">待确认</span></dd>
+      </dl>
+    </div>
+    <div class="card note">
+      <div class="cl">为什么这个预算重要</div>
+      <h4>两个 30 s 设备吃掉 60% 流量</h4>
+      <p>
+        <code>fog-ctrl-A3</code> + <code>valve-4A</code> 合计 60.3% 的字节量。若要降流量，正确做法不是降低雾化控制频率（会牺牲闭环质量），而是：
+        <b>①</b> <code>valve-4A</code> 改为<b>状态变化时上报 + 5 min 心跳</b>，日流量从 190 KB 降到 ≈6 KB（−16%）；
+        <b>②</b> 网关在 <code>fog_duty=0</code> 且各项稳定时按 60 s 合并上报（需改契约，<span class="tbc">待确认</span>）。
+      </p>
+      <p class="tiny">参考：HTTP 主通道方案约 4.5 MB/日（按 10,536 请求 × ~450 B 头开销），是 MQTT 线上量的 3 倍，故仅作降级。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 工程注意 ================= -->
+<section class="sec" id="ops">
+  <div class="sechead">
+    <div class="num">06 / FIELD NOTES</div>
+    <h2>工程注意：10 条会真实咬人的细节</h2>
+    <div class="zh">biofouling · low-ionic EC · membrane · droplet sizing · condensation · bus · buffering</div>
+    <p>
+      这些不是"最佳实践"清单，而是这类系统在现场最常见的失效路径。每条都给出可执行动作，便于直接写进安装验收表与运维 SOP。
+    </p>
+  </div>
+
+  <div class="notes">
+    <div class="note-card">
+      <h4><span class="ni">01</span>pH 电极生物膜与 2 周校准</h4>
+      <p>
+        雾环境让电极长期处于营养液气溶胶中，膜面生物膜与蛋白沉积会让斜率持续下降，典型表现是读数每天缓慢下漂、校准后 3 天又偏。
+      </p>
+      <p class="fix">每 2 周两点校准（4.01 / 7.00，必要时加 10.01）；每周 0.1 M HCl 清洗 2 min；斜率 &lt;92% 或响应 &gt;60 s 立即更换电极。pH 电极<b>不可干放</b>，停机超 2 h 拆下浸 3 M KCl。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">02</span>低离子强度雾液里的 EC</h4>
+      <p>
+        气雾咖啡的雾化液 EC 常在 0.5–1.4 mS/cm，处于普通 EC 电极的"低电导弱段"，极化与漂移明显；K=1.0 电极在此段分辨率不足。
+      </p>
+      <p class="fix">选 K=0.1 或 1.0 电极并在<b>泵运行稳定期</b>取样（<code>fog_duty&gt;0</code> 且持续 ≥10 s）；标定用 84 µS/cm 与 1413 µS/cm 双点；温度补偿统一到 25 °C。低电导段读数标 <span class="tbc">待确认</span> 精度等级。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">03</span>DO 传感器的膜与流速</h4>
+      <p>
+        原电池式 DO 电极依赖膜面扩散，需要稳定流速（≥3 cm/s）；静止死水里读数会虚高，肥液结垢又会让响应变慢。荧光法（LDO）耐污但荧光帽有寿命。
+      </p>
+      <p class="fix">装在旁通 flow cell 而非罐体死角；每月零点（亚硫酸钠溶液）+ 空气饱和两点；膜/荧光帽按厂家周期更换（12–18 月 <span class="tbc">待确认</span>）；每周检查膜下气泡。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">04</span>雾滴粒径：激光衍射 vs 现场</h4>
+      <p>
+        Malvern Spraytec / Sympatec HELOS 是实验室级激光衍射，精度高但体积大、价格是整控制器的数倍，<b>不适合每台控制器配</b>。气雾咖啡关注的 5–50 µm 区间在衍射仪上很好测，在线却很难长期稳定。
+      </p>
+      <p class="fix">季度外协取 3 点（喷嘴出口 10 / 30 / 50 cm）标定，再用相机 + 喷雾模型做软测量回归 <code>droplet_um</code>；<code>droplet_class</code> 只用于趋势（coarse/medium/fine），不用于阈值判定。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">05</span>相机镜头结雾</h4>
+      <p>
+        根区 95–100 %RH 且雾滴直冲，视窗 5–10 min 就能结满露；<code>image_quality</code> 掉下去后模型仍会输出概率，只是全是噪声——这比没有相机更危险。
+      </p>
+      <p class="fix">视窗加热 2–5 W + NTC 控温；镜头下倾 10–15° 利用重力排水；遮光罩内正压干燥空气；<code>image_quality</code> 低于阈值时<b>抑制</b>该设备的概率输出并告警，不要让脏镜头参与决策。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">06</span>根区成像的照明</h4>
+      <p>
+        棚内补光灯与日光都有频闪与色偏，运动模糊会让根系边缘糊掉；雾滴的镜面反光会掩盖褐变细节。
+      </p>
+      <p class="fix">660 nm 窄带 LED + 频闪同步（曝光 ≤2 ms）；侧面掠射而非正面直打；加偏振片压反光；每帧入画参考色卡做白平衡；背景用哑光黑，避免棚膜反光。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">07</span>Modbus 地址与总线纪律</h4>
+      <p>
+        7 个从站共享一条 485，地址冲突、缺终端电阻、分支过长都会表现为"偶发超时"，且往往在高温高湿时才明显。
+      </p>
+      <p class="fix">地址规划 11–17（fog 12 / valve 13 / climate 14 / power 15 / lab 16）；总线两端 120 Ω，屏蔽层单端接地；分支 ≤1 m，总线 ≤100 m <span class="tbc">待确认</span>；与 1.7 MHz 超声驱动线分开 30 cm 以上。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">08</span>网关离线缓冲 ≥72 h</h4>
+      <p>
+        4G 掉线、平台升级、证书过期都是常态。若缓存只够 24 h，一次周末故障就会造成数据缺口，而"雾化策略效果"这类分析依赖连续序列。
+      </p>
+      <p class="fix">SQLite WAL + NVMe，按 3.29 MB/日 预留 7 天；<code>buffer_depth</code> &gt;5,000 条告警；重连限速补发（≤50 msg/s）；断网时 <code>fog-ctrl-A3</code> 保持最后 recipe 自治。每季做一次真实拔网 72 h 演练。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">09</span>IP65 不等于不结露</h4>
+      <p>
+        气雾区昼夜温差大，密封箱内壁照样凝露；水滴沿线缆毛细作用进入端子，比直接喷水更容易造成间歇故障。
+      </p>
+      <p class="fix">用呼吸阀/干燥剂平衡内外压差；端子朝下、线缆做滴水弯；接头用 M12/M16 防水型；箱内加小功率加热片；箱体避开喷嘴 1.5 m 内正对位置。</p>
+    </div>
+
+    <div class="note-card">
+      <h4><span class="ni">10</span>传感器交叉校验</h4>
+      <p>
+        单点数据无法自证。三处温湿度（fog-ctrl-A3、climate-PuEr-01、网关柜内）、两处压力（0–10 bar 主管 vs 0–2.5 bar 阀后）、两套污染判断（tray-scan 概率 vs micro-lab CFU）互为参照。
+      </p>
+      <p class="fix">写入平台规则：T/RH 差值 &gt;0.5 °C / 5 %RH 持续 24 h 告警；主管有压而阀后零压 = 阀未开/堵；<code>contaminated_p</code> 与 <code>sample_cfu</code> 每季做一次 ROC 对齐。任一源缺失时降级投票，而不是直接丢弃。</p>
+    </div>
+  </div>
+
+  <p class="tiny" style="margin-top:16px">
+    验收建议：①②③⑤ 四跳逐跳压测（拔线、断电、超时、重放），④ 跳做只读降级演练；所有 <span class="tbc">待确认</span> 项在打样阶段回填到本页，并在页脚记录版本。
+  </p>
+</section>
+
+<footer class="foot">
+  <b>本页为选型参考，价格为估算，具体型号需按供货与现场条件替换。</b><br>
+  CoffeeJeV / Napell Agent · 硬件附录 v1.0 · 8 devices / 7 profile tags / 42 telemetry keys<br>
+  设备名、遥测键与采样周期为软件平台契约冻结版本，修改需同步变更接口文档；参数与价格标注 <span class="tbc">待确认</span> 者以打样/送检结果为准。<br>
+  更新 2026-11-03 · 单文件离线页面，无外部依赖。
+</footer>
+
+<script>
+(function () {
+  var items = Array.prototype.slice.call(document.querySelectorAll('.navitem'));
+  var secs = items.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function sync() {
+    var y = window.scrollY + 120, idx = 0;
+    for (var i = 0; i < secs.length; i++) {
+      if (secs[i] && secs[i].offsetTop <= y) idx = i;
+    }
+    items.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+  }
+  window.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync);
+  sync();
+})();
+</script>
+
+</div>
+</main>
+</div>
+</body>
+</html>

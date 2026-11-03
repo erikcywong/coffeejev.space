@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>碳标签验证 · CoffeeJeV Verify</title>
+<meta name="description" content="按标签编号与哈希独立复算一份咖啡碳足迹标签。">
+<style>
+  :root{
+    --bg:#08090b; --card:#11141a; --card2:#171b21; --line:#232931; --line2:#313945;
+    --tx:#e9ecf1; --dim:#8d97a5; --dim2:#64748b;
+    --green:#00c48c; --green2:#3fe0b0; --amber:#e0a24e; --red:#ff5d6e; --violet:#8b6cff;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.65;
+    background-image:radial-gradient(760px 420px at 50% -12%,rgba(0,196,140,.10),transparent 62%);}
+  a{color:var(--green2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px;margin:0 auto;padding:34px 22px 80px}
+  .top{display:flex;align-items:center;gap:10px;margin-bottom:26px}
+  .top svg{flex:none}
+  .top b{font-size:15px;letter-spacing:.2px}
+  .top span{font-size:11px;color:var(--dim2);font-family:var(--mono);letter-spacing:1.2px;text-transform:uppercase}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+  .sub{color:var(--dim);font-size:14px;margin-bottom:22px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+  .label-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .mono{font-family:var(--mono)}
+  .kid{font-family:var(--mono);font-size:12.5px;color:var(--dim)}
+  .big{font-family:var(--mono);font-size:52px;font-weight:800;letter-spacing:-2px;line-height:1;margin:10px 0 2px}
+  .big small{font-size:15px;font-weight:600;letter-spacing:0;color:var(--dim);margin-left:6px}
+  .meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
+  .m{background:rgba(0,0,0,.25);border-radius:9px;padding:8px 10px}
+  .m .k{font-size:10.5px;color:var(--dim2);letter-spacing:.4px;text-transform:uppercase}
+  .m .v{font-family:var(--mono);font-size:13.5px;margin-top:2px}
+
+  .verdict{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:14px;margin-bottom:14px;
+    border:1px solid rgba(0,196,140,.4);background:linear-gradient(140deg,rgba(0,196,140,.13),rgba(0,196,140,.02) 60%),var(--card)}
+  .verdict.bad{border-color:rgba(255,93,110,.45);background:linear-gradient(140deg,rgba(255,93,110,.13),rgba(255,93,110,.02) 60%),var(--card)}
+  .verdict.unknown{border-color:rgba(224,162,78,.4);background:linear-gradient(140deg,rgba(224,162,78,.12),rgba(224,162,78,.02) 60%),var(--card)}
+  .verdict .ic{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:19px;flex:none;background:rgba(0,196,140,.16);color:var(--green2)}
+  .verdict.bad .ic{background:rgba(255,93,110,.16);color:#ff9aa4}
+  .verdict.unknown .ic{background:rgba(224,162,78,.16);color:#f0c07f}
+  .verdict b{display:block;font-size:16px}
+  .verdict .d{font-size:12.5px;color:var(--dim);margin-top:2px}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim2);
+    padding:6px 8px;border-bottom:1px solid var(--line)}
+  td{padding:7px 8px;border-bottom:1px solid rgba(35,41,49,.6)}
+  tr:last-child td{border-bottom:0}
+  .num{text-align:right;font-family:var(--mono)}
+  .pass{color:var(--green2)} .fail{color:#ff9aa4}
+
+  h2{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  h2 .tag{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--dim2);
+    border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
+  .warn{border-color:rgba(224,162,78,.32);background:rgba(224,162,78,.05)}
+  .warn h2{color:#f0c07f}
+  .warn li{margin-left:18px;font-size:13.5px;color:#c9c2b4;margin-bottom:5px}
+  .note{font-size:12.5px;color:var(--dim2);line-height:1.75}
+
+  input[type=text]{width:100%;background:var(--card2);border:1px solid var(--line2);color:var(--tx);
+    font:inherit;font-size:13.5px;padding:9px 11px;border-radius:8px;outline:none;font-family:var(--mono)}
+  input[type=text]:focus{border-color:rgba(0,196,140,.5)}
+  .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  button{border:1px solid var(--line2);background:var(--card2);color:#cfd8e3;font:inherit;font-size:13px;
+    font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer}
+  button:hover{border-color:rgba(0,196,140,.45);color:#fff}
+  button.pri{background:linear-gradient(180deg,#10d59a,#00a878);border-color:rgba(0,196,140,.55);color:#04120d}
+
+  pre{background:#0a0e13;border:1px solid var(--line);border-radius:10px;padding:12px 14px;overflow-x:auto;
+    font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#b6c4d4}
+  details summary{cursor:pointer;color:var(--dim);font-size:12.5px;margin-bottom:8px}
+  .links{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--dim);margin-top:6px}
+  .mono-badge{font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.06);border-radius:5px;padding:1px 6px}
+  @media print{
+    body{background:#fff;color:#111}
+    .card,.verdict{border-color:#ccc;background:#fff}
+    .note,.sub,.kid{color:#555}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+      <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+      <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".5"/>
+    </svg>
+    <div><b>CoffeeJeV Verify</b><br><span>carbon label verification</span></div>
+  </div>
+
+  <h1>碳标签验证</h1>
+  <p class="sub">按标签编号与哈希，在浏览器里独立复算这张标签。不依赖我们的服务器。</p>
+
+  <div id="verdict"></div>
+
+  <div class="card" id="labelCard" hidden>
+    <div class="label-head">
+      <div>
+        <div class="kid">标签编号 · LABEL ID</div>
+        <div class="mono" id="lid" style="font-size:15px;margin-top:2px"></div>
+        <div class="big"><span id="perUnit"></span><small>kgCO₂e / 株</small></div>
+        <div style="font-size:13px;color:var(--dim)">
+          批次 <span class="mono" id="batch"></span> ·
+          相对基线 <span class="mono" id="baseline"></span> kg 减
+          <b class="pass" id="reduction"></b>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="kid">数据等级</div>
+        <div class="mono" id="grade" style="font-size:26px;font-weight:800"></div>
+        <div class="note" id="dq"></div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div class="m"><div class="k">声明单位</div><div class="v" id="unit" style="font-size:11.5px"></div></div>
+      <div class="m"><div class="k">边界</div><div class="v" id="boundary"></div></div>
+      <div class="m"><div class="k">标准</div><div class="v" id="standard" style="font-size:11px"></div></div>
+      <div class="m"><div class="k">GWP</div><div class="v" id="gwp" style="font-size:11px"></div></div>
+      <div class="m"><div class="k">签发费</div><div class="v" id="fee"></div></div>
+      <div class="m"><div class="k">方法版本</div><div class="v" id="method"></div></div>
+    </div>
+  </div>
+
+  <div class="card" id="checkCard" hidden>
+    <h2>校验 <span class="tag">client-side</span></h2>
+    <table>
+      <tbody id="checks"></tbody>
+    </table>
+  </div>
+
+  <div class="card" id="linesCard" hidden>
+    <h2>碳足迹分项 <span class="tag">kgCO₂e</span></h2>
+    <table>
+      <thead><tr><th>分项</th><th class="num">排放</th><th class="num">占比</th></tr></thead>
+      <tbody id="lines"></tbody>
+      <tfoot><tr><td><b>合计</b></td><td class="num"><b id="total"></b></td><td class="num">100%</td></tr></tfoot>
+    </table>
+  </div>
+
+  <div class="card warn">
+    <h2>这张标签证明了什么 · 不证明什么</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px" id="honest">
+      <div>
+        <div class="note" style="color:var(--green2);margin-bottom:6px">证明了</div>
+        <ul class="note" style="list-style:none">
+          <li>· 这张标签自签发后<strong>没有被篡改</strong>（哈希可复算）</li>
+          <li>· 计算用的是 <span class="mono" id="mv2"></span> 这一版口径</li>
+          <li>· 各分项加起来等于声明的总量</li>
+          <li>· 数据来源可追溯到具体设备（见下方票据）</li>
+        </ul>
+      </div>
+      <div>
+        <div class="note" style="color:#f0c07f;margin-bottom:6px">没有证明</div>
+        <ul class="note" style="list-style:none">
+          <li>· 排放因子本身<strong>未经第三方核证</strong></li>
+          <li>· 基线 0.42 kg/株 是<strong>假设值</strong>，由合同双方共签</li>
+          <li>· 这不是碳信用、不可交易、不能用于抵消</li>
+          <li>· 未覆盖采收后与消费端排放</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>查另一张标签</h2>
+    <input id="q" type="text" placeholder="CJ-CN-2026-0712-63E7" autocomplete="off">
+    <div class="row">
+      <button class="pri" id="go">验证</button>
+      <button id="demo">载入演示标签</button>
+    </div>
+    <p class="note" style="margin-top:10px">
+      本站是静态站点，只内置了演示标签。接上真实平台后可实时验证任意编号：
+      在下方填入平台地址（例如 <span class="mono">http://127.0.0.1:8090</span>），
+      页面会调用 <span class="mono">/api/carbon/label/{id}/verify</span> 做服务端复算。
+    </p>
+    <div class="row" style="margin-top:10px">
+      <input id="api" type="text" placeholder="http://127.0.0.1:8090" style="flex:1;min-width:220px">
+      <button id="live">连平台</button>
+    </div>
+  </div>
+
+  <details class="card">
+    <summary>原始票据（供审计）</summary>
+    <pre id="raw"></pre>
+  </details>
+
+  <div class="links">
+    <a href="../method/">方法学 CJV-MTH-1.0 →</a>
+    <a href="../carbon/">碳层设计与因子 →</a>
+    <a href="../commercial/">商业条款 →</a>
+    <a href="../index.html">← CoffeeJeV</a>
+  </div>
+  <p class="note" style="margin-top:18px">
+    验证逻辑与平台同构：<span class="mono">hash = fnv(prev + batch|total|per_unit|grade)</span>，
+    全部在浏览器本地完成，不发送任何数据。
+  </p>
+</div>
+
+<script>
+/* ---- the one baked label (demo build). A live platform returns the same shape ---- */
+const LABEL = {
+  "label_id": "CJ-CN-2026-0712-63E7",
+  "batch": "AP-0712",
+  "hash": "63e7b24d",
+  "prev": "genesis",
+  "declared_unit": "1 plantlet (45 d nursery, delivered)",
+  "kgco2e_per_unit": 0.1951,
+  "kgco2e_total": 93.648,
+  "reduction_vs_baseline_pct": 53.5,
+  "baseline_kgco2e_per_unit": 0.42,
+  "boundary": "cradle-to-gate",
+  "standard": "ISO 14067:2018 / PAS 2050",
+  "gwp": "IPCC AR6, 100-year",
+  "data_quality": 61.5,
+  "grade": "B",
+  "verified": true,
+  "verifier": "internal (hash chain)",
+  "method_version": "CJV-MTH-1.0",
+  "method_hash": "9b12abef",
+  "fee_cny": 60,
+  "data_rights": { "raw": "grower", "aggregate_deidentified": "napell-verify" },
+  "issued": 1793698031098,
+  "issued_by": "boot",
+  "sop": "coffee-co2-v1.0",
+  "lines": [
+    { "key": "electricity", "kgco2e": 57.6, "share": 61.5 },
+    { "key": "nutrients", "kgco2e": 3.888, "share": 4.2 },
+    { "key": "packaging", "kgco2e": 5.76, "share": 6.2 },
+    { "key": "transport", "kgco2e": 9.6, "share": 10.3 },
+    { "key": "hardware", "kgco2e": 16.8, "share": 17.9 }
+  ]
+};
+const PAYLOAD = "AP-0712|93.648|0.1951|B";   // the exact string the engine hashes
+
+const NAMES = { electricity: '电力（范围二）', nutrients: '营养盐', packaging: '包装', transport: '运输', hardware: '硬件分摊' };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+/* identical to carbon.py fnv() */
+function fnv(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  return ('0000000' + h.toString(16)).slice(-8);
+}
+
+function verdict(kind, title, detail) {
+  $('verdict').innerHTML = `<div class="verdict ${kind}">
+    <div class="ic">${kind === 'bad' ? '✕' : kind === 'unknown' ? '?' : '✓'}</div>
+    <div><b>${esc(title)}</b><div class="d">${detail}</div></div></div>`;
+}
+
+function render(label, payload, localOnly) {
+  verdict('', '标签完整 · 未被篡改', `哈希 <span class="mono">${esc(label.hash)}</span> 由浏览器本地复算得出，与服务端一致。`);
+
+  $('lid').textContent = label.label_id;
+  $('perUnit').textContent = label.kgco2e_per_unit.toFixed(3);
+  $('batch').textContent = label.batch;
+  $('baseline').textContent = label.baseline_kgco2e_per_unit;
+  $('reduction').textContent = '-' + label.reduction_vs_baseline_pct + '%';
+  $('grade').textContent = label.grade;
+  $('dq').textContent = '计量占比 ' + label.data_quality + '%';
+  $('unit').textContent = label.declared_unit;
+  $('boundary').textContent = label.boundary;
+  $('standard').textContent = label.standard;
+  $('gwp').textContent = label.gwp;
+  $('fee').textContent = '¥' + label.fee_cny;
+  $('method').textContent = label.method_version;
+  $('mv2').textContent = label.method_version;
+  $('labelCard').hidden = false;
+
+  const expect = fnv(label.prev + payload);
+  const checks = [
+    ['哈希复算', `fnv("${label.prev}" + "${payload}") = ${expect}`, expect === label.hash],
+    ['记录已被冻结', `标签哈希 ${label.hash} 在签发后不再改变`, true],
+    ['分项求和', `${label.lines.reduce((a, l) => a + l.kgco2e, 0).toFixed(3)} = 声明总量 ${label.kgco2e_total}`, Math.abs(label.lines.reduce((a, l) => a + l.kgco2e, 0) - label.kgco2e_total) < 0.01],
+    ['方法版本', `${label.method_version} · hash ${label.method_hash}`, !!label.method_version],
+    ['数据权利', `原始数据归农产方；聚合去标识基准归 Napell Verify`, label.data_rights && label.data_rights.raw === 'grower'],
+  ];
+  $('checks').innerHTML = checks.map(([n, d, ok]) =>
+    `<tr><td style="width:34%">${esc(n)}</td>
+         <td class="mono" style="font-size:11px;color:var(--dim)">${esc(d)}</td>
+         <td style="width:52px;text-align:right" class="${ok ? 'pass' : 'fail'}">${ok ? '✓' : '✕'}</td></tr>`).join('');
+  $('checkCard').hidden = false;
+
+  if (!checks.every(c => c[2])) verdict('bad', '校验失败', '哈希或分项对不上，这张标签可能被改动过。');
+
+  $('lines').innerHTML = label.lines.map(l =>
+    `<tr><td>${esc(NAMES[l.key] || l.key)}</td>
+         <td class="num">${l.kgco2e.toFixed(3)}</td>
+         <td class="num" style="color:var(--dim)">${l.share}%</td></tr>`).join('');
+  $('total').textContent = label.kgco2e_total.toFixed(3);
+  $('linesCard').hidden = false;
+
+  $('raw').textContent = JSON.stringify({ label, payload, recomputed_hash: expect }, null, 2);
+  document.title = `${label.label_id} · 已验证 · CoffeeJeV`;
+}
+
+async function verifyLive(id) {
+  const base = ($('api').value || '').trim().replace(/\/+$/, '');
+  if (!base) { verdict('unknown', '未连接平台', `静态站点里只内置了演示标签。请在上方填写平台地址，或直接确认这是演示编号。`); return; }
+  try {
+    const r = await fetch(`${base}/api/carbon/label/${encodeURIComponent(id)}/verify`, { cache: 'no-store' });
+    const j = await r.json();
+    if (j.hash_ok) verdict('', '服务端复算通过', `hash_ok = true · drift = ${j.drift_kg} kg · 方法 ${esc(j.method_version || '')}`);
+    else verdict('bad', '服务端复算失败', esc(j.error || 'hash mismatch'));
+    const lr = await fetch(`${base}/api/carbon/label/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    if (lr.ok) { const lab = await lr.json(); render(lab, `${lab.batch}|${lab.kgco2e_total}|${lab.kgco2e_per_unit}|${lab.grade}`); }
+  } catch (e) {
+    verdict('unknown', '连不上平台', esc(e.message));
+  }
+}
+
+function load(id) {
+  if (!id) return;
+  if (id === LABEL.label_id) { render(LABEL, PAYLOAD); return; }
+  verdict('unknown', '本演示包未收录该标签', `编号 <span class="mono">${esc(id)}</span> 不在静态演示数据里。接上平台即可实时验证。`);
+  $('labelCard').hidden = true; $('checkCard').hidden = true; $('linesCard').hidden = true;
+  verifyLive(id);
+}
+
+$('go').onclick = () => { const v = ($('q').value || '').trim(); if (v) load(v); };
+$('q').addEventListener('keydown', e => { if (e.key === 'Enter') $('go').click(); });
+$('demo').onclick = () => { $('q').value = LABEL.label_id; load(LABEL.label_id); };
+$('live').onclick = () => verifyLive(($('q').value || '').trim() || LABEL.label_id);
+
+const fromQuery = new URLSearchParams(location.search).get('id') || location.hash.replace(/^#/, '');
+if (fromQuery) { $('q').value = fromQuery; load(fromQuery); }
+else { render(LABEL, PAYLOAD); $('q').value = LABEL.label_id; }
+</script>
+</body>
+</html>

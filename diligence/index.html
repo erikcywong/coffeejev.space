@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>尽调包 · CoffeeJeV</title>
+<meta name="description" content="可独立发送的技术尽调材料：规格、方法学、可拨的实验室、可验证的标签、选型手册。">
+<style>
+  :root{
+    --bg:#08090b; --card:#11141a; --card2:#171b21; --line:#232931; --line2:#313945;
+    --tx:#e9ecf1; --dim:#8d97a5; --dim2:#64748b;
+    --green:#00c48c; --green2:#3fe0b0; --amber:#e0a24e; --violet:#8b6cff;
+    --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.7;
+    background-image:radial-gradient(820px 420px at 12% -10%,rgba(0,196,140,.10),transparent 60%);}
+  a{color:var(--green2);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1000px;margin:0 auto;padding:34px 22px 90px}
+  .top{display:flex;align-items:center;gap:10px;margin-bottom:30px}
+  .top b{font-size:15px} .top span{font-size:11px;color:var(--dim2);font-family:var(--mono);letter-spacing:1.2px}
+  h1{font-size:clamp(28px,4vw,40px);font-weight:850;letter-spacing:-1.2px;line-height:1.15;margin-bottom:12px}
+  h1 em{font-style:normal;background:linear-gradient(96deg,#00c48c,#7fe0b6 60%,#8b6cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:#b9c2ce;max-width:70ch;font-size:15px}
+  h2{font-size:16px;font-weight:750;margin:34px 0 12px;letter-spacing:-.2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:7px}
+  .card:hover{border-color:rgba(0,196,140,.35);background:var(--card2)}
+  .card .n{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;color:var(--green2)}
+  .card b{font-size:14.5px}
+  .card .d{font-size:12.5px;color:#a8b2bf;line-height:1.6;flex:1}
+  .card .ch{font-size:11.5px;color:var(--amber);border-top:1px dashed rgba(224,162,78,.25);padding-top:7px;margin-top:4px}
+  .card a.open{font-size:12px;font-weight:700}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th{text-align:left;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim2);padding:7px 9px;border-bottom:1px solid var(--line)}
+  td{padding:8px 9px;border-bottom:1px solid rgba(35,41,49,.6)}
+  tr:last-child td{border-bottom:0}
+  .num{text-align:right;font-family:var(--mono)}
+  .note{font-size:12.5px;color:var(--dim2);line-height:1.75}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-top:12px}
+  .kbd{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.05);border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
+  .copy{border:1px solid var(--line2);background:var(--card2);color:#cfd8e3;font:inherit;font-size:12.5px;
+    font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;margin-top:10px}
+  .copy:hover{border-color:rgba(0,196,140,.45);color:#fff}
+  @media print{ body{background:#fff;color:#111} .card,.box{border-color:#ccc;background:#fff} .lede,.note{color:#444} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+      <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+      <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".5"/>
+    </svg>
+    <div><b>CoffeeJeV</b><br><span>due diligence pack</span></div>
+  </div>
+
+  <h1>这套东西可以<em>被挑错</em></h1>
+  <p class="lede">
+    七份可以单独发出去的材料：每一份都能被审阅者独立验证或反驳。我们不出 demo，
+    出的是能自己跑一遍的证据。下面每张卡片都写明了「审阅者可以挑什么」—— 这不是免责，
+    是邀请。
+  </p>
+
+  <h2>七份材料</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="n">01 · SPEC</div>
+      <b>设计规格（中 / 英，11 节）</b>
+      <div class="d">从评审到附录，每节可单独发送；含 14 节点契约、四种「不决策」语义、90 天计划。</div>
+      <div class="ch">可挑：技术选择是否过度设计；时间表是否现实</div>
+      <a class="open" href="../spec/index.html">阅读 →</a>
+    </div>
+    <div class="card">
+      <div class="n">02 · LAB</div>
+      <b>判断器实验室（可拨动）</b>
+      <div class="d">三个判断器的数学在浏览器里真跑：阈值由成本推导、硬闸门压分、约束集求可行解。</div>
+      <div class="ch">可挑：把参数拨到边界，看它是否还给出合理解</div>
+      <a class="open" href="../spec/lab.html">拨一拨 →</a>
+    </div>
+    <div class="card">
+      <div class="n">03 · METHOD</div>
+      <b>方法学 CJV-MTH-1.0</b>
+      <div class="d">12 条口径、版本哈希、30 天挑战流程、可改与不可改清单。</div>
+      <div class="ch">可挑：任一条规则的失效场景；提交反例即进入裁决</div>
+      <a class="open" href="../method/">查阅 →</a>
+    </div>
+    <div class="card">
+      <div class="n">04 · CARBON</div>
+      <b>碳层方法与因子</b>
+      <div class="d">边界、功能单位、小时级边际因子、12 条合规风险、三方账。</div>
+      <div class="ch">可挑：0.42 kg/株 的基线假设；这正是最大不确定项</div>
+      <a class="open" href="../carbon/">查阅 →</a>
+    </div>
+    <div class="card">
+      <div class="n">05 · VERIFY</div>
+      <b>标签公开验证页</b>
+      <div class="d">输入标签编号，在浏览器本地复算哈希；证明标签自签发后未被改动。</div>
+      <div class="ch">可挑：拿一张我们自己签的标签试试能否改一个数字</div>
+      <a class="open" href="../v/">验证一张 →</a>
+    </div>
+    <div class="card">
+      <div class="n">06 · HARDWARE</div>
+      <b>设备选型手册 + BOM</b>
+      <div class="d">8 台设备的量程 / 精度 / 采样 / 接口；BOM 估算；流量预算 1.10 MB/日。</div>
+      <div class="ch">可挑：任何一条精度是否够支撑判断；单价是否可谈</div>
+      <a class="open" href="../napell/docs/devices.html">查阅 →</a>
+    </div>
+    <div class="card">
+      <div class="n">07 · FILM</div>
+      <b>双语说明片（3:39 / 3:26）</b>
+      <div class="d">12 场，从问题到闭环到碳；可直接发给不看文档的人。</div>
+      <div class="ch">可挑：任何一帧与旁白是否对得上</div>
+      <a class="open" href="../index.html">播放 →</a>
+    </div>
+  </div>
+
+  <h2>一页纸的关键数字</h2>
+  <div class="box">
+    <table>
+      <thead><tr><th>项目</th><th class="num">数值</th><th>口径</th></tr></thead>
+      <tbody>
+        <tr><td>单次决策成本</td><td class="num">$0.15 → $0.04</td><td>现状 → 目标</td></tr>
+        <tr><td>污染漏检率 / 复核率</td><td class="num">12% → 3% / 100% → 15%</td><td>同上</td></tr>
+        <tr><td>移栽成活率 / 能耗</td><td class="num">72% → 86% / −15%</td><td>同上</td></tr>
+        <tr><td>规模阈值</td><td class="num">6 万株：回收期 ∞</td><td>挽回 $3,900 &lt; 运维 $4,800</td></tr>
+        <tr><td>硬件 BOM / 售价 / 毛利</td><td class="num">¥55,540 / ¥78,000 / 28.8%</td><td>估算</td></tr>
+        <tr><td>每株碳足迹（已交付批次）</td><td class="num">0.195 kgCO₂e</td><td>基线 0.42，减 53.5%</td></tr>
+        <tr><td>标签签发费</td><td class="num">¥60 / 批（B 级）</td><td>买方付费，可转嫁</td></tr>
+        <tr><td>Zone 席位</td><td class="num">¥900 + ¥0.03/株 + 盒摊</td><td>6 万株场 ≈ ¥3,450/年</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:10px">
+      所有数值均为设计目标或可调假设，**不是实测**。已在各页面逐条标注来源与不确定度。
+    </p>
+    <button class="copy" id="copyBtn">复制这一页的纯文本</button>
+  </div>
+
+  <h2>怎么用这套材料</h2>
+  <div class="box">
+    <p style="font-size:13.5px;color:#b9c2ce">
+      <b>技术尽调</b>：把 01 + 02 + 03 一起发。让对方自己拨滑杆、自己挑规则的错 —— 比看 demo 快。
+    </p>
+    <p style="font-size:13.5px;color:#b9c2ce;margin-top:8px">
+      <b>商业尽调</b>：把 04 + 05 + 06 一起发。让财务核三方账，让法务核合规边界，让采购核 BOM。
+    </p>
+    <p style="font-size:13.5px;color:#b9c2ce;margin-top:8px">
+      <b>不要做的事</b>：不要把这些数字当成实测结果对外承诺；基线、因子、价格全部待核证。
+    </p>
+  </div>
+
+  <p class="note" style="margin-top:26px">
+    <a href="../commercial/">商业条款与报价 →</a> ·
+    <a href="../method/">方法学 →</a> ·
+    <a href="../v/">标签验证 →</a> ·
+    <a href="../index.html">← CoffeeJeV</a>
+  </p>
+</div>
+
+<script>
+document.getElementById('copyBtn').onclick = async () => {
+  const text = `CoffeeJeV 尽调摘要
+- 单次决策成本 $0.15 → $0.04；漏检率 12% → 3%；复核率 100% → 15%
+- 移栽成活率 72% → 86%；能耗 -15%
+- 规模阈值：6 万株/年 回收期 ∞（挽回 $3,900 < 运维 $4,800）
+- 硬件 BOM ¥55,540 / 售价 ¥78,000 / 毛利 28.8%
+- 每株碳足迹 0.195 kgCO2e（基线 0.42，减 53.5%，B 级数据）
+- 标签签发 ¥60/批（买方付）；Zone 席位 ¥900/场/年 + ¥0.03/株/年
+- 方法版本 CJV-MTH-1.0（12 条口径，可挑战）
+材料：/spec/ /method/ /carbon/ /v/ /napell/docs/devices.html
+所有数值为设计目标或假设，不是实测。`;
+  try { await navigator.clipboard.writeText(text); document.getElementById('copyBtn').textContent = '已复制'; }
+  catch (e) { document.getElementById('copyBtn').textContent = '复制失败，请手动选择'; }
+};
+</script>
+</body>
+</html>
