@@ -1,0 +1,69 @@
+{
+ "generated": "2026-11-04T07:36:36",
+ "base": "https://www.coffeejev.space/v/?id=",
+ "count": 1,
+ "method": "CJV-MTH-1.0",
+ "labels": [
+  {
+   "label_id": "CJ-CN-2026-0712-63E7",
+   "batch": "AP-0712",
+   "hash": "63e7b24d",
+   "prev": "genesis",
+   "declared_unit": "1 plantlet (45 d nursery, delivered)",
+   "kgco2e_per_unit": 0.1951,
+   "kgco2e_total": 93.648,
+   "reduction_vs_baseline_pct": 53.5,
+   "baseline_kgco2e_per_unit": 0.42,
+   "boundary": "cradle-to-gate",
+   "standard": "ISO 14067:2018 / PAS 2050",
+   "gwp": "IPCC AR6, 100-year",
+   "data_quality": 61.5,
+   "grade": "B",
+   "verified": true,
+   "verifier": "internal (hash chain)",
+   "verifier_body": "零碳核云 ZeroCarbon Verify",
+   "verifier_status": "pending accreditation",
+   "method_version": "CJV-MTH-1.0",
+   "method_hash": "9b12abef",
+   "fee_cny": 60,
+   "data_rights": {
+    "raw": "grower",
+    "aggregate_deidentified": "零碳核云"
+   },
+   "issued": 1793721767671,
+   "issued_by": "boot",
+   "sop": "coffee-co2-v1.0",
+   "lines": [
+    {
+     "key": "electricity",
+     "kgco2e": 57.6,
+     "share": 61.5
+    },
+    {
+     "key": "nutrients",
+     "kgco2e": 3.888,
+     "share": 4.2
+    },
+    {
+     "key": "packaging",
+     "kgco2e": 5.76,
+     "share": 6.2
+    },
+    {
+     "key": "transport",
+     "kgco2e": 9.6,
+     "share": 10.3
+    },
+    {
+     "key": "hardware",
+     "kgco2e": 16.8,
+     "share": 17.9
+    }
+   ],
+   "_payload": "AP-0712|93.648|0.1951|B",
+   "_reduction": 53.5,
+   "_url": "https://www.coffeejev.space/v/?id=CJ-CN-2026-0712-63E7",
+   "qr": "qr/CJ-CN-2026-0712-63E7.png"
+  }
+ ]
+}
