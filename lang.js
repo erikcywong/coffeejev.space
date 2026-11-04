@@ -1,23 +1,37 @@
 /* coffeejev.space — language boundary layer.
  *
- * The site publishes an English tree for the design spec only (/spec/en/…).
- * Carbon, commercial, method and the app page exist in Chinese only. That is a
- * content gap, not something a script can translate, so this file makes the
- * boundary explicit instead of letting a click silently drop you into Chinese:
+ * The site publishes English trees for /spec/ (all pages) and /method/ (partial).
+ * Everything else is Chinese only. This layer makes the boundary explicit
+ * instead of letting a click silently drop you into Chinese:
  *
- *   - ?lang=en is honoured once and then removed from the address bar
- *   - in English mode, a Chinese spec page redirects to its English twin
- *   - any other Chinese-only page shows a one-line notice with a way back
- *   - clicking the 中文 switch clears the stored preference
+ *   - ?lang= is honoured once, then removed from the address bar
+ *   - in English mode, a translated page redirects to its English twin
+ *   - a page without an English version shows a one-line notice with a way back
+ *   - English pages carry a floating 中文 switch
+ *   - clicking any language control updates the stored preference
  */
 (function () {
   'use strict';
   var KEY = 'cjv-lang';
-  var p = location.pathname;
-  var inEnTree = /\/spec\/en\//.test(p);
-  var inSpecZh = /\/spec\/(?:index\.html|[a-z]+\.html)$/.test(p) || /\/spec\/$/.test(p);
 
-  // ---- read ?lang=, then strip it so it cannot outvote the switch
+  // which pages have an English twin
+  var EN_READY = {
+    spec: '*',
+    method: ['index.html', 'thesis.html', 'claim.html', 'boundary.html', 'manifest.html']
+  };
+
+  var p = location.pathname;
+  var m = p.match(/\/(spec|method)\/(en\/)?([^\/]*\.html)?$/);
+  var tree = m ? m[1] : null;
+  var inEnTree = !!m && !!m[2];
+
+  function hasEnglish(file) {
+    if (!tree) return false;
+    var v = EN_READY[tree];
+    return v === '*' || (v && v.indexOf(file) >= 0);
+  }
+
+  // ---- ?lang= once, then gone
   try {
     var q = new URLSearchParams(location.search).get('lang');
     if (q === 'en' || q === 'zh') {
@@ -28,24 +42,65 @@
     }
   } catch (e) { /* private mode */ }
 
-  // ---- the English tree sets the preference by existing
-  if (inEnTree) {
-    try { localStorage.setItem(KEY, 'en'); } catch (e) {}
-    return;
-  }
+  if (inEnTree) { try { localStorage.setItem(KEY, 'en'); } catch (e) {} }
 
   var lang = 'zh';
   try { lang = localStorage.getItem(KEY) || 'zh'; } catch (e) {}
+
+  // ---- language controls win over everything below
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-lang], a');
+    if (!el) return;
+    var chosen = el.getAttribute && el.getAttribute('data-lang');
+    if (!chosen && (el.textContent || '').trim() === '中文') chosen = 'zh';
+    if (!chosen) return;
+    try { localStorage.setItem(KEY, chosen); } catch (err) {}
+    var file = p.split('/').pop() || 'index.html';
+    if (chosen === 'zh' && inEnTree) {
+      e.preventDefault();
+      location.href = '../' + file;
+    } else if (chosen === 'en' && !inEnTree && hasEnglish(file)) {
+      e.preventDefault();
+      location.href = 'en/' + file;
+    }
+  }, true);
+
+  // ---- English page: offer the way back to Chinese
+  function backToChinese() {
+    if (document.getElementById('cjv-zhpill')) return;
+    var file = p.split('/').pop() || 'index.html';
+    var a = document.createElement('a');
+    a.id = 'cjv-zhpill';
+    a.href = '../' + file;
+    a.textContent = '中文';
+    a.title = '这一页的中文版 / Chinese version';
+    document.body.appendChild(a);
+    var css = document.createElement('style');
+    css.textContent =
+      '#cjv-zhpill{position:fixed;right:20px;bottom:20px;z-index:2147483000;padding:8px 16px;border-radius:999px;' +
+      'font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;text-decoration:none;' +
+      'color:#c9ffe9;background:rgba(10,14,18,.9);border:1px solid rgba(63,224,176,.45);' +
+      'backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.3)}' +
+      '#cjv-zhpill:hover{background:rgba(0,196,140,.2)}';
+    document.head.appendChild(css);
+  }
+
+  if (inEnTree) {
+    if (document.body) backToChinese();
+    else document.addEventListener('DOMContentLoaded', backToChinese);
+    return;
+  }
+
   if (lang !== 'en') return;
 
-  // ---- English mode, Chinese spec page: send to the English twin
-  if (inSpecZh) {
-    var file = p.split('/').pop() || 'index.html';
+  // ---- English mode: go to the twin when it exists
+  var file = p.split('/').pop() || 'index.html';
+  if (tree && hasEnglish(file)) {
     location.replace('en/' + file);
     return;
   }
 
-  // ---- English mode, page that has no English version: say so, once
+  // ---- otherwise say so, once
   function notice() {
     if (document.getElementById('cjv-langbar')) return;
     var bar = document.createElement('div');
@@ -72,13 +127,4 @@
   }
   if (document.body) notice();
   else document.addEventListener('DOMContentLoaded', notice);
-
-  // ---- clicking any 中文 switch clears the preference
-  document.addEventListener('click', function (e) {
-    var a = e.target.closest && e.target.closest('a');
-    if (!a) return;
-    if ((a.textContent || '').trim() === '中文') {
-      try { localStorage.setItem(KEY, 'zh'); } catch (err) {}
-    }
-  }, true);
 })();
