@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>页面不存在 · CoffeeJeV</title>
+<style>
+  :root{--bg:#08090b;--tx:#e9ecf1;--dim:#8d97a5;--line:#232830;--green:#3fe0b0}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--tx);
+    font:400 15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:24px}
+  .box{max-width:560px;width:100%}
+  .k{font:600 11px/1 ui-monospace,monospace;letter-spacing:2px;color:var(--green);text-transform:uppercase}
+  h1{font-size:28px;letter-spacing:-.6px;margin:10px 0 6px}
+  p{color:var(--dim);margin:0 0 18px}
+  .mono{font-family:ui-monospace,monospace;color:#c9ffe9;word-break:break-all}
+  a.btn{display:inline-block;margin:6px 10px 0 0;padding:10px 16px;border-radius:999px;text-decoration:none;
+    border:1px solid rgba(63,224,176,.45);background:rgba(0,196,140,.12);color:#c9ffe9;font-weight:700;font-size:13px}
+  .note{margin-top:22px;font-size:12.5px;color:#69727e}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="k">404 · page not found</div>
+  <h1 id="title">这一页不存在</h1>
+  <p id="body">如果你是从打印的碳标签扫码进来的，链接格式可能已经更新。下面会自动跳转到验证页。</p>
+  <p id="target"></p>
+  <a class="btn" id="verify" href="/v/">碳标签验证 · Verify</a>
+  <a class="btn" href="/">返回首页 · Home</a>
+  <p class="note">验证页不依赖我们的账号：输入标签编号与哈希即可在浏览器本地复算。</p>
+</div>
+<script>
+(function () {
+  // A printed label may encode the legacy /v/<label_id>#<hash12> form. The
+  // verification page resolves ?id= (and a bare hash), so rewrite and forward.
+  var parts = location.pathname.split('/').filter(Boolean);
+  if (parts[0] === 'v' && parts.length >= 2) {
+    var id = decodeURIComponent(parts[1]).replace(/[^A-Za-z0-9._-]/g, '');
+    if (id && id.toLowerCase() !== 'index.html') {
+      var target = '/v/?id=' + encodeURIComponent(id) + (location.hash || '');
+      document.getElementById('target').innerHTML =
+        '正在跳转到 <span class="mono">' + target + '</span>';
+      document.getElementById('verify').href = target;
+      location.replace(target);
+      return;
+    }
+  }
+  if (location.pathname.indexOf('/en/') !== -1) {
+    document.documentElement.lang = 'en';
+    document.documentElement.setAttribute('data-lang', 'en');
+    document.getElementById('title').textContent = 'This page does not exist';
+    document.getElementById('body').textContent =
+      'If you scanned a printed carbon label, the link format may have changed. Redirecting you to the verification page.';
+    document.querySelector('.note').textContent =
+      'Verification needs no account: enter the label id and hash and recompute in your browser.';
+  }
+})();
+</script>
+</body>
+</html>

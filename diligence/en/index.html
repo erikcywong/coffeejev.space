@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>try{if(location.pathname.indexOf("/en/")!==-1){localStorage.setItem("cjv-lang","en");document.documentElement.dataset.lang="en";document.documentElement.lang="en";}}catch(e){}</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Due diligence pack · CoffeeJeV</title>
+<meta name="description" content="content="Technical due-diligence material that travels on its own: specification, method, the interactive lab, verifiable labels and the device manual.">
+<style>
+ :root{
+ --bg:#08090b; --card:#11141a; --card2:#171b21; --line:#232931; --line2:#313945;
+ --tx:#e9ecf1; --dim:#8d97a5; --dim2:#64748b;
+ --green:#00c48c; --green2:#3fe0b0; --amber:#e0a24e; --violet:#8b6cff;
+ --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+ }
+ *{margin:0;padding:0;box-sizing:border-box}
+ body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.7;
+ background-image:radial-gradient(820px 420px at 12% -10%,rgba(0,196,140,.10),transparent 60%);}
+ a{color:var(--green2);text-decoration:none} a:hover{text-decoration:underline}
+ .wrap{max-width:1000px;margin:0 auto;padding:34px 22px 90px}
+ .top{display:flex;align-items:center;gap:10px;margin-bottom:30px}
+ .top b{font-size:15px} .top span{font-size:11px;color:var(--dim2);font-family:var(--mono);letter-spacing:1.2px}
+ h1{font-size:clamp(28px,4vw,40px);font-weight:850;letter-spacing:-1.2px;line-height:1.15;margin-bottom:12px}
+ h1 em{font-style:normal;background:linear-gradient(96deg,#00c48c,#7fe0b6 60%,#8b6cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+ .lede{color:#b9c2ce;max-width:70ch;font-size:15px}
+ h2{font-size:16px;font-weight:750;margin:34px 0 12px;letter-spacing:-.2px}
+ .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+ .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:7px}
+ .card:hover{border-color:rgba(0,196,140,.35);background:var(--card2)}
+ .card .n{font-family:var(--mono);font-size:10.5px;letter-spacing:1.4px;color:var(--green2)}
+ .card b{font-size:14.5px}
+ .card .d{font-size:12.5px;color:#a8b2bf;line-height:1.6;flex:1}
+ .card .ch{font-size:11.5px;color:var(--amber);border-top:1px dashed rgba(224,162,78,.25);padding-top:7px;margin-top:4px}
+ .card a.open{font-size:12px;font-weight:700}
+ table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+ th{text-align:left;font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim2);padding:7px 9px;border-bottom:1px solid var(--line)}
+ td{padding:8px 9px;border-bottom:1px solid rgba(35,41,49,.6)}
+ tr:last-child td{border-bottom:0}
+ .num{text-align:right;font-family:var(--mono)}
+ .note{font-size:12.5px;color:var(--dim2);line-height:1.75}
+ .box{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-top:12px}
+ .kbd{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.05);border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
+ .copy{border:1px solid var(--line2);background:var(--card2);color:#cfd8e3;font:inherit;font-size:12.5px;
+ font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;margin-top:10px}
+ .copy:hover{border-color:rgba(0,196,140,.45);color:#fff}
+ @media print{ body{background:#fff;color:#111} .card,.box{border-color:#ccc;background:#fff} .lede,.note{color:#444} }
+</style>
+<style id="zc-back-css">
+.zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;border:0;
+ font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.90);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28);transition:.15s}
+.zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+.zc-back svg{width:13px;height:13px;flex:none}
+@media (max-width:640px){.zc-back{top:12px;right:12px;padding:8px 12px;font-size:11.5px}}
+</style>
+<!-- polish -->
+<link rel="icon" type="image/png" sizes="180x180" href="/media/icon-180.png">
+<meta name="twitter:card" content="summary_large_image">
+<style id="prefers-reduced-motion">@media (prefers-reduced-motion: reduce){
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+ transition-duration:.001ms!important;scroll-behavior:auto!important}
+ video[autoplay]{animation:none!important}
+}</style>
+<style>.rule-en{display:none}</style>
+<!-- seo:begin -->
+<link rel="canonical" href="https://www.coffeejev.space/diligence/en/">
+<link rel="alternate" hreflang="zh-CN" href="https://www.coffeejev.space/diligence/">
+<link rel="alternate" hreflang="en" href="https://www.coffeejev.space/diligence/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.coffeejev.space/diligence/">
+<!-- seo:end -->
+</head>
+<body>
+<a class="zc-back" href="../../index.html" title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="wrap">
+ <div class="top">
+ <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.7" stroke-linecap="round">
+ <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+ <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".5"/>
+ </svg>
+ <div><b>CoffeeJeV</b><br><span>due diligence pack</span></div>
+ </div>
+
+ <h1>This can be <em>picked apart</em></h1>
+ <p class="lede">
+ Seven documents that can be sent on their own: each one can be verified or refuted independently by the reader. We do not ship a demo; we ship evidence you can run yourself. Every card below states what a reviewer may challenge — that is an invitation, not a disclaimer.
+ </p>
+
+ <h2>Seven documents</h2>
+ <div class="grid">
+ <div class="card">
+ <div class="n">01 · SPEC</div>
+ <b>Design specification (zh / en, 11 sections)</b>
+ <div class="d">From review to appendix, each section travels alone; includes the fourteen node contracts, the four abstention semantics and the 90-day plan.</div>
+ <div class="ch">Challenge: whether the engineering is over-designed; whether the schedule is realistic</div>
+ <a class="open" href="../../spec/index.html">Read →</a>
+ </div>
+ <div class="card">
+ <div class="n">02 · LAB</div>
+ <b>Judger lab (interactive)</b>
+ <div class="d">The three judgers really run in the browser: a cost-derived threshold, a hard gate that caps the score, and a feasible set solved under constraints.</div>
+ <div class="ch">Challenge: push the parameters to the edge and see whether the answer still holds</div>
+ <a class="open" href="../../spec/lab.html">Try the sliders →</a>
+ </div>
+ <div class="card">
+ <div class="n">03 · METHOD</div>
+ <b>Method CJV-MTH-1.0</b>
+ <div class="d">Twelve rules, a version hash, a 30-day challenge process and the list of what may and may not change.</div>
+ <div class="ch">Challenge: a failure scenario for any rule; submit a counter-example and it enters adjudication</div>
+ <a class="open" href="../../method/">Read →</a>
+ </div>
+ <div class="card">
+ <div class="n">04 · CARBON</div>
+ <b>Carbon method and factors</b>
+ <div class="d">Boundary, functional unit, hourly marginal factors, twelve compliance risks, the three-party ledger.</div>
+ <div class="ch">Challenge: the 0.42 kg per plantlet baseline — our largest single uncertainty</div>
+ <a class="open" href="../../carbon/">Read →</a>
+ </div>
+ <div class="card">
+ <div class="n">05 · VERIFY</div>
+ <b>Public label verification</b>
+ <div class="d">Enter a label id and recompute the hash locally in the browser; proof the label has not changed since issuance.</div>
+ <div class="ch">Challenge: take one of our own labels and try to change a digit</div>
+ <a class="open" href="../../v/">Verify one →</a>
+ </div>
+ <div class="card">
+ <div class="n">06 · HARDWARE</div>
+ <b>Device selection manual + BOM</b>
+ <div class="d">Range, accuracy, sampling and interface for the eight devices; BOM estimate; a data budget of 1.10 MB a day.</div>
+ <div class="ch">Challenge: whether any accuracy figure can support the decision; whether the unit price is negotiable</div>
+ <a class="open" href="../../napell/docs/devices.html">Read →</a>
+ </div>
+ <div class="card">
+ <div class="n">07 · FILM</div>
+ <b>Bilingual explainer (3:39 / 3:26)</b>
+ <div class="d">Twelve scenes from the problem to the loop to carbon; sendable to someone who will not read the documents.</div>
+ <div class="ch">Challenge: whether any frame matches its narration</div>
+ <a class="open" href="../../index.html">Play →</a>
+ </div>
+ </div>
+
+ <h2>The key numbers on one page</h2>
+ <div class="box">
+ <table>
+ <thead><tr><th>Item</th><th class="num">Value</th><th>the standard</th></tr></thead>
+ <tbody>
+ <tr><td>single decision cost</td><td class="num">$0.15 → $0.04</td><td>Now → target</td></tr>
+ <tr><td>Missed contamination / review rate</td><td class="num">12% → 3% / 100% → 15%</td><td>same as above</td></tr>
+ <tr><td>Transplant survival / energy</td><td class="num">72% → 86% / −15%</td><td>same as above</td></tr>
+ <tr><td>Scale threshold</td><td class="num">60,000 plantlets: payback ∞</td><td>recovered $3,900 &lt; opex $4,800</td></tr>
+ <tr><td>Hardware BOM / price / margin</td><td class="num">¥55,540 / ¥78,000 / 28.8%</td><td>estimate</td></tr>
+ <tr><td>Footprint per plantlet (delivered batch)</td><td class="num">0.195 kgCO₂e</td><td>baseline 0.42, −53.5%</td></tr>
+ <tr><td>Label issuance fee</td><td class="num">¥60 / batch (grade B)</td><td>paid by the buyer; passable</td></tr>
+ <tr><td>Zone seat</td><td class="num">¥900 + ¥0.03/plantlet + box share</td><td>60,000-plantlet site ≈ ¥3,450 a year</td></tr>
+ </tbody>
+ </table>
+ <p class="note" style="margin-top:10px">
+ Every number is a design target or an adjustable assumption, **not a measurement**. Each page marks its source and its uncertainty.
+ </p>
+ <button class="copy" id="copyBtn">Copy this page as plain text</button>
+ </div>
+
+ <h2>How to use the pack</h2>
+ <div class="box">
+ <p style="font-size:13.5px;color:#b9c2ce">
+ <b>Technical due diligence</b>: send 01 + 02 + 03 together. Let them move the sliders and break a rule themselves — faster than any demo.
+ </p>
+ <p style="font-size:13.5px;color:#b9c2ce;margin-top:8px">
+ <b>Commercial due diligence</b>: send 04 + 05 + 06. Finance checks the three-party ledger, legal checks the compliance boundary, procurement checks the BOM.
+ </p>
+ <p style="font-size:13.5px;color:#b9c2ce;margin-top:8px">
+ <b>Negotiating a share or a bond</b>: attach the <a href="../../trial/">pre-registered pilot and shared-savings agreement,</a> whose endpoints, sample size, randomisation unit and attribution rules are locked before the run.
+ </p>
+ <p style="font-size:13.5px;color:#b9c2ce;margin-top:8px">
+ <b>What not to do</b>: do not commit to these numbers as measurements; the baseline, the factors and the prices all await verification.
+ </p>
+ </div>
+
+ <p class="note" style="margin-top:26px">
+ <a href="../../eudr/">EUDR export compliance gate →</a> · <a href="../../commercial/">Commercial terms and pricing →</a> ·
+ <a href="../../method/">Method →</a> ·
+ <a href="../../v/">Label verification →</a> ·
+ <a href="../../index.html">← CoffeeJeV</a>
+ </p>
+</div>
+
+<script>
+document.getElementById('copyBtn').onclick = async () => {
+ const text = `CoffeeJeV 尽调摘要
+- 单次决策成本 $0.15 → $0.04;漏检率 12% → 3%；复核率 100% → 15%
+- 移栽成活率 72% → 86%；能耗 -15%
+- 规模阈值：6 万株/年 回收期 ∞（挽回 $3,900 < 运维 $4,800）
+- 硬件 BOM ¥55,540 / 售价 ¥78,000 / 毛利 28.8%
+- 每株碳足迹 0.195 kgCO2e（基线 0.42,减 53.5%，B 级数据）
+- 标签签发 ¥60/批（买方付）；Zone 席位 ¥900/场/年 + ¥0.03/株/年
+- 方法版本 CJV-MTH-1.0（12 条口径，可挑战）
+材料：/spec/ /method/ /carbon/ /v/ /napell/docs/devices.html
+所有数值为设计目标或假设，不是实测。`;
+ try { await navigator.clipboard.writeText(text); document.getElementById('copyBtn').textContent = 'Copied'; }
+ catch (e) { document.getElementById('copyBtn').textContent = '复制失败，请手动选择'; }
+};
+</script>
+<script src="/lang.js"></script>
+</body>
+</html>

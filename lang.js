@@ -20,11 +20,14 @@
     method: '*',
     carbon: '*',
     commercial: '*',
-    napell: ['index.html']   // app.html is the device mock, language-neutral
+    napell: ['index.html'],  // app.html is the device mock, language-neutral
+    trial: '*',
+    diligence: '*',
+    eudr: '*'
   };
 
   var p = location.pathname;
-  var m = p.match(/\/(spec|method|carbon|commercial|napell)\/(en\/)?([^\/]*\.html)?$/);
+  var m = p.match(/\/(spec|method|carbon|commercial|napell|trial|diligence|eudr)\/(en\/)?([^\/]*\.html)?$/);
   var tree = m ? m[1] : null;
   var inEnTree = !!m && !!m[2];
 

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EUDR 出口合规闸门 · CoffeeJeV</title>
+<meta name="description" content="EUDR 要求一柜咖啡能证明自己不来自毁林地块。我们把批次谱系、地块坐标与哈希链账本串成一份可复算的放行证据包——同时明确我们不做什么。">
+<style>
+  :root{--bg:#08090b;--card:#11141a;--line:#232931;--line2:#313945;--tx:#e9ecf1;--dim:#8d97a5;
+    --dim2:#69727e;--green:#3fe0b0;--amber:#e0a24e;--red:#e06a6a;--blue:#6ea8e0}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--tx)}
+  body{font:400 15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+    padding:0 0 80px}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 28px}
+  .zc-back{position:fixed;top:16px;right:16px;z-index:60;display:inline-flex;align-items:center;gap:6px;
+    padding:7px 13px 7px 9px;border-radius:999px;border:1px solid var(--line2);background:rgba(10,13,17,.86);
+    color:var(--dim);text-decoration:none;font-size:12px;font-weight:700;backdrop-filter:blur(8px)}
+  .zc-back:hover{color:#fff;border-color:var(--green)}
+  .zc-back svg{width:13px;height:13px}
+  .top{margin:54px 0 26px}
+  .k{font:700 11px/1 ui-monospace,monospace;letter-spacing:2.2px;color:var(--green);text-transform:uppercase}
+  h1{font-size:clamp(28px,4vw,40px);letter-spacing:-1px;line-height:1.15;margin:12px 0 8px}
+  h1 em{font-style:normal;color:var(--green)}
+  .lede{font-size:16px;color:#b9c2ce;max-width:760px;margin:0}
+  h2{font-size:20px;letter-spacing:-.3px;margin:44px 0 10px;padding-top:8px}
+  h2 .n{font:700 11px/1 ui-monospace,monospace;color:var(--green);margin-right:9px;letter-spacing:1.5px}
+  p{color:#c3ccd8;margin:0 0 12px}
+  .mut{color:var(--dim2)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:#c9ffe9;word-break:break-all}
+  .grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:14px 0}
+  .card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--card)}
+  .card h3{margin:0 0 8px;font-size:14.5px;letter-spacing:-.1px}
+  .card.yes{border-color:rgba(63,224,176,.35)}
+  .card.no{border-color:rgba(224,106,106,.35)}
+  .card ul{margin:8px 0 0;padding-left:18px}
+  .card li{margin:5px 0;color:#bcc6d2;font-size:13.5px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase}
+  td.mono{font-family:ui-monospace,monospace;font-size:12px;color:#c9ffe9}
+  .tag{display:inline-block;font:700 10px/1 ui-monospace,monospace;padding:3px 7px;border-radius:5px;
+    letter-spacing:.5px;vertical-align:1px}
+  .tag.asm{color:var(--amber);border:1px solid rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+  .tag.der{color:var(--green);border:1px solid rgba(63,224,176,.4);background:rgba(0,196,140,.1)}
+  .tag.gap{color:var(--red);border:1px solid rgba(224,106,106,.4);background:rgba(224,106,106,.08)}
+  .note{border-left:2px solid var(--green);padding:10px 14px;background:rgba(0,196,140,.06);
+    border-radius:0 8px 8px 0;color:#bcc6d2;font-size:13.5px;margin:16px 0}
+  .note.warn{border-left-color:var(--amber);background:rgba(224,162,78,.06)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0;font-size:12.5px}
+  .flow span.pill{border:1px solid var(--line2);border-radius:8px;padding:7px 11px;background:var(--card);
+    font-family:ui-monospace,monospace;color:#c9ffe9}
+  .flow span.arrow{color:var(--dim2)}
+  a{color:var(--green)}
+  .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim2);font-size:12.5px}
+  .langpill{position:fixed;left:16px;bottom:16px;z-index:60;font:700 12px/1 -apple-system,sans-serif;
+    padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:rgba(10,13,17,.86);
+    color:var(--dim);text-decoration:none;backdrop-filter:blur(8px)}
+  @media (max-width:640px){.wrap{padding:0 18px}.top{margin-top:64px}}
+</style>
+<!-- polish -->
+<link rel="icon" type="image/png" sizes="180x180" href="/media/icon-180.png">
+<meta name="twitter:card" content="summary_large_image">
+<style id="prefers-reduced-motion">@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+  transition-duration:.001ms!important;scroll-behavior:auto!important}
+  video[autoplay]{animation:none!important}
+}</style>
+<!-- seo:begin -->
+<link rel="canonical" href="https://www.coffeejev.space/eudr/">
+<link rel="alternate" hreflang="zh-CN" href="https://www.coffeejev.space/eudr/">
+<link rel="alternate" hreflang="en" href="https://www.coffeejev.space/eudr/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.coffeejev.space/eudr/">
+<!-- seo:end -->
+</head>
+<body>
+<a class="zc-back" href="../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="wrap">
+
+  <div class="top">
+    <div class="k">EUDR · 出口合规闸门</div>
+    <h1>一柜咖啡要能证明自己<em>不来自毁林地块</em></h1>
+    <p class="lede">EUDR 要的不是一份漂亮的 ESG 报告，而是一条能落到坐标上的证据链。我们做的部分很窄：把批次、地块与账本串成可复算的放行材料；不做的部分也很明确：不判定毁林，不出具尽职调查声明。</p>
+  </div>
+
+  <div class="note">
+    <b>先划清边界。</b> 本页描述的是产品设计，不是已上线服务。截至撰写时：核证方未签约、地块数据接口未建立、法规时间表仍在变动。文中的价格与比例均为<b>设计锚点（推）</b>，需实测与法务确认。
+  </div>
+
+  <h2><span class="n">01</span>法规要的五件事</h2>
+  <table>
+    <thead><tr><th>要求</th><th>实质</th><th>谁能提供</th></tr></thead>
+    <tbody>
+      <tr><td><b>商品范围</b></td><td>咖啡（CN 0901）在 EUDR 附件一之内，含烘焙、脱因等衍生品</td><td>法规本身</td></tr>
+      <tr><td><b>地块坐标</b></td><td>每一块产地都要给出地理坐标；面积超过 4 公顷须用多边形（≥6 位小数）</td><td>种植者 / 合作社</td></tr>
+      <tr><td><b>无毁林</b></td><td>2020-12-31 之后未发生毁林或森林退化</td><td>卫星影像 + 经营者尽职调查</td></tr>
+      <tr><td><b>合法生产</b></td><td>土地权属、劳工、税务、环境许可等当地法律合规</td><td>种植者 + 当地律师</td></tr>
+      <tr><td><b>尽职调查声明（DDS）</b></td><td>提交至 EU 信息系统并取得参考号，随货流转</td><td>欧盟经营者（进口商）</td></tr>
+    </tbody>
+  </table>
+  <p class="mut">时间表：按欧盟委员会 2024 年底的延期决定，大型经营者 2025-12-30 适用、中小企业 2026-06-30；此后仍有简化与再延期的讨论。以 EUR-Lex 最新文本为准，本页不复述日期。</p>
+
+  <h2><span class="n">02</span>我们做什么 / 不做什么</h2>
+  <div class="grid2">
+    <div class="card yes">
+      <h3>我们能交付的（现有能力 + 一层包装）</h3>
+      <ul>
+        <li><b>批次 → 地块的绑定</b>：把 <span class="mono">plot_id</span> 与多边形写入批次清单，随标签一起哈希</li>
+        <li><b>不可改的运输链</b>：批次号 → 集装箱号 → 提单，逐跳写入哈希链账本</li>
+        <li><b>证据包（release evidence pack）</b>：每柜一份，含地块坐标、批次账本摘要、PCF 标签、复核记录</li>
+        <li><b>公开验证</b>：任何人凭柜号与哈希前 12 位在浏览器里复算，不依赖我们的服务器</li>
+        <li><b>与 DDS 对齐的字段映射</b>：把我们的字段映射成进口商填 DDS 时需要的键，减少二次录入</li>
+      </ul>
+    </div>
+    <div class="card no">
+      <h3>我们不做的（会被误认的部分）</h3>
+      <ul>
+        <li><b>不判定毁林</b>：无毁林结论由经营者尽职调查与卫星证据支撑，我们只负责把证据固定下来</li>
+        <li><b>不出具 DDS</b>：DDS 是欧盟进口商（operator）的法律责任，不是供应商的</li>
+        <li><b>不替代认证</b>：没有获得任何认可机构的认证，也不声称与 EUDR 合规等同</li>
+        <li><b>不做地块测绘</b>：坐标由种植者或合作社提供；我们校验格式与一致性，不生产坐标</li>
+        <li><b>不保证清关</b>：证据链降低被拒风险，不改变主管机关的判断权</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2><span class="n">03</span>数据模型：一条能落地的链</h2>
+  <div class="flow">
+    <span class="pill">plot_id + polygon</span><span class="arrow">→</span>
+    <span class="pill">batch_id</span><span class="arrow">→</span>
+    <span class="pill">harvest window</span><span class="arrow">→</span>
+    <span class="pill">container_id</span><span class="arrow">→</span>
+    <span class="pill">DDS ref</span>
+  </div>
+  <p>每一跳都取上一跳的哈希作为输入，和现有标签链是同一套 <span class="mono">fnv(prev ‖ canonical(payload))</span>。区别只在 payload 里多了三类字段：</p>
+  <table>
+    <thead><tr><th>字段</th><th>来源</th><th>谁能改</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">plot_polygon</td><td>种植者提供（GeoJSON，WGS84，≥6 位小数）</td><td>不可改；变更走新版本并切分批次</td></tr>
+      <tr><td class="mono">container_id / B/L</td><td>货代提单</td><td>不可改；一柜一哈希</td></tr>
+      <tr><td class="mono">dds_ref</td><td>进口商在 EU 系统取得</td><td>可回填一次，之后冻结</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">
+    <b>已知缺口（写在这里而不是藏起来）。</b> ① 目前没有地块数据接口，<span class="mono">plot_polygon</span> 只存在于设计里；② 没有接入卫星基线，无法自动比对 2020-12-31 的森林覆盖；③ 合法生产四类文件需要当地律师逐项核验，我们只做归档与哈希。这三条不解决，本页就只是接口设计。
+  </div>
+
+  <h2><span class="n">04</span>产品形态与定价锚点</h2>
+  <table>
+    <thead><tr><th>交付物</th><th>内容</th><th>价格锚点</th><th>性质</th></tr></thead>
+    <tbody>
+      <tr><td><b>柜级放行证据包</b></td><td>地块坐标 + 批次账本摘要 + PCF 标签 + 复核记录</td><td>货值的 0.2–0.5%，或 ¥3,000–8,000 / 柜</td><td><span class="tag der">推</span></td></tr>
+      <tr><td><b>批次合规档案</b></td><td>同一批货的多柜汇总，供年度审计</td><td>¥8,000–15,000 / 季度</td><td><span class="tag asm">假设</span></td></tr>
+      <tr><td><b>DDS 字段对接</b></td><td>把我们的字段映射为进口商 DDS 所需键</td><td>含在证据包内</td><td><span class="tag der">推</span></td></tr>
+      <tr><td><b>公开验证页</b></td><td>任何人可复算，不依赖账号</td><td>免费</td><td><span class="tag der">推</span></td></tr>
+    </tbody>
+  </table>
+  <p>为什么按柜而不是按批：EUDR 的执法单位是<b>货</b>，清关发生在集装箱层面；按批收费会让一柜货被拆成十几个计费点，反而抬高摩擦。参照 SITE-REVIEW 与 PRICING-AUDIT 的同一结论：<b>跟着货走才收得到钱</b>。</p>
+
+  <h2><span class="n">05</span>为什么这个产品比碳标签更先能卖</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>需求是刚性的，不是溢价的</h3>
+      <p>碳标签卖的是「更好的价格」，EUDR 卖的是「能不能进关」。前者可以推迟，后者不能。</p>
+    </div>
+    <div class="card">
+      <h3>付费方是进口商，不是农户</h3>
+      <p>进口商没有 DDS 就无法放行；他的预算是合规成本，且可以摊到货值里。农户只需要配合提供坐标。</p>
+    </div>
+    <div class="card">
+      <h3>复用现有账本，不新建系统</h3>
+      <p>批次谱系、哈希链、计量记录都已经在跑；新增的只是地块坐标与柜号两跳。</p>
+    </div>
+    <div class="card">
+      <h3>可与碳标签打包</h3>
+      <p>同一柜货、同一份证据包：既回答「是否合规」，也回答「碳足迹多少」。一次采集，两次收费。</p>
+    </div>
+  </div>
+
+  <h2><span class="n">06</span>风险与不承诺</h2>
+  <table>
+    <thead><tr><th>风险</th><th>说明</th><th>我们的处理</th></tr></thead>
+    <tbody>
+      <tr><td><b>法规时间表变动</b></td><td>适用日期已延期一次，仍可能简化或再延</td><td>本页不复述具体日期，产品设计不绑定某一天</td></tr>
+      <tr><td><b>地块数据拿不到</b></td><td>小农没有多边形数据，合作社也常常没有</td><td>先做「有坐标的批次」；其余标注为不完整，不假装覆盖</td></tr>
+      <tr><td><b>卫星基线依赖第三方</b></td><td>毁林判定需要历史森林覆盖数据</td><td>不自建，接入现成数据源，并在证据包里注明来源与日期</td></tr>
+      <tr><td><b>责任边界被误读</b></td><td>客户可能认为我们「保证合规」</td><td>合同与页面双重声明：证据提供方，不是合规判定方</td></tr>
+      <tr><td><b>计费口径争议</b></td><td>货值随行情波动</td><td>合同写死「吨位 × 单价」或固定柜费，不写单一货值总额</td></tr>
+    </tbody>
+  </table>
+
+  <h2><span class="n">07</span>与站内其它部分的关系</h2>
+  <p>EUDR 页不是新体系，它是现有三件东西的出口版本：</p>
+  <table>
+    <thead><tr><th>现有</th><th>在 EUDR 里的角色</th></tr></thead>
+    <tbody>
+      <tr><td><a href="../carbon/index.html">碳层</a> · 批次账本与功能单位</td><td>提供「这一批货是什么、排放多少」的结构化记录</td></tr>
+      <tr><td><a href="../method/index.html">方法学</a> CJV-MTH-1.0 · 哈希与版本</td><td>提供不可改的哈希链与版本治理，证据包直接复用</td></tr>
+      <tr><td><a href="../commercial/index.html">报价</a> · 按证据分级、反套利</td><td>提供计费口径与「一证一货」的唯一性校验</td></tr>
+      <tr><td><a href="../v/">标签验证</a> · 公开复算</td><td>柜级证据包的验证入口复用同一套浏览器复算逻辑</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>一句话。</b> EUDR 不缺报告，缺的是「这一柜的坐标、批次与运输记录能不能被第三方重算一遍」。这正是这套账本已经擅长的事——把碳换成地块与柜号，结构不变。
+  </div>
+
+  <div class="foot">
+    本页为产品设计说明，不构成法律意见或合规承诺。EUDR 的适用与解释以 EUR-Lex 官方文本及主管机关决定为准。<br>
+    <a href="../diligence/">尽调包 →</a> · <a href="../commercial/index.html">商业条款与报价 →</a> · <a href="../index.html">返回首页</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<script>try{if(location.pathname.indexOf("/en/")!==-1){localStorage.setItem("cjv-lang","en");document.documentElement.dataset.lang="en";document.documentElement.lang="en";}}catch(e){}</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EUDR export compliance gate · CoffeeJeV</title>
+<meta name="description" content="content="EUDR requires a container of coffee to prove it is not from deforested land. We link batch lineage, plot coordinates and the hash-chained ledger into a recomputable release evidence pack — and we are explicit about what we do not do.">
+<style>
+ :root{--bg:#08090b;--card:#11141a;--line:#232931;--line2:#313945;--tx:#e9ecf1;--dim:#8d97a5;
+ --dim2:#69727e;--green:#3fe0b0;--amber:#e0a24e;--red:#e06a6a;--blue:#6ea8e0}
+ *{box-sizing:border-box}
+ html,body{margin:0;background:var(--bg);color:var(--tx)}
+ body{font:400 15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+ padding:0 0 80px}
+ .wrap{max-width:1000px;margin:0 auto;padding:0 28px}
+ .zc-back{position:fixed;top:16px;right:16px;z-index:60;display:inline-flex;align-items:center;gap:6px;
+ padding:7px 13px 7px 9px;border-radius:999px;border:1px solid var(--line2);background:rgba(10,13,17,.86);
+ color:var(--dim);text-decoration:none;font-size:12px;font-weight:700;backdrop-filter:blur(8px)}
+ .zc-back:hover{color:#fff;border-color:var(--green)}
+ .zc-back svg{width:13px;height:13px}
+ .top{margin:54px 0 26px}
+ .k{font:700 11px/1 ui-monospace,monospace;letter-spacing:2.2px;color:var(--green);text-transform:uppercase}
+ h1{font-size:clamp(28px,4vw,40px);letter-spacing:-1px;line-height:1.15;margin:12px 0 8px}
+ h1 em{font-style:normal;color:var(--green)}
+ .lede{font-size:16px;color:#b9c2ce;max-width:760px;margin:0}
+ h2{font-size:20px;letter-spacing:-.3px;margin:44px 0 10px;padding-top:8px}
+ h2 .n{font:700 11px/1 ui-monospace,monospace;color:var(--green);margin-right:9px;letter-spacing:1.5px}
+ p{color:#c3ccd8;margin:0 0 12px}
+ .mut{color:var(--dim2)}
+ .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:#c9ffe9;word-break:break-all}
+ .grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin:14px 0}
+ .card{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--card)}
+ .card h3{margin:0 0 8px;font-size:14.5px;letter-spacing:-.1px}
+ .card.yes{border-color:rgba(63,224,176,.35)}
+ .card.no{border-color:rgba(224,106,106,.35)}
+ .card ul{margin:8px 0 0;padding-left:18px}
+ .card li{margin:5px 0;color:#bcc6d2;font-size:13.5px}
+ table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+ th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+ th{color:var(--dim);font-weight:600;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase}
+ td.mono{font-family:ui-monospace,monospace;font-size:12px;color:#c9ffe9}
+ .tag{display:inline-block;font:700 10px/1 ui-monospace,monospace;padding:3px 7px;border-radius:5px;
+ letter-spacing:.5px;vertical-align:1px}
+ .tag.asm{color:var(--amber);border:1px solid rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+ .tag.der{color:var(--green);border:1px solid rgba(63,224,176,.4);background:rgba(0,196,140,.1)}
+ .tag.gap{color:var(--red);border:1px solid rgba(224,106,106,.4);background:rgba(224,106,106,.08)}
+ .note{border-left:2px solid var(--green);padding:10px 14px;background:rgba(0,196,140,.06);
+ border-radius:0 8px 8px 0;color:#bcc6d2;font-size:13.5px;margin:16px 0}
+ .note.warn{border-left-color:var(--amber);background:rgba(224,162,78,.06)}
+ .flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0;font-size:12.5px}
+ .flow span.pill{border:1px solid var(--line2);border-radius:8px;padding:7px 11px;background:var(--card);
+ font-family:ui-monospace,monospace;color:#c9ffe9}
+ .flow span.arrow{color:var(--dim2)}
+ a{color:var(--green)}
+ .foot{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim2);font-size:12.5px}
+ .langpill{position:fixed;left:16px;bottom:16px;z-index:60;font:700 12px/1 -apple-system,sans-serif;
+ padding:8px 14px;border-radius:999px;border:1px solid var(--line2);background:rgba(10,13,17,.86);
+ color:var(--dim);text-decoration:none;backdrop-filter:blur(8px)}
+ @media (max-width:640px){.wrap{padding:0 18px}.top{margin-top:64px}}
+</style>
+<!-- polish -->
+<link rel="icon" type="image/png" sizes="180x180" href="/media/icon-180.png">
+<meta name="twitter:card" content="summary_large_image">
+<style id="prefers-reduced-motion">@media (prefers-reduced-motion: reduce){
+ *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
+ transition-duration:.001ms!important;scroll-behavior:auto!important}
+ video[autoplay]{animation:none!important}
+}</style>
+<style>.rule-en{display:none}</style>
+<!-- seo:begin -->
+<link rel="canonical" href="https://www.coffeejev.space/eudr/en/">
+<link rel="alternate" hreflang="zh-CN" href="https://www.coffeejev.space/eudr/">
+<link rel="alternate" hreflang="en" href="https://www.coffeejev.space/eudr/en/">
+<link rel="alternate" hreflang="x-default" href="https://www.coffeejev.space/eudr/">
+<!-- seo:end -->
+</head>
+<body>
+<a class="zc-back" href="../../index.html" title="title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="wrap">
+
+ <div class="top">
+ <div class="k">EUDR · export compliance gate</div>
+ <h1>A container of coffee must prove <em>it is not from deforested land</em></h1>
+ <p class="lede">EUDR does not ask for a handsome ESG report; it asks for an evidence chain that lands on coordinates. Our part is narrow: link batches, plots and the ledger into recomputable release material. Our non-part is just as explicit: we do not decide deforestation and we do not issue the due-diligence statement.</p>
+ </div>
+
+ <div class="note">
+ <b>Draw the boundary first.</b> This page describes a product design, not a live service. At the time of writing the verifier is not contracted, there is no plot-data interface, and the regulatory timetable is still moving. Every price and ratio here is a <b>design anchor</b>, pending measurement and legal review.
+ </div>
+
+ <h2><span class="n">01</span> The five things the regulation asks</h2>
+ <table>
+ <thead><tr><th>Requirement</th><th>What it means</th><th>Who can provide it</th></tr></thead>
+ <tbody>
+ <tr><td><b>Scope</b></td><td>Coffee (CN 0901) is in EUDR Annex I, including roasted and decaffeinated derivatives</td><td>the regulation itself</td></tr>
+ <tr><td><b>Plot coordinates</b></td><td>every plot needs geographic coordinates; above 4 hectares a polygon is required (at least 6 decimal places)</td><td>grower / cooperative</td></tr>
+ <tr><td><b>Deforestation-free</b></td><td>no deforestation or forest degradation after 2020-12-31</td><td>satellite imagery + the operator's due diligence</td></tr>
+ <tr><td><b>Legal production</b></td><td>tenure, labour, tax and environmental permits under local law</td><td>grower + local counsel</td></tr>
+ <tr><td><b>Due diligence statement (DDS)</b></td><td>filed in the EU system, receiving a reference number that travels with the goods</td><td>the EU operator (importer)</td></tr>
+ </tbody>
+ </table>
+ <p class="mut">Timetable: under the Commission's late-2024 postponement, large operators from 2025-12-30 and SMEs from 2026-06-30; simplification and further delay are still under discussion. The EUR-Lex text governs; this page does not restate dates.</p>
+
+ <h2><span class="n">02</span> What we do, and what we do not</h2>
+ <div class="grid2">
+ <div class="card yes">
+ <h3>What we deliver (existing capability, one layer of packaging)</h3>
+ <ul>
+ <li><b>Batch-to-plot binding</b>: the <span class="mono">plot_id</span> and its polygon go into the batch manifest and are hashed with the label</li>
+ <li><b>An immutable transport chain</b>: batch id → container id → bill of lading, each hop written to the hash-chained ledger</li>
+ <li><b>Release evidence pack</b>: one per container, holding plot coordinates, the batch ledger digest, the PCF label and the review record</li>
+ <li><b>Public verification</b>: anyone can recompute it from the container id and the first 12 hash digits in a browser, without our servers</li>
+ <li><b>Field mapping aligned to the DDS</b>: our fields are mapped to the keys an importer needs when filing, so nothing is typed twice</li>
+ </ul>
+ </div>
+ <div class="card no">
+ <h3>What we do not do (the parts most easily misread)</h3>
+ <ul>
+ <li><b>We do not decide deforestation</b>: the deforestation-free conclusion rests on the operator's due diligence and satellite evidence; we only fix the evidence in place</li>
+ <li><b>We do not issue the DDS</b>: the DDS is the EU importer's legal responsibility, not the supplier's</li>
+ <li><b>We do not stand in for certification</b>: no accreditation body has certified us, and we do not claim equivalence with EUDR compliance</li>
+ <li><b>We do not survey plots</b>: coordinates come from the grower or cooperative; we validate format and consistency, we do not produce them</li>
+ <li><b>We do not guarantee customs clearance</b>: the evidence chain lowers the risk of refusal; it does not displace the authority's judgement</li>
+ </ul>
+ </div>
+ </div>
+
+ <h2><span class="n">03</span> The data model: a chain that can land</h2>
+ <div class="flow">
+ <span class="pill">plot_id + polygon</span><span class="arrow">→</span>
+ <span class="pill">batch_id</span><span class="arrow">→</span>
+ <span class="pill">harvest window</span><span class="arrow">→</span>
+ <span class="pill">container_id</span><span class="arrow">→</span>
+ <span class="pill">DDS ref</span>
+ </div>
+ <p>Each hop takes the previous hash as input, the same <span class="mono">fnv(prev ‖ canonical(payload))</span> used by the existing label chain. The only difference is three extra fields in the payload:</p>
+ <table>
+ <thead><tr><th>Field</th><th>Source</th><th>Who may change it</th></tr></thead>
+ <tbody>
+ <tr><td class="mono">plot_polygon</td><td>provided by the grower (GeoJSON, WGS84, at least 6 decimal places)</td><td>immutable; a change ships a new version and splits the batch</td></tr>
+ <tr><td class="mono">container_id / B/L</td><td>the carrier's bill of lading</td><td>immutable; one container, one hash</td></tr>
+ <tr><td class="mono">dds_ref</td><td>obtained by the importer in the EU system</td><td>may be filled in once, then frozen</td></tr>
+ </tbody>
+ </table>
+ <div class="note warn">
+ <b>Known gaps — written here rather than hidden.</b> (1) there is no plot-data interface yet; <span class="mono">plot_polygon</span> exists only in the design; (2) no satellite baseline is connected, so forest cover at 2020-12-31 cannot be checked automatically; (3) the four legality document classes need item-by-item review by local counsel, and we only archive and hash them. Until those three are solved, this page is an interface design.
+ </div>
+
+ <h2><span class="n">04</span> Product shape and price anchors</h2>
+ <table>
+ <thead><tr><th>Deliverable</th><th>content</th><th>Price anchor</th><th>Type</th></tr></thead>
+ <tbody>
+ <tr><td><b>Container-level release evidence pack</b></td><td>plot coordinates + batch ledger digest + PCF label + review record</td><td>0.2–0.5% of cargo value, or ¥3,000–8,000 per container</td><td><span class="tag der">derived</span></td></tr>
+ <tr><td><b>Batch compliance file</b></td><td>several containers of one batch, for the annual audit</td><td>¥8,000–15,000 / quarter</td><td><span class="tag asm">assumption</span></td></tr>
+ <tr><td><b>DDS field mapping</b></td><td>our fields mapped to the keys the importer's DDS needs</td><td>included in the evidence pack</td><td><span class="tag der">derived</span></td></tr>
+ <tr><td><b>Public verification</b></td><td>anyone can recompute it, no account needed</td><td>free</td><td><span class="tag der">derived</span></td></tr>
+ </tbody>
+ </table>
+ <p>Why per container and not per batch: EUDR enforcement acts on the <b>cargo</b>, and clearance happens at container level. Per-batch billing would split one container into a dozen billing points and add friction. This is the same conclusion both the site review and the pricing audit reached: <b>the fee has to follow the cargo</b>.</p>
+
+ <h2><span class="n">05</span> Why this sells before the carbon label does</h2>
+ <div class="grid2">
+ <div class="card">
+ <h3>The need is binary, not a premium</h3>
+ <p>A carbon label sells a better price; EUDR sells the right to enter. The first can be postponed, the second cannot.</p>
+ </div>
+ <div class="card">
+ <h3>The payer is the importer, not the grower</h3>
+ <p>Without a DDS the importer cannot release the goods; it is a compliance cost, spread across cargo value. The grower only supplies coordinates.</p>
+ </div>
+ <div class="card">
+ <h3>It reuses the ledger; no new system</h3>
+ <p>Batch lineage, the hash chain and the metering record already run; the only additions are plot coordinates and the container hop.</p>
+ </div>
+ <div class="card">
+ <h3>It bundles with the carbon label</h3>
+ <p>One container, one evidence pack: it answers both whether the goods are compliant and what their footprint is. Collect once, bill twice.</p>
+ </div>
+ </div>
+
+ <h2><span class="n">06</span> Risks and non-promises</h2>
+ <table>
+ <thead><tr><th>risk</th><th>Description</th><th>Our handling</th></tr></thead>
+ <tbody>
+ <tr><td><b>The timetable moves</b></td><td>application has already been postponed once; simplification or further delay is possible</td><td>this page does not restate dates, and the design does not bind itself to one</td></tr>
+ <tr><td><b>Plot data is unavailable</b></td><td>smallholders have no polygons, and cooperatives often do not either</td><td>start with the batches that have coordinates; mark the rest incomplete rather than pretending coverage</td></tr>
+ <tr><td><b>The satellite baseline is third-party</b></td><td>a deforestation finding needs historical forest-cover data</td><td>we do not build it; we connect a ready source and state its origin and date in the pack</td></tr>
+ <tr><td><b>The liability boundary gets misread</b></td><td>a client may believe we guarantee compliance</td><td>contract and page both say it: an evidence provider, not a compliance arbiter</td></tr>
+ <tr><td><b>Billing-basis disputes</b></td><td>cargo value moves with the market</td><td>the contract fixes "tonnage × unit price" or a flat container fee, never a single cargo-value total</td></tr>
+ </tbody>
+ </table>
+
+ <h2><span class="n">07</span> How it relates to the rest of the site</h2>
+ <p>The EUDR page is not a new system; it is the export edition of three things that already exist:</p>
+ <table>
+ <thead><tr><th>Existing</th><th>Its role in EUDR</th></tr></thead>
+ <tbody>
+ <tr><td><a href="../../carbon/index.html">Carbon</a> · batch ledger and functional unit</td><td>supplies the structured record of what the batch is and what it emits</td></tr>
+ <tr><td><a href="../../method/index.html">Method</a> CJV-MTH-1.0 · hashes and versions</td><td>supplies the immutable chain and version governance the pack reuses</td></tr>
+ <tr><td><a href="../../commercial/index.html">Pricing</a> · evidence grading and anti-arbitrage</td><td>supplies the billing basis and the one-certificate-one-cargo uniqueness check</td></tr>
+ <tr><td><a href="../../v/">Label verification</a> · public recomputation</td><td>the container pack's verification entry reuses the same in-browser recomputation</td></tr>
+ </tbody>
+ </table>
+
+ <div class="note">
+ <b>In one line.</b> EUDR does not lack reports; it lacks a way for a third party to recompute one container's coordinates, batch and transport record. That is exactly what this ledger already does — swap carbon for plots and container ids and the structure holds.
+ </div>
+
+ <div class="foot">
+ This page is a product design note, not legal advice or a compliance commitment. The application and interpretation of EUDR are governed by the official EUR-Lex text and by the competent authorities.<br>
+ <a href="../../diligence/">Due diligence pack →</a> · <a href="../../commercial/index.html">Commercial terms and pricing →</a> · <a href="../../index.html">Back to the home page</a>
+ </div>
+</div>
+</body>
+</html>

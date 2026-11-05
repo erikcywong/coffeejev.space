@@ -394,6 +394,15 @@ textarea{resize:vertical;line-height:1.6}
   .toc .b span{font-size:12.5px;color:var(--dim);line-height:1.55}
 </style>
 
+<!-- polish -->
+<link rel="icon" type="image/png" sizes="180x180" href="/media/icon-180.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- seo:begin -->
+<link rel="canonical" href="https://www.coffeejev.space/spec/kpi.html">
+<link rel="alternate" hreflang="zh-CN" href="https://www.coffeejev.space/spec/kpi.html">
+<link rel="alternate" hreflang="en" href="https://www.coffeejev.space/spec/en/kpi.html">
+<link rel="alternate" hreflang="x-default" href="https://www.coffeejev.space/spec/kpi.html">
+<!-- seo:end -->
 </head>
 <body>
 <div class="app">
@@ -443,6 +452,14 @@ textarea{resize:vertical;line-height:1.6}
     <div class="zh">准确率不是目标；<b>成本加权净收益</b>才是。下面的计算器可调，算式全透明</div>
     <p>气雾栽培的成本结构和土培完全不同：<b>电是最大变动成本</b>，人工巡检占比很小，而一次整槽污染损失极大。所以判断层的价值不只在「判得准」，还在「敢于为了省电而不开雾」。</p>
   </div>
+    <div class="note" id="cost-basis" style="margin:14px 0 0">
+      <b>三个成本口径，不要混用。</b>
+      ① <b>端侧边际成本</b>（&lt; $0.001/次）—— 设备已在跑时多算一次的电与算力，用来判断「值不值得每小时多判一次」；
+      ② <b>单次决策全寿命成本</b>（8.1 的公式：一次性投入/3 + 年运维 + 复核人工 ÷ 年决策数）—— 用来定价与排产能；
+      ③ <b>年现金运维</b>（$4,800/场/年）—— 用来算回收期，不含设备摊销。
+      下方计算器统一以<b>美元</b>计（1 USD ≈ ¥7.18）；硬件的<b>人民币</b>原价见碳页 §5.2（edge 盒 ¥18,000、全套 ¥78,000）。
+    </div>
+    
 
   <h3 class="sub">8.1 KPI 分层 <span class="mut">前四个是业务指标，后四个是系统指标；都标了基线来源</span></h3>
   <div class="tblscroll">
@@ -472,8 +489,8 @@ textarea{resize:vertical;line-height:1.6}
       <div class="field"><label>目标污染损失率（%）</label><input type="number" id="e-c1" value="4" step="0.5"></div>
       <div class="field"><label>基线移栽成活率（%）</label><input type="number" id="e-s0" value="72" step="1"></div>
       <div class="field"><label>目标移栽成活率（%）</label><input type="number" id="e-s1" value="84" step="1"></div>
-      <div class="field"><label>一次性投入（设备 + 集成）</label><input type="number" id="e-capex" value="18000" step="1000"></div>
-      <div class="field"><label>年运维（云 + 复核人力 + 现场维护）</label><input type="number" id="e-opex" value="4800" step="400"></div>
+      <div class="field"><label>一次性投入（$ · 设备 + 集成；edge 盒 ¥18,000 ÷ 7.18 = $2,507）</label><input type="number" id="e-capex" value="2500" step="100"></div>
+      <div class="field"><label>年运维（$ · 云 + 复核人力 + 现场维护）</label><input type="number" id="e-opex" value="4800" step="400"></div>
       <div class="field"><label>日均决策量（次）</label><input type="number" id="e-d" value="800" step="50"></div>
     </div>
     <div>
