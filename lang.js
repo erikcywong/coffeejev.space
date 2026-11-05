@@ -17,7 +17,8 @@
   // which pages have an English twin
   var EN_READY = {
     spec: '*',
-    method: '*'
+    method: '*',
+    carbon: ['index.html', 'why.html', 'risk.html']
   };
 
   var p = location.pathname;

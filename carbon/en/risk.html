@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>风险与合规：12 条会让这套东西变成负债的路径 · 碳资产 · CoffeeJeV</title>
+<meta name="description" content="碳资产 — 风险与合规：12 条会让这套东西变成负债的路径">
+<style>
+:root{
+ --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
+ --line:#232931; --line2:#313945;
+ --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+ --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
+ --amber:#e0a24e; --amber-dk:rgba(224,162,78,.12);
+ --red:#ff5d6e; --cyan:#3b9ef7; --violet:#9d7bff;
+ --r:14px; --r2:11px;
+ --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+a{color:#8ec7ff;text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(0,196,140,.28)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0b0d10}
+::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#3a434f}
+b,strong{font-weight:700;color:#fff}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;color:#cfe0ee;overflow-wrap:anywhere}
+
+/* ---------- 布局 ---------- */
+.app{display:grid;grid-template-columns:258px minmax(0,1fr)}
+.nav{position:sticky;top:0;height:100vh;padding:18px 14px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;background:linear-gradient(180deg,#0a0c0f,#08090b 60%)}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 16px}
+.brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,196,140,.05) inset}
+.brand .mark svg{width:22px;height:22px}
+.brand .txt b{display:block;font-size:15.5px;letter-spacing:.2px;line-height:1.25}
+.brand .txt span{display:block;font-size:10.5px;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;font-family:var(--mono)}
+.navlabel{font-size:10.5px;letter-spacing:1.3px;color:var(--dim2);text-transform:uppercase;padding:10px 10px 6px;font-family:var(--mono)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;color:var(--dim);font-size:13.5px;border:1px solid transparent;transition:.15s}
+.navitem:hover{background:rgba(255,255,255,.045);color:var(--tx);text-decoration:none}
+.navitem .n{font-family:var(--mono);font-size:11px;color:var(--dim2);width:16px;flex-shrink:0}
+.navitem.active{background:rgba(0,196,140,.1);border-color:rgba(0,196,140,.28);color:#fff;font-weight:600}
+.navitem.active .n{color:var(--green)}
+.navfoot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--dim2);line-height:1.7}
+.navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-right:6px;box-shadow:0 0 8px var(--amber)}
+main{min-width:0}
+.wrap{max-width:1200px;padding:0 48px 0 44px}
+
+/* ---------- 页首 ---------- */
+.hero{padding:52px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -10% auto -10%;height:520px;background:
+ radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.15),transparent 62%),
+ radial-gradient(620px 300px at 92% -20%,rgba(157,123,255,.13),transparent 62%),
+ radial-gradient(520px 260px at 55% 10%,rgba(224,162,78,.08),transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:16px}
+.eyebrow .sep{color:var(--dim2)}
+.eyebrow .mut{color:var(--dim)}
+h1.title{font-size:clamp(29px,4.4vw,48px);line-height:1.12;letter-spacing:-1.2px;font-weight:850;margin-bottom:10px}
+h1.title em{font-style:normal;background:linear-gradient(96deg,#00c48c 8%,#7fe0b6 46%,#9d7bff 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .zh{font-size:clamp(15px,2.1vw,20px);color:var(--dim);font-weight:600;letter-spacing:.4px;margin-bottom:18px}
+.lede{font-size:16px;color:#c3cbd6;max-width:78ch;line-height:1.78}
+.lede b{color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
+.chip .k{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase}
+.chip.g{border-color:rgba(0,196,140,.32);background:rgba(0,196,140,.07);color:#a9f3d8}
+.chip.a{border-color:rgba(224,162,78,.32);background:rgba(224,162,78,.07);color:#f0d3a5}
+.chip.v{border-color:rgba(157,123,255,.32);background:rgba(157,123,255,.07);color:#cfc0ff}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:10px;margin-top:28px}
+.tile{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:13px;padding:13px 14px}
+.tile .k{font-size:11.5px;color:var(--dim);letter-spacing:.3px}
+.tile .v{font-size:23px;font-weight:800;letter-spacing:-.6px;margin-top:3px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:12px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:2px}
+.tile .s{font-size:11px;color:var(--dim2);margin-top:2px}
+
+/* ---------- 区块 ---------- */
+.sec{padding:54px 0 20px;border-top:1px solid var(--line);scroll-margin-top:10px}
+.sechead{margin-bottom:24px}
+.sechead .num{font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:2px;margin-bottom:9px}
+.sechead h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;line-height:1.2;font-weight:800}
+.sechead .zh{font-size:14px;color:var(--dim);font-weight:600;margin-top:5px;letter-spacing:.5px}
+.sechead p{margin-top:13px;color:#b9c2ce;max-width:92ch;font-size:14.6px;line-height:1.78}
+h3.sub{font-size:16.5px;font-weight:750;margin:28px 0 12px;letter-spacing:-.2px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+h3.sub::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--green);display:inline-block}
+h3.sub .mut{font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:0;font-family:var(--mono)}
+p.body{font-size:14.4px;color:#bcc5d0;line-height:1.82;margin:10px 0;max-width:96ch}
+p.body b{color:#fff}
+p.body .m{font-family:var(--mono);font-size:13px;color:#d6e6f2}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:13px}
+.grid2b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+@media (max-width:900px){.grid2b{grid-template-columns:1fr}}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:17px 18px 15px}
+.card h4{font-size:14.8px;font-weight:750;margin-bottom:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.6px;color:#b4bdc9;line-height:1.7}
+.card p+p{margin-top:7px}
+.card.note{border-left:2px solid var(--amber);background:linear-gradient(90deg,rgba(224,162,78,.07),transparent 55%)}
+.card.good{border-left:2px solid var(--green);background:linear-gradient(90deg,rgba(0,196,140,.07),transparent 55%)}
+.card.bad{border-left:2px solid var(--red);background:linear-gradient(90deg,rgba(255,93,110,.07),transparent 55%)}
+.card.vio{border-left:2px solid var(--violet);background:linear-gradient(90deg,rgba(157,123,255,.08),transparent 55%)}
+.card .cl{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;border:1px solid;white-space:nowrap}
+.pill.ok{color:var(--green2);border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.1)}
+.pill.warn{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.pill.info{color:#8ec7ff;border-color:rgba(59,158,247,.45);background:rgba(59,158,247,.1)}
+.pill.gray{color:var(--dim);border-color:var(--line2);background:rgba(255,255,255,.03)}
+.pill.vio{color:#c0adff;border-color:rgba(157,123,255,.45);background:rgba(157,123,255,.12)}
+.pill.red{color:#ff9aa4;border-color:rgba(255,93,110,.45);background:rgba(255,93,110,.1)}
+
+.tbc{display:inline-block;font-family:var(--mono);font-size:10px;color:#ffbe72;border:1px solid rgba(224,162,78,.45);background:rgba(224,162,78,.1);border-radius:4px;padding:0 4px;letter-spacing:.3px;vertical-align:1px;white-space:nowrap}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;border-radius:4px;padding:0 4px;letter-spacing:.3px;white-space:nowrap;vertical-align:1px;border:1px solid}
+.tag.ari{color:#9fe8d0;border-color:rgba(0,196,140,.4);background:rgba(0,196,140,.1)}
+.tag.asm{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.tag.law{color:#c0adff;border-color:rgba(157,123,255,.45);background:rgba(157,123,255,.12)}
+
+/* ---------- 表格 ---------- */
+.tblscroll{overflow-x:auto;border-radius:var(--r);max-width:100%}
+.tblscroll:has(thead th:nth-child(6)) .tbl{min-width:660px}
+.tblscroll:has(thead th:nth-child(7)) .tbl{min-width:760px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.9px;margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.tbl th{background:rgba(255,255,255,.035);text-align:left;padding:9px 11px;font-size:11.2px;letter-spacing:.5px;color:var(--dim);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 11px;border-bottom:1px solid rgba(35,41,49,.75);vertical-align:top;color:#bcc5d0;line-height:1.55}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.022)}
+.tbl td b{color:#fff}
+.tbl .mono,.tbl code{font-size:11.2px}
+.tbl td code{white-space:nowrap;overflow-wrap:normal}
+.tbl .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tr.grp td{background:rgba(0,196,140,.055);color:#a9f3d8;font-weight:700;font-size:11.5px;letter-spacing:.6px;font-family:var(--mono);padding:7px 11px}
+.tbl tr.out td{background:rgba(255,93,110,.045)}
+.tbl tfoot td{background:rgba(255,255,255,.04);border-top:1px solid var(--line2);font-weight:700;color:#fff}
+.tbl tfoot tr.total td{background:rgba(0,196,140,.1);color:#c9ffe9;font-size:13.4px;border-top:1px solid rgba(0,196,140,.35)}
+.tbl tfoot tr.sub td{background:rgba(255,255,255,.035);color:#dfe6ee}
+.tbl.widem{min-width:640px}
+
+/* ---------- 代码 / JSON / 公式 ---------- */
+.code{background:#0a0d11;border:1px solid var(--line2);border-radius:11px;overflow:hidden;margin:10px 0}
+.code .ch2{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px;flex-wrap:wrap;gap:6px}
+.code pre{margin:0;padding:11px 13px;overflow-x:auto;font-family:var(--mono);font-size:11.8px;line-height:1.72;color:#c9d4e0;white-space:pre}
+.formula{background:linear-gradient(180deg,rgba(0,196,140,.07),rgba(0,196,140,.015));border:1px solid rgba(0,196,140,.24);border-radius:12px;padding:15px 16px;font-family:var(--mono);font-size:12.4px;line-height:1.9;color:#cfe0ee;overflow-x:auto;white-space:pre}
+.formula b{color:#a9f3d8}
+.formula .c{color:var(--dim2)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:12.8px}
+.kv dt{color:var(--dim2);font-family:var(--mono);font-size:11.4px;padding-top:2px;white-space:nowrap}
+.kv dd{color:#c0c9d5}
+.json{background:#0a0d11;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.json .jh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.4px;flex-wrap:wrap}
+.json pre{margin:0;padding:10px 12px;overflow-x:auto;font-family:var(--mono);font-size:11.4px;line-height:1.62;color:#c9d4e0}
+.json pre .s{color:#8fd8b8}
+.json pre .n{color:#e8c98f}
+.json pre .k{color:#a8c7ff}
+
+/* ---------- SVG 图 ---------- */
+.diagram{background:linear-gradient(180deg,#0b0d11,#08090b);border:1px solid var(--line);border-radius:16px;padding:10px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto}
+.diagram.wide svg{min-width:800px}
+.caption{font-size:11.8px;color:var(--dim2);margin-top:9px;line-height:1.7}
+.caption b{color:var(--dim)}
+
+/* ---------- 碳标签样张 ---------- */
+.paper{position:relative;background:linear-gradient(168deg,#f7f4ec 0%,#efeade 58%,#e8e2d3 100%);border:1px solid #d6cfbd;border-radius:12px;padding:18px 18px 15px;color:#15191e;box-shadow:0 14px 34px rgba(0,0,0,.45);font-size:12.4px;line-height:1.5}
+.paper .phead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1.5px solid #15191e;padding-bottom:8px}
+.paper .brandline{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:#3c434c}
+.paper .ptitle{font-size:12.6px;font-weight:800;letter-spacing:.2px;margin-top:2px;color:#101418}
+.paper .pnum{text-align:right;font-family:var(--mono);font-size:9.5px;color:#4a515a;line-height:1.5}
+.paper .big{display:flex;align-items:baseline;gap:8px;margin:11px 0 2px}
+.paper .big .v{font-family:var(--mono);font-size:31px;font-weight:800;letter-spacing:-1.4px;color:#0d1216;font-variant-numeric:tabular-nums}
+.paper .big .u{font-family:var(--mono);font-size:11.5px;color:#4a515a}
+.paper .big .d{font-size:10.5px;color:#1f6b4f;background:rgba(0,150,105,.12);border:1px solid rgba(0,150,105,.35);border-radius:999px;padding:1px 7px;font-weight:700;white-space:nowrap}
+.paper .psub{font-size:10.6px;color:#4a515a;margin-bottom:10px}
+.paper .bar{display:flex;height:9px;border-radius:3px;overflow:hidden;margin:8px 0 7px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.paper .bar i{display:block;height:100%}
+.paper .bleg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px;font-family:var(--mono);font-size:9.4px;color:#3a4149}
+.paper .bleg span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.paper .bleg em{font-style:normal;color:#15191e;font-weight:700}
+.paper .dotc{width:7px;height:7px;border-radius:2px;flex-shrink:0;display:inline-block}
+.paper .pfoot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;border-top:1px dashed #b9b1a0;margin-top:11px;padding-top:9px}
+.paper .fields{font-family:var(--mono);font-size:9.3px;line-height:1.62;color:#383f47;min-width:0}
+.paper .fields b{color:#101418;font-weight:700}
+.paper .hash{word-break:break-all;font-size:8.6px;color:#4a515a;line-height:1.45;letter-spacing:.2px}
+.paper .qr{flex-shrink:0;text-align:center}
+.paper .qr svg{display:block;width:96px;height:96px;background:#fff;border-radius:3px}
+.paper .qr span{display:block;font-family:var(--mono);font-size:7.6px;color:#4a515a;margin-top:3px;letter-spacing:.2px}
+.paper .pnote{font-size:8.8px;color:#5b6169;margin-top:8px;line-height:1.5;border-top:1px solid rgba(0,0,0,.1);padding-top:6px}
+
+/* ---------- 注意条 ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:11px}
+.note-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px 13px;border-top:2px solid rgba(224,162,78,.55)}
+.note-card.r{border-top-color:rgba(255,93,110,.6)}
+.note-card h4{font-size:14.2px;font-weight:750;margin-bottom:7px;display:flex;gap:8px;align-items:baseline;line-height:1.45;flex-wrap:wrap}
+.note-card h4 .ni{font-family:var(--mono);font-size:10.5px;color:var(--amber);flex-shrink:0}
+.note-card h4 .ni.r{color:var(--red)}
+.note-card p{font-size:13px;color:#b4bdc9;line-height:1.68}
+.note-card p+p{margin-top:6px}
+.note-card .fix{color:#9fe8d0}
+.note-card .fix::before{content:"做法 → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2)}
+.note-card .fix.d::before{content:"风险敞口 → ";color:#ffbe72}
+
+.list{list-style:none;display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.list li{font-size:13.2px;color:#b4bdc9;padding-left:14px;position:relative;line-height:1.65}
+.list li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--line2)}
+.list li b{color:#e9ecf1;font-weight:650}
+.list li .m{font-family:var(--mono);font-size:12.2px;color:#9fe8d0}
+.nl{list-style:none;counter-reset:nl;display:flex;flex-direction:column;gap:7px;margin:8px 0}
+.nl li{font-size:13.2px;color:#b4bdc9;line-height:1.68;padding-left:24px;position:relative}
+.nl li::before{counter-increment:nl;content:counter(nl);position:absolute;left:0;top:1px;width:17px;height:17px;border-radius:5px;background:rgba(0,196,140,.12);border:1px solid rgba(0,196,140,.3);color:#9fe8d0;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.nl li b{color:#fff}
+
+/* ---------- 页脚 ---------- */
+.foot{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 56px;font-size:12.3px;color:var(--dim2);line-height:1.85}
+.foot b{color:var(--dim)}
+.foot .rule{color:#ffbe72}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1080px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .nav{position:static;height:auto;flex-direction:column;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;width:100%}
+ .navlabel,.navfoot{display:none}
+ .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;width:100%}
+ .navlist::-webkit-scrollbar{display:none}
+ .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
+ .navitem .n{display:none}
+ .brand{padding-bottom:8px}
+ .wrap{padding:0 20px}
+}
+@media (max-width:900px){
+ .grid2b{grid-template-columns:1fr}
+ .grid3{grid-template-columns:1fr}
+ .paper .bleg{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+ .wrap{padding:0 14px}
+ .hero{padding:34px 0 26px}
+ .sec{padding:40px 0 16px}
+ .tile .v{font-size:20px}
+ .json pre,.code pre,.formula{font-size:10.8px}
+ .tbl{font-size:12.2px}
+ .tbl th,.tbl td{padding:8px 9px}
+ .paper{padding:14px 13px 12px}
+ .paper .big .v{font-size:26px}
+ .paper .qr svg{width:80px;height:80px}
+}
+@media print{.nav{display:none}.app{grid-template-columns:1fr}.sec{page-break-inside:avoid}body{background:#fff;color:#111}}
+</style>
+
+<style>
+ /* --- subpage chrome (added by tools/split_docs.py) --- */
+ h1,h2,h3,h4{scroll-margin-top:90px}
+ .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
+ "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
+ .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+ .zc-back svg{width:13px;height:13px}
+ .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
+ grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
+ .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
+ .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
+ text-transform:uppercase;color:#64748b;margin-bottom:12px}
+ .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
+ text-decoration:none;color:#8d97a5;border:0}
+ .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
+ .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
+ .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
+ .zc-rail a.on b{color:#3fe0b0}
+ .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+ .zc-rail a.zc-full{color:#64748b;font-size:12px}
+ .zc-main{min-width:0}
+ .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
+ .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
+ .zc-crumb a:hover{color:#3fe0b0}
+ .zc-crumb b{color:#c9d2dd;font-weight:600}
+ .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
+ .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+ border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
+ background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+ .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+ .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
+ text-transform:uppercase;color:#64748b}
+ .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+ .zc-pager .r{align-items:flex-end;text-align:right}
+ /* paper-themed docs (trial-like) */
+ .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
+ @media (max-width:900px){
+ .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
+ .zc-rail{position:static}
+ .zc-back{top:12px;right:12px}
+ }
+</style>
+
+<style>.rule-en{display:none}</style>
+</head>
+<body>
+<a class="zc-back" href="../../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="zc-wrap">
+<aside class="zc-rail"><div class="zc-brand">Carbon · 6 sections</div><a class="" href="why.html"><b>01</b> A metered number can be audited; a number in a spreadsheet is a guess</a><a class="" href="boundary.html"><b>02</b> Boundary and functional unit: what is included, and why each exclusion holds</a><a class="" href="method.html"><b>03</b> Algorithm and factors: the formula chain, a worked batch, the hourly curve, and uncertainty</a><a class="" href="label.html"><b>04</b> The label: fields, a specimen, the JSON structure, and how anyone verifies it</a><a class="" href="points.html"><b>05</b> Points economics: the three-party ledger, and the arithmetic for 240,000 plantlets a year</a><a class="on" href="risk.html"><b>06</b> Risk and compliance: twelve routes by which this design becomes a liability</a><div class="zc-rule"></div><a class="zc-full" href="full.html">Read the full text →</a></aside>
+<div class="zc-main">
+<div class="zc-crumb"><a href="../../index.html">CoffeeJeV</a> · <a href="index.html">Carbon</a> · <b>Risk and compliance: twelve routes by which this design becomes a liability</b></div>
+<section class="sec" id="risk">
+ <div class="sechead">
+ <div class="num">06 / RISK &amp; COMPLIANCE</div>
+ <h2>Risk and compliance: twelve routes by which this design becomes a liability</h2>
+ <div class="zh">claims · double counting · baseline · MRV independence · data gaps · allocation · regulation</div>
+ <p>
+ This is a list of design constraints, not a disclaimer. Each item states an exposure and a control, and converts directly into a contract clause, a label-printing rule or an internal audit item.
+ </p>
+ </div>
+
+ <div class="notes">
+ <div class="note-card r">
+ <h4><span class="ni r">01</span> Never call it a carbon credit</h4>
+ <p>Points are not an offset; a buyer may not use them to claim neutrality, and they are not transferable, tradable or connected to any registry. A single appearance of credit, offset, neutral or net zero in copy, contract or sales talk misstates what the product is.</p>
+ <p class="fix d"><b>not tradable, not an offset, redeemable against our products only</b>; externally they are "low-carbon points" only. Contract, label and SaaS copy must use the same wording, reviewed quarterly.</p>
+ </div>
+
+ <div class="note-card r">
+ <h4><span class="ni r">02</span> Double counting</h4>
+ <p>Three kinds: (1) one batch declared by two growers; (2) one device's data counted into two batches; (3) nursery-stage abatement claimed again downstream as the buyer's own reduction. The third is the hardest to see.</p>
+ <p class="fix d">The batch id is globally unique and bound to the device serial; one device belongs to one batch per period; and the label and contract state that the reduction has been claimed upstream and may not be claimed again downstream.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">03</span> Greenwashing</h4>
+ <p>“−52%” holds only against the baseline this method defines. “Half the emissions of conventional growing”, “eco seedling”, “zero-carbon seedling” all overstep; “carbon neutral” is impossible without an offset mechanism.</p>
+ <p class="fix d">Every public number carries three qualifiers: <b>boundary (cradle-to-gate), baseline (0.42, range 0.34–0.52) and version (AR6 / factor-table version)</b>. Missing any one, it is not approved for publication.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">04</span> The baseline is self-declared</h4>
+ <p>0.42 (0.34–0.52) comes from literature and industry interviews, <b>not from a control plot in the same region with the same variety</b>. It contributes most of the uncertainty in the avoided-emissions figure (±42%) and sits outside our own metering.</p>
+ <p class="fix d">Build two or three control plots soon (conventional soil nursery, same variety and season, metering electricity, nutrient, substrate and transport); until those data exist, publish the baseline as a range rather than a point, and mark the label “baseline: self-declared, 0.34–0.52”.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">05</span> MRV independence</h4>
+ <p>We supply the algorithm and the ledger and would also collect the verification fee — a structural conflict. Self-verification plus self-billing is exactly what a buyer's due diligence questions, and it can disqualify the body outright.</p>
+ <p class="fix d">Verification must come from a third party; the platform only does <b>data preparation</b>; the verifier receives a read-only replica and signed material, and does not report through the business team; and the 40% of the service fee the platform retains must be demonstrably a data-processing fee, not payment for a conclusion.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">06</span> Data gaps and fallback estimates</h4>
+ <p>Gateways drop offline, meters get replaced, batches cross month-ends, sensors drift — all of it loses intervals. Falling back to an estimate drops an A straight to a C, and must be disclosed: never filled in silently.</p>
+ <p class="fix d">Missing &lt;5%: impute the median of the same time band over the previous seven days on the same device, flag it <b>grade B</b>; &gt;5% or a key line item missing: <b>grade C</b>, apply a 0.8 multiplier, and in the label record <code>estimation</code> state the method and the coverage. Above 20% missing, no label is issued.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">07</span> Allocation between nursery and green-fruit stages</h4>
+ <p>The two stages share equipment and people. Pushing all nursery emissions onto the nursery and keeping all the benefit for green fruit — or the reverse — distorts the label. The allocation rule (mass, economic value or separate accounting) must be fixed in advance and disclosed.</p>
+ <p class="fix d">The rule used here: <b>the two stages are accounted and issued separately</b>, with no cross-stage allocation; shared equipment is split by machine hours (<code>kwh_total</code> attribution), while people and buildings are not allocated (declared excluded). Changing the allocation rule requires a version bump.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">08</span> Chinese regulatory context: CCER and tanpuhui <span class="tag law">pending legal review</span></h4>
+ <p>The national voluntary market (CCER) runs methodology → registration → verification → trading, and requires an approved methodology plus an accredited validator/verifier. Local voluntary schemes (tanpuhui) are mostly consumer-side and cannot enter the national market; they are used for redemption and incentives.</p>
+ <p class="fix d">This mechanism is <b>neither a CCER project nor a registered tanpuhui project</b>; it is a product footprint label plus a company's own points. Public material may not say the reduction is tradable, offsettable or part of a carbon market; whether local registration is required <b>must be confirmed with counsel and the competent authority</b>. No public methodology exists yet for coffee nurseries or aeroponics; it cannot be assumed to be developable.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">09</span> Drifting electricity-factor conventions</h4>
+ <p>Marginal versus average, provincial versus regional grid, hourly versus annual, with or without green-tariff trades — mixing these conventions makes the same kilowatt-hour differ two- to three-fold. Whether green certificates may be deducted, and how to avoid double deduction against the grid factor, must also be settled.</p>
+ <p class="fix d">The label embeds the full factor table and its version; GHG Protocol Scope 2 is disclosed both ways (location-based and market-based); where green power is purchased it is deducted with evidence retained, so we never use green power and the national average factor at once.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">10</span> Boundary drift and multi-tenant attribution</h4>
+ <p>Equipment added or removed, a greenhouse rebuilt, one gateway serving several growers, batches merged across sites — each breaks the assumption that this meter powered this batch. When the boundary moves, history stops being comparable.</p>
+ <p class="fix d">Device–greenhouse–batch binding is written into a registry (reusing <code>/api/overview</code> entities); a change requires a change order and a batch split; cross-site merges are always split rather than issued jointly.</p>
+ </div>
+
+ <div class="note-card">
+ <h4><span class="ni">11</span> Points accounting and consumer rights</h4>
+ <p>Points are a liability, not revenue. A vague redemption rate, validity period or expiry rule becomes an unfair contract term (growers as businesses need a separate set of rules).</p>
+ <p class="fix d">Every points entry is logged (issue, redeem, expire, adjust); the terms state validity and the right to change; a redemption-rate change may only apply to <b>unissued</b> batches; the provision is based on expected redemption and re-estimated each quarter.</p>
+ </div>
+
+ <div class="note-card r">
+ <h4><span class="ni r">12</span> Misclaiming biogenic carbon</h4>
+ <p>A seedling does absorb CO2 as it grows, but under ISO 14067 that is not part of the product footprint and may not offset emissions. Calling it sequestration or carbon negative is the most common claim, and the easiest to dismiss on sight.</p>
+ <p class="fix d">The boundary states explicitly that biogenic carbon is excluded and may not be offset; any material mentioning sequestration must also say that short-lived biogenic storage is not a permanent removal and sits outside this label's accounting.</p>
+ </div>
+ </div>
+
+ <h3 class="sub">6.1 Preconditions for release <span class="mut">gate to publish</span></h3>
+ <div class="tblscroll">
+ <table class="tbl">
+ <thead><tr><th style="width:180px">Gate</th><th>Status</th><th style="width:110px">Blocker</th></tr></thead>
+ <tbody>
+ <tr><td>Third-party verification (ISO 14067)</td><td><span class="pill warn">not contracted</span> select a body, agree scope and sampling plan</td><td>the label may not print VERIFIED</td></tr>
+ <tr><td>Baseline control measurement</td><td><span class="pill warn">not started</span> two or three conventional soil-nursery control plots</td><td>without it the premium story is fragile</td></tr>
+ <tr><td>Factor-table provenance fixed</td><td><span class="pill warn">design value</span> the six bands are an assumption; they need a provincial/regional published series or an authoritative database</td><td>without it, nothing may be published</td></tr>
+ <tr><td>Scope 1 maintenance ledger</td><td><span class="pill gray">gap</span> refrigerant and diesel-generator records are unstructured</td><td>the disclosure is incomplete</td></tr>
+ <tr><td>Legal opinion (CCER / tanpuhui / points terms)</td><td><span class="pill vio">to be confirmed</span></td><td>must close before release</td></tr>
+ <tr><td>Interface implementation and freeze</td><td><span class="pill info">design complete</span> four read-only endpoints, see §4.5</td><td>—</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <p class="body" style="margin-top:16px">
+ The conclusion is one sentence: <b>the value of this design is that someone else can recompute it; every risk sits in whether we actually let them</b>. Hand over the raw intervals, the factor version, the baseline range and the hash chain and it is a method; hold any one of them back and it is marketing.
+ </p>
+</section
+<div class="zc-pager"><a href="points.html"><span class="k">← Previous </span><span class="t">Points economics: the three-party ledger, and the arithmetic for 240,000 plantlets a year</span></a></div>
+</div>
+</div>
+<script>try{
+(function () {
+ /* 侧栏高亮 */
+ var items = Array.prototype.slice.call(document.querySelectorAll('.navitem'));
+ var secs = items.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+ function sync() {
+ var y = window.scrollY + 120, idx = 0;
+ for (var i = 0; i < secs.length; i++) {
+ if (secs[i] && secs[i].offsetTop <= y) idx = i;
+ }
+ items.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+ }
+ window.addEventListener('scroll', sync, { passive: true });
+ window.addEventListener('resize', sync);
+ sync();
+
+ /* 二维码占位：25×25 模块，三个定位图案 + 伪随机数据模块（仅装饰，不含真实编码） */
+ var svg = document.getElementById('qrmock');
+ if (!svg) return;
+ var NS = 'http://www.w3.org/2000/svg', N = 25, seed = 20261103;
+ function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+ function put(x, y) {
+ var r = document.createElementNS(NS, 'rect');
+ r.setAttribute('x', x); r.setAttribute('y', y);
+ r.setAttribute('width', 1); r.setAttribute('height', 1);
+ r.setAttribute('fill', '#101418');
+ svg.appendChild(r);
+ }
+ function finder(ox, oy) {
+ for (var y = 0; y < 7; y++) {
+ for (var x = 0; x < 7; x++) {
+ var edge = (x === 0 || x === 6 || y === 0 || y === 6);
+ var core = (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+ if (edge || core) put(ox + x, oy + y);
+ }
+ }
+ }
+ function inFinder(x, y) {
+ return (x < 8 && y < 8) || (x >= N - 8 && y < 8) || (x < 8 && y >= N - 8);
+ }
+ svg.innerHTML = '';
+ for (var y = 0; y < N; y++) {
+ for (var x = 0; x < N; x++) {
+ if (inFinder(x, y)) continue;
+ if ((x === 6 || y === 6) && rnd() > 0.45) put(x, y); /* 时序线 */
+ else if ((x === 8 && y % 2 === 0) || (y === 8 && x % 2 === 0)) put(x, y);
+ else if (rnd() > 0.52) put(x, y);
+ }
+ }
+ finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+})();
+}catch(e){console.warn("skip",e.message)}</script>
+<script src="/lang.js"></script>
+</body>
+</html>

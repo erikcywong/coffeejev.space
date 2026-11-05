@@ -7,38 +7,38 @@
 <meta name="description" content="content="Method — what we refuse to claim">
 <style>
 :root{
-  --bg:#08090b;
-  --card:#11141a;
-  --card2:#171b21;
-  --border:#232931;
-  --text:#e9ecf1;
-  --dim:#8d97a5;
-  --dim2:#64748b;
-  --accent:#00c48c;
-  --accent2:#3fe0b0;
-  --amber:#e0a24e;
-  --red:#ff5d6e;
-  --violet:#8b6cff;
-  --cyan:#3b9ef7;
-  --mono:ui-monospace,Consolas,"Cascadia Mono","SFMono-Regular",monospace;
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  --max:1180px;
-  --radius:8px;
+ --bg:#08090b;
+ --card:#11141a;
+ --card2:#171b21;
+ --border:#232931;
+ --text:#e9ecf1;
+ --dim:#8d97a5;
+ --dim2:#64748b;
+ --accent:#00c48c;
+ --accent2:#3fe0b0;
+ --amber:#e0a24e;
+ --red:#ff5d6e;
+ --violet:#8b6cff;
+ --cyan:#3b9ef7;
+ --mono:ui-monospace,Consolas,"Cascadia Mono","SFMono-Regular",monospace;
+ --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+ --max:1180px;
+ --radius:8px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:28px}
 body{
-  margin:0;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 78% -10%,rgba(0,196,140,.08),transparent 34rem),
-    radial-gradient(circle at 6% 22%,rgba(59,158,247,.055),transparent 30rem),
-    var(--bg);
-  font-family:var(--sans);
-  font-size:15.5px;
-  line-height:1.7;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+ margin:0;
+ color:var(--text);
+ background:
+ radial-gradient(circle at 78% -10%,rgba(0,196,140,.08),transparent 34rem),
+ radial-gradient(circle at 6% 22%,rgba(59,158,247,.055),transparent 30rem),
+ var(--bg);
+ font-family:var(--sans);
+ font-size:15.5px;
+ line-height:1.7;
+ -webkit-font-smoothing:antialiased;
+ text-rendering:optimizeLegibility;
 }
 ::selection{background:rgba(0,196,140,.28);color:#fff}
 a{color:inherit;text-decoration:none}
@@ -190,87 +190,87 @@ h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.025em}
 .footer{margin-top:34px;padding:18px 0 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;line-height:1.8;color:var(--dim2);letter-spacing:.02em}
 .footer b{font-weight:500;color:var(--dim)}
 @media (max-width:960px){
-  .page{padding:0 20px}
-  .shell{grid-template-columns:1fr;gap:22px;padding-top:24px}
-  aside{order:-1}
-  .nav{position:static;border-bottom:1px solid var(--border);padding-bottom:15px}
-  .nav-title{margin-bottom:8px}
-  .nav a{display:inline-flex;border:1px solid var(--border);border-radius:4px;padding:6px 9px;margin:0 5px 5px 0;font-size:11.5px}
-  .nav a .n{min-width:0}
-  .nav-meta{display:none}
-  .topbar-meta span:nth-child(1),.topbar-meta span:nth-child(2){display:none}
-  .audit-grid{grid-template-columns:1fr}
-  .v-grid{grid-template-columns:1fr 1fr}
-  .v-item:nth-child(3n){border-right:1px solid var(--border)}
-  .v-item:nth-child(2n){border-right:0}
+ .page{padding:0 20px}
+ .shell{grid-template-columns:1fr;gap:22px;padding-top:24px}
+ aside{order:-1}
+ .nav{position:static;border-bottom:1px solid var(--border);padding-bottom:15px}
+ .nav-title{margin-bottom:8px}
+ .nav a{display:inline-flex;border:1px solid var(--border);border-radius:4px;padding:6px 9px;margin:0 5px 5px 0;font-size:11.5px}
+ .nav a .n{min-width:0}
+ .nav-meta{display:none}
+ .topbar-meta span:nth-child(1),.topbar-meta span:nth-child(2){display:none}
+ .audit-grid{grid-template-columns:1fr}
+ .v-grid{grid-template-columns:1fr 1fr}
+ .v-item:nth-child(3n){border-right:1px solid var(--border)}
+ .v-item:nth-child(2n){border-right:0}
 }
 @media (max-width:700px){
-  h1{font-size:38px}
-  .hero-sub{font-size:14.5px}
-  .section-head{grid-template-columns:1fr;gap:7px}
-  .sec-num{padding-top:0}
-  .copy-grid,.steps,.fixed-grid,.claims{grid-template-columns:1fr}
-  .rule-card{grid-template-columns:1fr}
-  .rule-id{display:flex;align-items:center;gap:10px;border-right:0;border-bottom:1px solid var(--border);padding:11px 14px}
-  .rule-kind{margin-top:0}
-  .rule-body{padding:14px}
-  .evidence-grid{grid-template-columns:1fr}
-  .v-grid{grid-template-columns:1fr}
-  .v-item{border-right:0!important}
-  .notice{flex-direction:column;gap:4px}
-  .notice-label{padding-top:0}
-  .footer{flex-direction:column;gap:4px}
+ h1{font-size:38px}
+ .hero-sub{font-size:14.5px}
+ .section-head{grid-template-columns:1fr;gap:7px}
+ .sec-num{padding-top:0}
+ .copy-grid,.steps,.fixed-grid,.claims{grid-template-columns:1fr}
+ .rule-card{grid-template-columns:1fr}
+ .rule-id{display:flex;align-items:center;gap:10px;border-right:0;border-bottom:1px solid var(--border);padding:11px 14px}
+ .rule-kind{margin-top:0}
+ .rule-body{padding:14px}
+ .evidence-grid{grid-template-columns:1fr}
+ .v-grid{grid-template-columns:1fr}
+ .v-item{border-right:0!important}
+ .notice{flex-direction:column;gap:4px}
+ .notice-label{padding-top:0}
+ .footer{flex-direction:column;gap:4px}
 }
 @media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *{transition:none!important;animation:none!important}
+ html{scroll-behavior:auto}
+ *{transition:none!important;animation:none!important}
 }
 </style>
 
 <style>
-  /* --- subpage chrome (added by tools/split_docs.py) --- */
-  h1,h2,h3,h4{scroll-margin-top:90px}
-  .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
-    padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
-    "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
-    background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
-    backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
-  .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
-  .zc-back svg{width:13px;height:13px}
-  .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
-    grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
-  .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
-  .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
-    text-transform:uppercase;color:#64748b;margin-bottom:12px}
-  .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
-    text-decoration:none;color:#8d97a5;border:0}
-  .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
-  .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
-  .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
-  .zc-rail a.on b{color:#3fe0b0}
-  .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
-  .zc-rail a.zc-full{color:#64748b;font-size:12px}
-  .zc-main{min-width:0}
-  .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
-  .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
-  .zc-crumb a:hover{color:#3fe0b0}
-  .zc-crumb b{color:#c9d2dd;font-weight:600}
-  .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
-  .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
-    border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
-    background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
-  .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
-  .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
-    text-transform:uppercase;color:#64748b}
-  .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
-  .zc-pager .r{align-items:flex-end;text-align:right}
-  /* paper-themed docs (trial-like) */
-  .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
-  @media (max-width:900px){
-    .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
-    .zc-rail{position:static}
-    .zc-back{top:12px;right:12px}
-  }
+ /* --- subpage chrome (added by tools/split_docs.py) --- */
+ h1,h2,h3,h4{scroll-margin-top:90px}
+ .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
+ "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
+ .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+ .zc-back svg{width:13px;height:13px}
+ .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
+ grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
+ .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
+ .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
+ text-transform:uppercase;color:#64748b;margin-bottom:12px}
+ .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
+ text-decoration:none;color:#8d97a5;border:0}
+ .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
+ .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
+ .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
+ .zc-rail a.on b{color:#3fe0b0}
+ .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+ .zc-rail a.zc-full{color:#64748b;font-size:12px}
+ .zc-main{min-width:0}
+ .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
+ .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
+ .zc-crumb a:hover{color:#3fe0b0}
+ .zc-crumb b{color:#c9d2dd;font-weight:600}
+ .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
+ .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+ border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
+ background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+ .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+ .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
+ text-transform:uppercase;color:#64748b}
+ .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+ .zc-pager .r{align-items:flex-end;text-align:right}
+ /* paper-themed docs (trial-like) */
+ .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
+ @media (max-width:900px){
+ .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
+ .zc-rail{position:static}
+ .zc-back{top:12px;right:12px}
+ }
 </style>
 
 <style>.rule-en{display:none}</style>
@@ -278,51 +278,51 @@ h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.025em}
 <body>
 <a class="zc-back" href="../../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
 <div class="zc-wrap">
-<aside class="zc-rail"><div class="zc-brand">Method · 8 sections</div><a class="" href="thesis.html"><b>01</b>Why the standard is the asset</a><a class="" href="chain.html"><b>02</b>The 12-rule chain </a><a class="" href="version.html"><b>03</b>Versions and hashes </a><a class="" href="challenge.html"><b>04</b>How to challenge a rule </a><a class="" href="boundary.html"><b>05</b>Relation to external standards </a><a class="" href="fixed.html"><b>06</b>What may change, what may not </a><a class="on" href="claim.html"><b>07</b>What we refuse to claim</a><a class="" href="manifest.html"><b>08</b>Method manifest </a><div class="zc-rule"></div><a class="zc-full" href="full.html">Read the full text →</a></aside>
+<aside class="zc-rail"><div class="zc-brand">Method · 8 sections</div><a class="" href="thesis.html"><b>01</b> Why the standard is the asset</a><a class="" href="chain.html"><b>02</b> The 12-rule chain </a><a class="" href="version.html"><b>03</b> Versions and hashes </a><a class="" href="challenge.html"><b>04</b> How to challenge a rule </a><a class="" href="boundary.html"><b>05</b> Relation to external standards </a><a class="" href="fixed.html"><b>06</b> What may change, what may not </a><a class="on" href="claim.html"><b>07</b> What we refuse to claim</a><a class="" href="manifest.html"><b>08</b> Method manifest </a><div class="zc-rule"></div><a class="zc-full" href="full.html">Read the full text →</a></aside>
 <div class="zc-main">
 <div class="zc-crumb"><a href="../../index.html">CoffeeJeV</a> · <a href="index.html">Method</a> · <b>What we refuse to claim</b></div>
 <section class="section" id="claim">
-        <div class="section-head">
-          <div class="sec-num">07</div>
-          <div>
-            <p class="sec-kicker">CLAIM BOUNDARY</p>
-            <h2>What we refuse to claim</h2>
-            <p class="sec-desc">These six statements are product boundaries, not legal boilerplate. Sales material may not delete, reword or soften them.</p>
-          </div>
-        </div>
-        <div class="claims">
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 01</span>
-            <h3>Not a carbon credit</h3>
-            <p>What we issue is a carbon footprint label and a decision record built on metered energy. It is not a tradable credit and carries no additionality argument.</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 02</span>
-            <h3>Not an offset</h3>
-            <p>There is no baseline additionality, no leakage provision and no permanence arrangement, so it may not be used to offset emissions in any scope.</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 03</span>
-            <h3>Not certified</h3>
-            <p>We cite ISO 14067, PAS 2050, the GHG Protocol, ISO/IEC 17025 and ISO 19011, but no accreditation body has certified us. A certification conclusion can only be issued by an accreditation body.</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 04</span>
-            <h3>No yield prediction</h3>
-            <p>This layer outputs contamination judgement, acclimatisation readiness and nutrient-fog selection only. Yield belongs to the client's own agronomy.</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 05</span>
-            <h3>No pesticide prescription</h3>
-            <p>It outputs release, review or isolation only. It never names a pesticide, a dose or an application, and plant-protection decisions remain with qualified personnel.</p>
-          </article>
-          <article class="claim-card">
-            <span class="claim-no">REFUSE 06</span>
-            <h3>No plant-variety rights ruling</h3>
-            <p>Lineage fields exist for batch merging and traceability only, never for authenticity, ownership or infringement judgements.</p>
-          </article>
-        </div>
-      </section
+ <div class="section-head">
+ <div class="sec-num">07</div>
+ <div>
+ <p class="sec-kicker">CLAIM BOUNDARY</p>
+ <h2>What we refuse to claim</h2>
+ <p class="sec-desc">These six statements are product boundaries, not legal boilerplate. Sales material may not delete, reword or soften them.</p>
+ </div>
+ </div>
+ <div class="claims">
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 01</span>
+ <h3>Not a carbon credit</h3>
+ <p>What we issue is a carbon footprint label and a decision record built on metered energy. It is not a tradable credit and carries no additionality argument.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 02</span>
+ <h3>Not an offset</h3>
+ <p>There is no baseline additionality, no leakage provision and no permanence arrangement, so it may not be used to offset emissions in any scope.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 03</span>
+ <h3>Not certified</h3>
+ <p>We cite ISO 14067, PAS 2050, the GHG Protocol, ISO/IEC 17025 and ISO 19011, but no accreditation body has certified us. A certification conclusion can only be issued by an accreditation body.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 04</span>
+ <h3>No yield prediction</h3>
+ <p>This layer outputs contamination judgement, acclimatisation readiness and nutrient-fog selection only. Yield belongs to the client's own agronomy.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 05</span>
+ <h3>No pesticide prescription</h3>
+ <p>It outputs release, review or isolation only. It never names a pesticide, a dose or an application, and plant-protection decisions remain with qualified personnel.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 06</span>
+ <h3>No plant-variety rights ruling</h3>
+ <p>Lineage fields exist for batch merging and traceability only, never for authenticity, ownership or infringement judgements.</p>
+ </article>
+ </div>
+ </section
 <div class="zc-pager"><a href="fixed.html"><span class="k">← Previous </span><span class="t">What may change, what may not </span></a><a class="r" href="manifest.html"><span class="k">Next → </span><span class="t">Method manifest </span></a></div>
 </div>
 </div>
