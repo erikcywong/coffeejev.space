@@ -486,7 +486,7 @@ textarea{resize:vertical;line-height:1.6}
 
  <div class="gap"><div class="sev hi"></div>
  <div class="gh"><span class="gid">G05</span><h4>The sensor itself cannot be trusted, but there is no quality gate</h4><span class="pill bad">Deliverability</span></div>
- <div class="why">The EC/pH probe is covered with biofilm within a week or two; the pH electrode drifts faster in low ionic strength nutrient mist; the camera fogs and condensates. A set of decision layers that "believe all input" will be given in the week when the probe breaks <b>Very confident wrong decision</b>。</div>
+ <div class="why">The EC/pH probe is covered with biofilm within a week or two; the pH electrode drifts faster in low ionic strength nutrient mist; the camera fogs and condensates. A set of decision layers that "believe all input" will be given in the week when the probe breaks <b>Very confident wrong decision</b>.</div>
  <div class="fix">perceptual layer plus <code>sensor_health</code> (drift rate / response time / dual probe cross-check / replacement cycle), any <code>need_more_info</code> Or abstain and never use it silently.</div>
  </div>
 
@@ -498,7 +498,7 @@ textarea{resize:vertical;line-height:1.6}
 
  <div class="gap"><div class="sev mid"></div>
  <div class="gh"><span class="gid">G07</span><h4>Without golden sets and replays, changing the threshold is just gambling.</h4><span class="pill mid">Learnability</span></div>
- <div class="why">When the threshold is adjusted from 0.7 to 0.6, does it get better or worse? Without historical replay and cost-weighted confusion matrix, we can only rely on "feeling that there has been less contamination recently". The most common way to die for this type of project is <b>Can't prove that I'm getting better</b>。</div>
+ <div class="why">When the threshold is adjusted from 0.7 to 0.6, does it get better or worse? Without historical replay and cost-weighted confusion matrix, we can only rely on "feeling that there has been less contamination recently". The most common way to die for this type of project is <b>Can't prove that I'm getting better</b>.</div>
  <div class="fix"><b>Decision replay</b> (Historical Sensor + Image Rerun) + Cost Weighted Loss + <b>shadow mode</b>; Promotion threshold: net income does not decrease <b>And</b> ECE does not rise.</div>
  </div>
 
@@ -529,7 +529,7 @@ textarea{resize:vertical;line-height:1.6}
  <div class="gap"><div class="sev lo"></div>
  <div class="gh"><span class="gid">G12</span><h4>0.7 / 80 / 60 These thresholds have no source</h4><span class="pill gray">decidability</span></div>
  <div class="why">"escalate below 0.7 confidence" and "transplant at ≥80" are guesses. The same 0.7 means completely different losses at the shoot stage and before transplant. The threshold should be <b>cost structure function</b>, is not a constant.</div>
- <div class="fix">Threshold = cost ratio <code>τ_cost = C_FP /(C_FP + C_FN)</code>，<b>Then take the larger of the operating lower limit</b> <code>τ_hi = max(τ_cost, τ_min)</code>— Otherwise the pure cost solution will degenerate into "almost complete isolation"; three intervals (<b>Disposal/Review/Release</b>) instead of binary; use decision curve analysis to see net benefits.</div>
+ <div class="fix">Threshold = cost ratio <code>τ_cost = C_FP /(C_FP + C_FN)</code>, <b>Then take the larger of the operating lower limit</b> <code>τ_hi = max(τ_cost, τ_min)</code>— Otherwise the pure cost solution will degenerate into "almost complete isolation"; three intervals (<b>Disposal/Review/Release</b>) instead of binary; use decision curve analysis to see net benefits.</div>
  </div>
 
  </div>

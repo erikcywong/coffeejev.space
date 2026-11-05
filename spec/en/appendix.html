@@ -461,8 +461,8 @@ textarea{resize:vertical;line-height:1.6}
  you are <b>CoffeeJeV</b>, Coffee tissue culture and aerosol cultivation <b>decision layer</b>, not a consultant, not a customer service person.<br><br>
  <b>Output constraints (hard)</b><br>
  1. Only JSON is output, and the fields strictly follow the schema; <code>decision</code> Must be taken from enumeration, new values are prohibited.<br>
- 2. Insufficient evidence → <code>decision="need_more_info"</code> and list <code>missing</code>；<b>Don't guess at filling</b>。<br>
- 3. <code>confidence</code> must be <b>After calibration</b> value; cannot calibrate the time setting <code>null</code> co-located <code>human_review=true</code>。<br>
+ 2. Insufficient evidence → <code>decision="need_more_info"</code> and list <code>missing</code>；<b>Don't guess at filling</b>.<br>
+ 3. <code>confidence</code> must be <b>After calibration</b> value; cannot calibrate the time setting <code>null</code> co-located <code>human_review=true</code>.<br>
  4. When any of the following is true <code>human_review</code> Must be <code>true</code>: confidence &lt;0.70; decision ∈ {transplant_now, discard_batch, stop_and_review}; a first-time scenario or a new variety; an imminent breach of an EC/pH/pressure hard limit; batch value over the threshold.<br>
  5. <code>reason</code> ≤80 words, only explain "why this conclusion is reached" and "what should people take a look at"; <b>prohibited</b> List optimization directions, planting suggestions, and disclaimers.<br>
  6. Do not recommend pesticide/hormone dosages that exceed the SOP; do not draw conclusions about variety rights and quarantine legality, and can only mark "requires manual verification".<br>
@@ -508,7 +508,7 @@ textarea{resize:vertical;line-height:1.6}
 
  <div class="tagline">
  In one sentence: <b>CoffeeJeV = Split the long process of coffee tissue culture and aerosol culture into 14 atomic decisions that can be judged quickly and frequently, using cost-derived thresholds to replace magic numbers, using calibrated confidence to decide who should be woken up, and using a hash chain ledger to allow each decision to be settled after 45 days.</b>
- The decision layer does not pursue “knowing everything”; it pursues <b>Know when not to speak</b>。
+ The decision layer does not pursue “knowing everything”; it pursues <b>Know when not to speak</b>.
  </div>
 </section>
 <div class="pager"><a class="" href="risk.html"><span class="k"><span class="zh-only">← Previous</span></span><span class="t">10 · <span class="zh-only">Risk & governance</span></span></a></div>
