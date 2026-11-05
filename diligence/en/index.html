@@ -200,7 +200,7 @@ document.getElementById('copyBtn').onclick = async () => {
 材料：/spec/ /method/ /carbon/ /v/ /napell/docs/devices.html
 所有数值为设计目标或假设，不是实测。`;
  try { await navigator.clipboard.writeText(text); document.getElementById('copyBtn').textContent = 'Copied'; }
- catch (e) { document.getElementById('copyBtn').textContent = '复制失败，请手动选择'; }
+ catch (e) { document.getElementById('copyBtn').textContent = 'Copy failed; select manually'; }
 };
 </script>
 <script src="/lang.js"></script>
