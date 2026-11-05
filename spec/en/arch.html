@@ -725,7 +725,7 @@ function renderLedger() {
 }
 
 /* ============================================================
- 2. 判断器 A：污染 Noul
+ 2. 判断器 A:污染 Noul
  ============================================================ */
 function judgeContamination(i) {
  const prior = clamp(i.hist, 1e-3, 0.5);
@@ -759,19 +759,19 @@ function judgeContamination(i) {
  jev_type: 'noul', decision, confidence: r4(confidence), p: pCal, tauHi, tauLo, tauCost, tauMin, ood,
  scores: { p_contaminated: r4(pCal), tau_cost: r4(tauCost), tau_hi: r4(tauHi), tau_lo: r4(tauLo), image_quality: i.q },
  review_reasons: reasons,
- // 只有 continue 才可能免复核。旧写法漏了 review_microscopy：
- // 边界区样本返回 human_review=false，等于「叫人来镜检」却没有人被叫。
+ // 只有 continue 才可能免复核。旧写法漏了 review_microscopy:
+ // 边界区样本返回 human_review=false,等于「叫人来镜检」却没有人被叫。
  human_review: decision !== 'continue' || confidence < 0.70 || ood,
  reason: clip(reason)
  };
 }
 
 /* ============================================================
- 3. 判断器 B：驯化 readiness
+ 3. 判断器 B:驯化 readiness
  ============================================================ */
 const RW = [0.22, 0.20, 0.10, 0.12, 0.18, 0.18];
-// 株高/根数比是「矮壮苗」指标，目标带 0.35–0.65，不是越大越好。
-// 旧写法 clamp(ratio/0.6*100)：徒长苗（ratio 1.2）拿满分，根数 0 时也拿 100。
+// 株高/根数比是「矮壮苗」指标，目标带 0.35–0.65,不是越大越好。
+// 旧写法 clamp(ratio/0.6*100):徒长苗（ratio 1.2）拿满分，根数 0 时也拿 100.
 function ratioScore(shoot, roots) {
  if (!(roots > 0)) return 0;
  const r = shoot / roots;
@@ -796,7 +796,7 @@ function judgeReadiness(i) {
 
  const band = score >= 80 ? 'transplant_ready' : (score >= 60 ? 'delay_adjust' : 'continue_acclimation');
  // 证据完整度 = 6 个形态学读数里真实拿到几个（由调用方传入）。
- // 旧实现写死 1：6 个读数全是默认值时仍报 0.80 置信度，违背「不猜」的契约。
+ // 旧实现写死 1:6 个读数全是默认值时仍报 0.80 置信度，违背「不猜」的契约。
  const completeness = i.completeness === undefined ? 1 : clamp(i.completeness, 0, 1);
  const confidence = clamp(0.62 + 0.30 * completeness - 0.35 * (sd(s) / 50), 0.35, 0.97);
  const binding = caps.length ? ` (hard gates active: ${caps.join(', ')})` : '';
@@ -822,7 +822,7 @@ function judgeReadiness(i) {
 }
 
 /* ============================================================
- 4. 判断器 C：营养雾 Choice
+ 4. 判断器 C:营养雾 Choice
  ============================================================ */
 const FT = { ec: 1.4, ph: 5.8, vpd: 0.9, temp: 24, do: 6.5, droplet: 35 };
 const FS = { ec: 0.8, ph: 0.9, vpd: 0.5, temp: 6, do: 3.0, droplet: 25 };
@@ -883,8 +883,8 @@ function judgeFog(i) {
  decision = best.action;
  const u = feas.map(o => o.utility).sort((a, b) => b - a);
  margin = u.length > 1 ? u[0] - u[1] : Infinity; // Infinity = 约束把它压成了单选
- // 置信度 = σ(ΔU/τ)，不是 softmax 最大值：6 个近似打平的候选里
- // softmax 最高也就 0.2，会把每一个正常批次都推进复核队列（与 <15% 复核率冲突）。
+ // 置信度 = σ(ΔU/τ),不是 softmax 最大值：6 个近似打平的候选里
+ // softmax 最高也就 0.2,会把每一个正常批次都推进复核队列（与 <15% 复核率冲突）。
  confidence = Number.isFinite(margin) ? clamp(1 / (1 + Math.exp(-margin / CONF_TAU)), 0.5, 0.99) : 0.88;
  if (zoneGates.length) { decision = 'stop_and_review'; confidence = 0; }
  }
@@ -937,7 +937,7 @@ function validate(req) {
  if (!req.sensors) { m.push('sensors'); return m; }
  const s = req.sensors;
  // 必填传感器按判断器区分：组培瓶里没有 EC/pH 探头，
- // 「全都要」的规则会把真实的无菌检查请求误判成 need_more_info。
+ // 「全都要」的规则会把真实的无菌检查请求误判成 need_more_info.
  const judger = ROUTES[req.stage];
  const need = judger === 'fog_choice' ? ['ec', 'ph', 'vpd', 'temp']
  : judger === 'contamination' ? ['temp'] : [];
