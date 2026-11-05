@@ -458,7 +458,7 @@ textarea{resize:vertical;line-height:1.6}
       ① <b>Edge marginal cost</b> (&lt; $0.001 per decision) — the power and compute of one more decision on hardware already running; it answers whether it is worth judging more often.
       ② <b>All-in cost per decision</b> (the formula in 8.1: one-off/3 + annual opex + review labour ÷ decisions per year) — the basis for pricing and capacity.
       ③ <b>Annual cash opex</b> ($4,800 per site per year) — the basis for payback, excluding hardware amortisation.
-      The calculator below is in <b>USD</b> (1 USD ≈ ¥7.18); the <b>CNY</b> hardware prices are in carbon §5.2 (edge box ¥18,000, full set ¥78,000).
+      The calculator is in <b>USD</b> (1 USD ≈ ¥7.18); the one-off default is the <b>full hardware set ¥78,000 ÷ 7.18 = $10,860</b> (self-build basis; under zone sharing only the edge box, ¥18,000, is needed — see carbon §5.2 and pricing §03).
     </div>
  
 
@@ -490,7 +490,7 @@ textarea{resize:vertical;line-height:1.6}
  <div class="field"><label>Target contamination loss rate (%)</label><input type="number" id="e-c1" value="4" step="0.5"></div>
  <div class="field"><label>Baseline transplant survival rate (%)</label><input type="number" id="e-s0" value="72" step="1"></div>
  <div class="field"><label>Target transplant survival rate (%)</label><input type="number" id="e-s1" value="84" step="1"></div>
- <div class="field"><label>One-off spend ($ · devices + integration; edge box ¥18,000 ÷ 7.18 = $2,507)</label><input type="number" id="e-capex" value="2500" step="100"></div>
+ <div class="field"><label>One-off spend ($ · full self-build hardware ¥78,000 ÷ 7.18 = $10,860; under zone sharing only the edge box, ¥18,000)</label><input type="number" id="e-capex" value="10860" step="500"></div>
  <div class="field"><label>Annual opex ($ · cloud + review labour + field maintenance)</label><input type="number" id="e-opex" value="4800" step="400"></div>
  <div class="field"><label>Decisions per day</label><input type="number" id="e-d" value="800" step="50"></div>
  </div>
