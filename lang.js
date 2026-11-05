@@ -17,7 +17,7 @@
   // which pages have an English twin
   var EN_READY = {
     spec: '*',
-    method: ['index.html', 'thesis.html', 'claim.html', 'boundary.html', 'manifest.html']
+    method: '*'
   };
 
   var p = location.pathname;
