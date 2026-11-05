@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>CJV-MTH-1.0 · the CoffeeJeV methodology, published</title>
+<meta name="description" content="content="The published methodology of the CoffeeJeV decision layer: twelve rules, a version hash, the challenge process and the boundary statement. Models are replaceable; the standard is the product.">
+<style>
+:root{
+ --bg:#08090b;
+ --card:#11141a;
+ --card2:#171b21;
+ --border:#232931;
+ --text:#e9ecf1;
+ --dim:#8d97a5;
+ --dim2:#64748b;
+ --accent:#00c48c;
+ --accent2:#3fe0b0;
+ --amber:#e0a24e;
+ --red:#ff5d6e;
+ --violet:#8b6cff;
+ --cyan:#3b9ef7;
+ --mono:ui-monospace,Consolas,"Cascadia Mono","SFMono-Regular",monospace;
+ --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+ --max:1180px;
+ --radius:8px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:28px}
+body{
+ margin:0;
+ color:var(--text);
+ background:
+ radial-gradient(circle at 78% -10%,rgba(0,196,140,.08),transparent 34rem),
+ radial-gradient(circle at 6% 22%,rgba(59,158,247,.055),transparent 30rem),
+ var(--bg);
+ font-family:var(--sans);
+ font-size:15.5px;
+ line-height:1.7;
+ -webkit-font-smoothing:antialiased;
+ text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(0,196,140,.28);color:#fff}
+a{color:inherit;text-decoration:none}
+p{margin:0}
+h1,h2,h3,h4{font-weight:650;line-height:1.2;margin:0;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--card);border:1px solid var(--accent);padding:10px 14px;z-index:99}
+.skip:focus{left:16px;top:16px}
+.page{max-width:var(--max);margin:0 auto;padding:0 28px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0 16px;border-bottom:1px solid var(--border)}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--text)}
+.brand span{color:var(--dim2);font-size:10px;letter-spacing:.12em;margin-left:8px}
+.topbar-meta{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.06em}
+.release{display:inline-flex;align-items:center;gap:6px;color:var(--accent2)}
+.release i{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(0,196,140,.12)}
+.notice{display:flex;align-items:flex-start;gap:14px;margin-top:16px;padding:12px 14px;border:1px solid rgba(0,196,140,.34);border-radius:6px;background:linear-gradient(90deg,rgba(0,196,140,.08),rgba(0,196,140,.015))}
+.notice-label{flex:0 0 auto;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--accent2);padding-top:3px}
+.notice p{font-size:12.5px;line-height:1.6;color:var(--dim)}
+.notice strong{color:var(--text);font-weight:600}
+.shell{display:grid;grid-template-columns:216px minmax(0,1fr);gap:54px;padding:34px 0 68px}
+aside{min-width:0}
+.nav{position:sticky;top:24px}
+.nav-title{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim2);margin-bottom:10px}
+.nav a{display:flex;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid rgba(35,41,49,.75);font-size:13px;color:var(--dim);transition:color .18s ease,border-color .18s ease}
+.nav a .n{font-family:var(--mono);font-size:9px;color:var(--dim2);min-width:18px}
+.nav a:hover{color:var(--accent2);border-color:rgba(0,196,140,.35)}
+.nav-meta{margin-top:22px;padding:12px 12px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);font-family:var(--mono);font-size:9.5px;line-height:1.9;color:var(--dim2)}
+.nav-meta b{display:block;color:var(--dim);font-weight:500}
+main{min-width:0}
+.hero{padding:10px 0 44px;border-bottom:1px solid var(--border)}
+.kicker{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--accent2);text-transform:uppercase}
+h1{margin:18px 0 18px;font-size:clamp(40px,5.2vw,60px);line-height:1.06;letter-spacing:-.045em;max-width:860px}
+h1 em{font-style:normal;color:var(--accent2)}
+.hero-sub{max-width:790px;color:var(--dim);font-size:16px;line-height:1.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:rgba(17,20,26,.6);font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.02em;white-space:nowrap}
+.chip b{font-weight:500;color:var(--dim)}
+.chip.hash{color:var(--accent2);border-color:rgba(0,196,140,.3)}
+.section{padding-top:52px}
+.section-head{display:grid;grid-template-columns:54px minmax(0,1fr);gap:18px;align-items:start;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:24px}
+.sec-num{font-family:var(--mono);font-size:12px;color:var(--accent);padding-top:4px}
+.sec-kicker{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--dim2);margin-bottom:7px;text-transform:uppercase}
+h2{font-size:clamp(24px,3vw,31px);letter-spacing:-.025em}
+.sec-desc{max-width:760px;margin-top:9px;color:var(--dim);font-size:14px;line-height:1.75}
+.prose p{color:#cdd4de;font-size:16px;line-height:1.9}
+.prose p+p{margin-top:16px}
+.prose strong{color:var(--text);font-weight:650}
+.prose .mark{color:var(--accent2)}
+.copy-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}
+.copy-card{padding:16px 17px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)}
+.copy-card p{margin-top:7px;color:var(--dim);font-size:13px;line-height:1.7}
+.copy-tag{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim2)}
+.copy-card:first-child .copy-tag{color:var(--amber)}
+.copy-card:last-child .copy-tag{color:var(--accent2)}
+.copy-card h3{margin-top:7px;font-size:15px}
+.pull{margin:26px 0 0;padding:14px 18px;border-left:2px solid var(--accent);background:rgba(0,196,140,.04);color:var(--accent2);font-size:15px}
+.chain-legend{display:flex;flex-wrap:wrap;gap:18px;margin:-4px 0 16px;font-family:var(--mono);font-size:9.5px;color:var(--dim2);letter-spacing:.03em}
+.chain-legend span::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;vertical-align:1px;background:var(--accent);border-radius:1px}
+.rule-list{display:flex;flex-direction:column;gap:12px}
+.rule-card{display:grid;grid-template-columns:94px minmax(0,1fr);border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden}
+.rule-id{padding:18px 13px;border-right:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.018),transparent)}
+.rule-tag{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--accent2)}
+.rule-kind{display:block;margin-top:6px;font-family:var(--mono);font-size:8.5px;line-height:1.6;color:var(--dim2);letter-spacing:.04em}
+.rule-body{padding:17px 19px 18px;min-width:0}
+.rule-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px}
+.rule-head h3{font-size:19px;letter-spacing:-.015em}
+.rule-en{font-family:var(--mono);font-size:8.5px;color:var(--dim2);letter-spacing:.06em;text-transform:uppercase}
+.rule-desc{margin-top:7px;color:var(--dim);font-size:13px;line-height:1.7}
+.criterion{margin-top:13px}
+.label{display:block;margin-bottom:6px;font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim2);text-transform:uppercase}
+.formula{padding:10px 12px;border:1px solid #1b212a;border-left:2px solid rgba(0,196,140,.72);border-radius:3px;background:#0b0d11;font-family:var(--mono);font-size:12px;line-height:1.85;color:#d9e7ef;overflow-x:auto;white-space:pre-wrap}
+.formula .muted{color:var(--dim2)}
+.formula .accent{color:var(--accent2)}
+.vars{margin-top:7px;color:var(--dim);font-size:12.5px;line-height:1.68}
+.vars b{font-family:var(--mono);font-weight:500;color:#c9d2de}
+.challenge{margin-top:13px;padding:9px 11px;border-left:2px solid rgba(224,162,78,.65);background:rgba(224,162,78,.035);color:var(--dim);font-size:12.5px;line-height:1.7}
+.challenge .label{color:var(--amber);margin-bottom:3px}
+.data-table{width:100%;margin-top:9px;border-collapse:collapse;font-size:12.5px}
+.data-table th{padding:6px 8px;border-bottom:1px solid var(--border);text-align:left;font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.08em;color:var(--dim2);white-space:nowrap}
+.data-table td{padding:6px 8px;border-bottom:1px solid rgba(35,41,49,.65);color:#c9d2de;vertical-align:top}
+.data-table tr:last-child td{border-bottom:0}
+.data-table code{font-family:var(--mono);font-size:11.5px;color:var(--accent2);white-space:nowrap}
+.data-table .num{font-family:var(--mono);color:var(--amber);white-space:nowrap}
+.table-wrap{overflow-x:auto}
+.version-card{border:1px solid rgba(0,196,140,.28);border-radius:var(--radius);background:linear-gradient(135deg,rgba(0,196,140,.055),rgba(17,20,26,.9) 48%);overflow:hidden}
+.v-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 20px 16px;border-bottom:1px solid var(--border)}
+.v-kicker{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.16em;color:var(--dim2);margin-bottom:5px}
+.v-head h3{font-family:var(--mono);font-size:24px;font-weight:500;color:var(--text);letter-spacing:-.02em}
+.badge{display:inline-block;padding:4px 8px;border:1px solid rgba(0,196,140,.42);border-radius:3px;font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;color:var(--accent2);white-space:nowrap}
+.v-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.v-item{padding:14px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-width:0}
+.v-item:nth-child(3n){border-right:0}
+.v-label{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;color:var(--dim2);margin-bottom:4px}
+.v-value{display:block;font-size:14px;font-weight:550;color:#dbe2eb;line-height:1.5;overflow-wrap:anywhere}
+.v-hash{font-family:var(--mono);font-size:17px;font-weight:500;color:var(--accent2);letter-spacing:.04em}
+.v-foot{padding:10px 20px 12px;color:var(--dim2);font-family:var(--mono);font-size:9px;line-height:1.7;border-bottom:1px solid var(--border)}
+.audit-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:18px;margin-top:18px;align-items:start}
+.audit-copy h3{margin:5px 0 9px;font-size:18px}
+.audit-copy>p{color:var(--dim);font-size:13px;line-height:1.75}
+.audit-list{list-style:none;padding:0;margin:15px 0 0;display:flex;flex-direction:column;gap:8px}
+.audit-list li{display:flex;gap:10px;font-size:12.5px;color:#c9d2de;line-height:1.65}
+.audit-list li span{font-family:var(--mono);font-size:9px;color:var(--accent);padding-top:2px}
+.code{margin:0;padding:15px 16px;border:1px solid var(--border);border-radius:6px;background:#0b0d11;font-family:var(--mono);font-size:10.5px;line-height:1.8;color:#c6d6e2;overflow-x:auto;white-space:pre}
+.timeline{margin:0 0 20px;padding:10px 0 4px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow-x:auto}
+.timeline svg{display:block;width:100%;min-width:640px;height:auto}
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;padding:14px 15px;border:1px solid var(--border);border-radius:6px;background:var(--card)}
+.step-num{font-family:var(--mono);font-size:10px;color:var(--accent);padding-top:2px}
+.step h3{font-size:15px}
+.step-time{font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;color:var(--amber);margin-top:3px}
+.step p{margin-top:6px;color:var(--dim);font-size:12.5px;line-height:1.7}
+.evidence-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.evidence{padding:13px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card2)}
+.evidence>span{font-family:var(--mono);font-size:8.5px;color:var(--violet);letter-spacing:.08em}
+.evidence h4{margin:5px 0 5px;font-size:13.5px}
+.evidence p{color:var(--dim);font-size:12px;line-height:1.65}
+.subhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:24px 0 0}
+.subhead h3{font-size:17px}
+.subhead span{font-family:var(--mono);font-size:9px;color:var(--dim2)}
+.notice-soft{margin-top:18px;padding:13px 15px;border:1px solid var(--border);border-left:2px solid var(--cyan);border-radius:4px;background:rgba(59,158,247,.035);color:var(--dim);font-size:12.5px;line-height:1.75}
+.notice-soft strong{color:#dbe5ef;font-weight:600}
+.standards td:first-child{font-family:var(--mono);font-size:11.5px;color:var(--text);white-space:nowrap}
+.fixed-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fixed-col{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);overflow:hidden}
+.fixed-col.mutable{border-top:2px solid rgba(0,196,140,.72)}
+.fixed-col.immutable{border-top:2px solid rgba(255,93,110,.62)}
+.fixed-head{padding:15px 16px 12px;border-bottom:1px solid var(--border)}
+.fixed-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;color:var(--dim2)}
+.fixed-col.mutable .fixed-tag{color:var(--accent2)}
+.fixed-col.immutable .fixed-tag{color:var(--red)}
+.fixed-head h3{margin-top:5px;font-size:16px}
+.fixed-list{padding:5px 16px 8px}
+.fixed-item{padding:9px 0;border-bottom:1px solid rgba(35,41,49,.62)}
+.fixed-item:last-child{border-bottom:0}
+.fixed-key{display:block;font-family:var(--mono);font-size:10px;color:#dbe2eb;letter-spacing:.02em}
+.fixed-detail{display:block;margin-top:3px;color:var(--dim);font-size:12px;line-height:1.65}
+.fixed-note{margin-top:12px;padding:10px 12px;border:1px dashed #2c3440;border-radius:4px;color:var(--dim);font-size:12px;line-height:1.7}
+.fixed-note strong{color:var(--amber);font-weight:600}
+.claims{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.claim-card{padding:14px 15px;border:1px solid var(--border);border-radius:6px;background:var(--card);border-left:2px solid rgba(255,93,110,.55)}
+.claim-no{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--red)}
+.claim-card h3{margin:5px 0 6px;font-size:15px}
+.claim-card p{color:var(--dim);font-size:12.5px;line-height:1.72}
+.manifest{margin-top:52px;padding-top:24px;border-top:1px solid var(--border)}
+.manifest-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
+.manifest-head h2{font-size:22px}
+.manifest-code{margin:0;padding:16px;border:1px solid var(--border);border-radius:6px;background:#0b0d11;font-family:var(--mono);font-size:11px;line-height:1.8;color:var(--accent2);overflow-wrap:anywhere;word-break:break-all;white-space:pre-wrap}
+.manifest>p{margin-top:10px;color:var(--dim2);font-size:11.5px;line-height:1.7}
+.footer{margin-top:34px;padding:18px 0 0;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;line-height:1.8;color:var(--dim2);letter-spacing:.02em}
+.footer b{font-weight:500;color:var(--dim)}
+@media (max-width:960px){
+ .page{padding:0 20px}
+ .shell{grid-template-columns:1fr;gap:22px;padding-top:24px}
+ aside{order:-1}
+ .nav{position:static;border-bottom:1px solid var(--border);padding-bottom:15px}
+ .nav-title{margin-bottom:8px}
+ .nav a{display:inline-flex;border:1px solid var(--border);border-radius:4px;padding:6px 9px;margin:0 5px 5px 0;font-size:11.5px}
+ .nav a .n{min-width:0}
+ .nav-meta{display:none}
+ .topbar-meta span:nth-child(1),.topbar-meta span:nth-child(2){display:none}
+ .audit-grid{grid-template-columns:1fr}
+ .v-grid{grid-template-columns:1fr 1fr}
+ .v-item:nth-child(3n){border-right:1px solid var(--border)}
+ .v-item:nth-child(2n){border-right:0}
+}
+@media (max-width:700px){
+ h1{font-size:38px}
+ .hero-sub{font-size:14.5px}
+ .section-head{grid-template-columns:1fr;gap:7px}
+ .sec-num{padding-top:0}
+ .copy-grid,.steps,.fixed-grid,.claims{grid-template-columns:1fr}
+ .rule-card{grid-template-columns:1fr}
+ .rule-id{display:flex;align-items:center;gap:10px;border-right:0;border-bottom:1px solid var(--border);padding:11px 14px}
+ .rule-kind{margin-top:0}
+ .rule-body{padding:14px}
+ .evidence-grid{grid-template-columns:1fr}
+ .v-grid{grid-template-columns:1fr}
+ .v-item{border-right:0!important}
+ .notice{flex-direction:column;gap:4px}
+ .notice-label{padding-top:0}
+ .footer{flex-direction:column;gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *{transition:none!important;animation:none!important}
+}
+</style>
+<style id="zc-back-css">
+.zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;border:0;
+ font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.90);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28);transition:.15s}
+.zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+.zc-back svg{width:13px;height:13px;flex:none}
+@media (max-width:640px){.zc-back{top:12px;right:12px;padding:8px 12px;font-size:11.5px}}
+</style>
+<style>.rule-en{display:none}</style>
+</head>
+<body>
+<a class="skip" href="#thesis">Skip to content</a>
+<div class="page">
+ <header class="topbar">
+ <a class="brand" href="#top">CoffeeJeV <span>/ METHOD</span></a>
+ <div class="topbar-meta">
+ <span>CJV-MTH-1.0</span>
+ <span>2026-11-03</span>
+ <span class="release"><i></i> published</span>
+ </div>
+ </header>
+
+ <div class="notice" role="note">
+ <span class="notice-label">READ FIRST</span>
+ <p><strong>This page is a method, not a sales page.</strong> It carries only recomputable criteria, challengeable boundaries and an auditable version record; no performance promises and no compliance claims we do not hold.</p>
+ </div>
+
+ <div class="shell">
+ <aside>
+ <nav class="nav" aria-label="aria-label="Page contents">
+ <p class="nav-title">Contents</p>
+ <a href="#thesis"><span class="n">01</span> Why the standard is the asset</a>
+ <a href="#chain"><span class="n">02</span> The 12-rule chain </a>
+ <a href="#version"><span class="n">03</span> Versions and hashes </a>
+ <a href="#challenge"><span class="n">04</span> How to challenge a rule </a>
+ <a href="#boundary"><span class="n">05</span> Relation to external standards </a>
+ <a href="#fixed"><span class="n">06</span> What may change, what may not </a>
+ <a href="#claim"><span class="n">07</span> What we refuse to claim</a>
+ <div class="nav-meta">
+ <b>CJV-MTH-1.0</b>
+ effective 2026-11-03<br>
+ 12 rules / 7 sections<br>
+ hash 9b12abef<br>
+ challenge window 30 d
+ </div>
+ </nav>
+ </aside>
+
+ <main id="top">
+ <section class="hero">
+ <p class="kicker">PUBLIC METHODOLOGY · COFFEE DECISION LAYER</p>
+ <h1>Models are replaceable;<br><em>the standard</em> is the product.</h1>
+ <p class="hero-sub">CoffeeJeV turns twelve-field IoT telemetry into three kinds of decision: contamination, acclimatisation readiness and nutrient-fog selection. This page fixes the twelve rules, the version hash and the challenge process behind those decisions, so that replacing a model never changes the auditable criteria.</p>
+ <div class="meta-row">
+ <span class="chip">Document id <b>CJV-MTH-1.0</b></span>
+ <span class="chip">Effective <b>2026-11-03</b></span>
+ <span class="chip">Rules <b>12</b></span>
+ <span class="chip hash">Method hash <b>9b12abef</b></span>
+ <span class="chip">Applies to <b>judgement / carbon label</b></span>
+ </div>
+ </section>
+
+ <section class="section" id="thesis">
+ <div class="section-head">
+ <div class="sec-num">01</div>
+ <div>
+ <p class="sec-kicker">THESIS / WHY</p>
+ <h2>Why the standard is the asset</h2>
+ <p class="sec-desc">A model is an implementation detail; a standard is an allocation of responsibility. Only once that sentence is written as auditable rules does anything have the right to be issued.</p>
+ </div>
+ </div>
+ <div class="prose">
+ <p><strong>A model can be copied. </strong> Mapping twelve fields onto three decision classes is not complicated mathematics: a threshold, a linear penalty, a softmax ranking. An experienced engineer could rewrite it in two hours with comparable results. Any claim that model performance is the moat has to accept that first.</p>
+ <p><strong>The standard cannot be copied. </strong> It is made of incident records, contract clauses, version history and interfaces that can be challenged. Which threshold came from one expensive false negative, which floor is a client constraint rather than a statistical finding, why an old label may not be quietly recomputed — none of that lives in the weights.</p>
+ <p><strong>So what ships is a numbered rule set. </strong> CJV-MTH-1.0, twelve rules, method hash <span class="mark mono">9b12abef</span>. The model may change; a rule may only change through an explicit upgrade that states its blast radius. Anyone can copy a judger. Almost nobody can copy a rule chain that has been audited, challenged and cited in a contract.</p>
+ </div>
+ <div class="copy-grid">
+ <article class="copy-card">
+ <span class="copy-tag">COPYABLE</span>
+ <h3>Copying a judger</h3>
+ <p>Model definition, inference code, training data. Measured in hours or days.</p>
+ </article>
+ <article class="copy-card">
+ <span class="copy-tag">NOT COPYABLE</span>
+ <h3>Copying this standard</h3>
+ <p>Twelve rules, incident records, contract baselines, version history, challenge archive. Measured in audit cycles.</p>
+ </article>
+ </div>
+ <p class="pull">The implementation can be copied. The audited chain of judgement cannot.</p>
+ </section>
+
+ <section class="section" id="chain">
+ <div class="section-head">
+ <div class="sec-num">02</div>
+ <div>
+ <p class="sec-kicker">RULE CHAIN</p>
+ <h2>The 12-rule chain </h2>
+ <p class="sec-desc">Every rule states an id, a criterion and a challenge point. The criterion must resolve to a formula or a threshold; the challenge point must name a disputable input or constant, not an attitude.</p>
+ </div>
+ </div>
+ <div class="chain-legend">
+ <span>Criterion = executable formula / threshold</span>
+ <span>Challenge point = an assumption a counter-example can overturn</span>
+ </div>
+
+ <div class="rule-list">
+ <article class="rule-card" id="mth-01">
+ <div class="rule-id"><span class="rule-tag">MTH-01</span><span class="rule-kind">Decision threshold</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Cost-asymmetry threshold</h3><span class="rule-en">Cost-asymmetric threshold</span></div>
+ <p class="rule-desc">The relative cost of the two error types sets the interception probability; no contamination rate is assumed in advance.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">τ_cost = C_FP / (C_FP + C_FN)
+<span class="muted">p ≥ τ_cost → hold side; p &lt; τ_cost → release side</span></div>
+ <p class="vars"><b>C_FP</b> = expected cost of one false release; <b>C_FN</b> = expected cost of one false hold; <b>p</b> = posterior probability of contamination. </p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> Who prices the two costs, and how those prices are audited; where the costs come from the client contract, the threshold must be recomputed with the contract annex and entered in the version record.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-02">
+ <div class="rule-id"><span class="rule-tag">MTH-02</span><span class="rule-kind">Operating constraint</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>lower operating limit</h3><span class="rule-en">Operational floor</span></div>
+ <p class="rule-desc">The operating floor may only raise the interception probability; no model may lower it on its own.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">τ_hi = max(τ_cost, τ_min)
+τ_min = 0.15 <span class="muted">// default</span></div>
+ <p class="vars">Any τ_min below the default must be listed in the contract annex and written into the decision record's <b>method_version</b> and the label metadata.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> The floor is a business constraint, not a statistical finding. A client may replace it, but it must be written into the contract; otherwise it may not be used for issuance.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-03">
+ <div class="rule-id"><span class="rule-tag">MTH-03</span><span class="rule-kind">Evidence bands</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Two-threshold triage</h3><span class="rule-en">Two-threshold evidence</span></div>
+ <p class="rule-desc">Above the high threshold, isolate immediately; above the low threshold, require microscopy review, so an uncertain sample is never released outright.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">τ_lo = max(0.06, 0.45 · τ_hi)</div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>p band</th><th>action</th><th>Record required</th></tr></thead>
+ <tbody>
+ <tr><td><code>p &lt; τ_lo</code></td><td>Release</td><td>Standard decision record</td></tr>
+ <tr><td><code>τ_lo ≤ p &lt; τ_hi</code></td><td>Microscopy review</td><td>Review conclusion written back; the case cannot be closed without it</td></tr>
+ <tr><td><code>p ≥ τ_hi</code></td><td>Quarantine</td><td>Quarantine batch id + disposal evidence</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> 0.06 and 0.45 are engineering constants, not estimates from data; changing the crop or the cost of review requires re-validation.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-04">
+ <div class="rule-id"><span class="rule-tag">MTH-04</span><span class="rule-kind">Hard gates</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Hard-gate score cap</h3><span class="rule-en">Hard-gate score cap</span></div>
+ <p class="rule-desc">The weighted score only ranks above the gates; it cannot override a hard constraint.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">cap = 100
+if N_root &lt; 3: cap = min(cap, 55)
+if browning &gt; 60%: cap = min(cap, 60)
+if p ≥ 0.5: cap = min(cap, 40)
+S_final = min(S_weighted, cap)</div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Trigger condition</th><th>Score cap</th></tr></thead>
+ <tbody>
+ <tr><td>Number of roots <code>N_root &lt; 3</code></td><td class="num">≤ 55</td></tr>
+ <tr><td>Browning <code>browning &gt; 60%</code></td><td class="num">≤ 60</td></tr>
+ <tr><td>Contamination posterior <code>p ≥ 0.5</code></td><td class="num">≤ 40</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> The three caps come from incident reviews. When several gates fire at once only the lowest cap applies; whether that is enough to cover cross-cutting risk has to be tested with counter-examples.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-05">
+ <div class="rule-id"><span class="rule-tag">MTH-05</span><span class="rule-kind">Output semantics</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Abstention semantics</h3><span class="rule-en">Abstention semantics</span></div>
+ <p class="rule-desc">Abstention is a formal output, not an error code. It must be written to the ledger and counted in the statistics, never padded with a default action.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">precedence: need_more_info ≻ abstain ≻ no_safe_option ≻ defer_to_human ≻ decision</div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Output</th><th>Trigger condition</th><th>Downstream action</th></tr></thead>
+ <tbody>
+ <tr><td><code>need_more_info</code></td><td>A field is missing or two fields conflict</td><td>Name the missing fields and a deadline</td></tr>
+ <tr><td><code>abstain</code></td><td>Input outside the training distribution, or a confidence interval straddling the threshold</td><td>No direction given; route to a human</td></tr>
+ <tr><td><code>no_safe_option</code></td><td>The feasible set is empty</td><td>Emit this semantic; the process is set to <code>stop_and_review</code></td></tr>
+ <tr><td><code>defer_to_human</code></td><td>A cost parameter is unconfirmed or beyond authority</td><td>Send to someone with the authority to sign</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span><code>no_safe_option</code> with <code>defer_to_human</code> boundaries are fixed by the decision tree; any change to that tree requires a release.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-06">
+ <div class="rule-id"><span class="rule-tag">MTH-06</span><span class="rule-kind">Feasible set</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Feasibility before utility</h3><span class="rule-en">Feasibility before utility</span></div>
+ <p class="rule-desc">Pass the hard constraints first, then compute utility, then rank only inside the feasible set. A high return may never compensate for a prohibited action.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">F = { a ∈ A | g_k(a) ≤ 0, ∀k = 1..K }
+if F = ∅ → no_safe_option + stop_and_review
+P(a) = exp(β · U(a)) / Σ exp(β · U(a')), a, a' ∈ F
+β = 6
+a* = argmax P(a), a ∈ F</div>
+ <p class="vars"><b>g_k</b> is the hard-constraint function; <b>U</b> is the expected utility; <b>β=6</b> is ranking sharpness and applies only inside the feasible set.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> Whether the hard-constraint set K is complete, and whether β=6 needs recalibration when the cost scale changes.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-07">
+ <div class="rule-id"><span class="rule-tag">MTH-07</span><span class="rule-kind">Evidence freezing</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Hash-chain freezing</h3><span class="rule-en">Hash-chain freeze</span></div>
+ <p class="rule-desc">Decision and label share one structure: any change to a field must change the hash, and an old record can never be overwritten.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">h_i = fnv(prev_hash ‖ canonical(payload_i)) canonical: keys in lexicographic order · UTF-8 · no redundant whitespace · decimal numerals</div>
+ <p class="vars">The payload skeleton holds <b>method_version</b>、<b>inputs_digest</b>、<b>output</b>、<b>decided_at</b>; the label uses the same skeleton and can be recomputed independently.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> FNV-1a-64 provides tamper detection only; it is not a collision-resistance commitment. External anchoring is the client's decision. A change to the canonicalisation implementation must ship as MAJOR and start a new chain.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-08">
+ <div class="rule-id"><span class="rule-tag">MTH-08</span><span class="rule-kind">Carbon footprint</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Hourly marginal factors</h3><span class="rule-en">Hourly marginal factor</span></div>
+ <p class="rule-desc">Metered energy only, never an estimate; the label retains hourly energy and the factor version.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">E_batch = Σ kWh_h · EF(h) <span class="muted">h = 1..24</span>
+label = E_batch / yield_kg <span class="muted">[kgCO2e/kg]</span></div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Period</th><th>EF(h) / kgCO2e·kWh⁻¹</th></tr></thead>
+ <tbody>
+ <tr><td>00:00–04:00</td><td class="num">0.31</td></tr>
+ <tr><td>04:00–08:00</td><td class="num">0.38</td></tr>
+ <tr><td>08:00–12:00</td><td class="num">0.44</td></tr>
+ <tr><td>12:00–16:00</td><td class="num">0.47</td></tr>
+ <tr><td>16:00–20:00</td><td class="num">0.58</td></tr>
+ <tr><td>20:00–24:00</td><td class="num">0.41</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> Factors depend on region and year; six fixed bands are not a true hourly curve. On-site PV or a green-power contract forces a choice between market-based and location-based accounting, and a version bump.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-09">
+ <div class="rule-id"><span class="rule-tag">MTH-09</span><span class="rule-kind">Data quality</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Data-quality grading</h3><span class="rule-en">Data-quality grade</span></div>
+ <p class="rule-desc">The metered share sets the grade, and the grade sets the evidence price and the points coefficient. Estimated data cannot buy an A.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">q = metered_kWh / (metered_kWh + estimated_kWh)
+A: q ≥ 0.70 B: 0.45 ≤ q &lt; 0.70 C: q &lt; 0.45</div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Grade</th><th>Metered share q</th><th>Price coefficient k</th><th>Points coefficient κ</th></tr></thead>
+ <tbody>
+ <tr><td><code>A</code></td><td>≥ 70%</td><td class="num">1.00</td><td class="num">1.00</td></tr>
+ <tr><td><code>B</code></td><td>45% ≤ q &lt; 70%</td><td class="num">0 &lt; k_B &lt; 1</td><td class="num">0 &lt; κ_B &lt; 1</td></tr>
+ <tr><td><code>C</code></td><td>&lt; 45%</td><td class="num">0 &lt; k_C &lt; k_B</td><td class="num">0 &lt; κ_C &lt; κ_B</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="vars">The coefficients must be fixed in the contract annex and apply to new batches only; issued labels keep their original version.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> Whether the denominator includes estimated energy, whether the metering window is cumulative or continuous, and how lost samples are counted — each choice changes the grade, so all three must be written into the rule snapshot.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-10">
+ <div class="rule-id"><span class="rule-tag">MTH-10</span><span class="rule-kind">Batch boundary</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Batch integrity</h3><span class="rule-en">Batch integrity</span></div>
+ <p class="rule-desc">The batch is the smallest unit of issuance, not a billable unit that can be split.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">valid_batch ⇔ |B| ≥ 240
+ ∧ (max t_harvest − min t_harvest) ≤ 24h
+ ∧ harvest_windows(B) = 1</div>
+ <p class="vars">Same lineage within 24 h merges into one batch; one batch maps to one harvest window; splitting to farm issuance fees is prohibited.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> The 240-plantlet floor is an operating constraint, not a statistical optimum; the 24 h boundary must be a closed interval; and where the client does not share lineage the rule cannot be executed.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-11">
+ <div class="rule-id"><span class="rule-tag">MTH-11</span><span class="rule-kind">Reduction baseline</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Baseline co-signing</h3><span class="rule-en">Baseline co-sign</span></div>
+ <p class="rule-desc">The reduction baseline is frozen by both parties at contract signature; the platform may neither set it unilaterally nor adjust it retroactively.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">B0 = (yield_ref, energy_ref, EF_ref, boundary, period)
+reduction = (E_ref − E_actual) / E_ref
+valid_reduction ⇔ sig_client(B0) ∧ sig_platform(B0)</div>
+ <p class="vars">Without both signatures no reduction statement may be issued; a baseline may only be updated through a contract annex, never swapped silently at runtime.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> Whether the co-signing party can actually verify the baseline, which reference year applies when history is missing, and whether baseline updates may only travel through the contract annex.</p>
+ </div>
+ </article>
+
+ <article class="rule-card" id="mth-12">
+ <div class="rule-id"><span class="rule-tag">MTH-12</span><span class="rule-kind">Version governance</span></div>
+ <div class="rule-body">
+ <div class="rule-head"><h3>Versions cannot be edited retroactively</h3><span class="rule-en">Non-retroactive versioning</span></div>
+ <p class="rule-desc">A method change must ship a new version number; old labels point at the old version forever, and silent recomputation or overwrite is prohibited.</p>
+ <div class="criterion">
+ <span class="label">Criterion</span>
+ <div class="formula">version = CJV-MTH-{MAJOR}.{MINOR}[.{PATCH}] MAJOR = immutable item or semantic change MINOR = threshold / parameter change PATCH = editorial fix that changes no criterion</div>
+ <p class="vars">Old labels' <b>method_version</b> cannot be modified; a new version produces new labels and may never write back to an old record.</p>
+ </div>
+ <p class="challenge"><span class="label">Challenge point</span> What counts as an editorial fix that changes no criterion needs a whitelist; otherwise PATCH becomes a way around the version record.</p>
+ </div>
+ </article>
+ </div>
+ </section>
+
+ <section class="section" id="version">
+ <div class="section-head">
+ <div class="sec-num">03</div>
+ <div>
+ <p class="sec-kicker">VERSION &amp; HASH</p>
+ <h2>Versions and hashes </h2>
+ <p class="sec-desc">The version card is the audit entry point: read method_version from the record, load that version's rule snapshot, then recompute. The current version is not the basis for recomputation.</p>
+ </div>
+ </div>
+
+ <div class="version-card">
+ <div class="v-head">
+ <div>
+ <span class="v-kicker">METHOD VERSION RECORD</span>
+ <h3>CJV-MTH-1.0</h3>
+ </div>
+ <span class="badge">CURRENT / PUBLISHED</span>
+ </div>
+ <div class="v-grid">
+ <div class="v-item"><span class="v-label">Version</span><span class="v-value mono">CJV-MTH-1.0</span></div>
+ <div class="v-item"><span class="v-label">Effective</span><span class="v-value">2026-11-03</span></div>
+ <div class="v-item"><span class="v-label">Rules</span><span class="v-value">12</span></div>
+ <div class="v-item"><span class="v-label">Method hash (short)</span><span class="v-value v-hash">9b12abef</span></div>
+ <div class="v-item"><span class="v-label">Applies to</span><span class="v-value">judgement / carbon label</span></div>
+ <div class="v-item"><span class="v-label">Change status</span><span class="v-value">no retroactive edits</span></div>
+ </div>
+ <p class="v-foot">The full 64-bit hash is archived with the method snapshot; 9b12abef is the first eight digits, for human citation.</p>
+ </div>
+
+ <div class="audit-grid">
+ <div class="audit-copy">
+ <span class="label">AUDIT RULE</span>
+ <h3>Recompute by version, never by current version</h3>
+ <p>Both the decision record and the carbon label carry <span class="mono">method_version</span> with <span class="mono">method_hash</span>. An audit takes the version from the record, loads the matching rule snapshot, then replays the input.</p>
+ <ol class="audit-list">
+ <li><span>01</span> Read method_version and inputs_digest.</li>
+ <li><span>02</span> Load that version's immutable rule snapshot and threshold configuration.</li>
+ <li><span>03</span> Replay the input; recompute the decision / label and the ledger hash.</li>
+ <li><span>04</span> On mismatch, freeze the related issuance and open an incident; the old record must not be edited.</li>
+ </ol>
+ </div>
+ <pre class="code">{
+ "decision_id": "jev_dec_...",
+ "method_version": "CJV-MTH-1.0",
+ "method_hash": "9b12abef",
+ "rule_id": "MTH-04",
+ "inputs_digest": "fnv1a64:...",
+ "output": "quarantine",
+ "ledger_prev": "fnv1a64:...",
+ "ledger_hash": "fnv1a64:..."
+}</pre>
+ </div>
+ </section>
+
+ <section class="section" id="challenge">
+ <div class="section-head">
+ <div class="sec-num">04</div>
+ <div>
+ <p class="sec-kicker">CHALLENGE</p>
+ <h2>How to challenge a rule </h2>
+ <p class="sec-desc">A challenge is not a customer-service process. It requires reproducible evidence, a stated failure scenario and a computable blast radius. Thirty-day submission window, adjudication within fourteen days of acceptance, and the outcome is published.</p>
+ </div>
+ </div>
+
+ <div class="timeline">
+ <svg viewBox="0 0 920 138" role="img" aria-labelledby="timeline-title">
+ <title id="timeline-title">Timeline: D0 window opens · D30 submissions close · D44 adjudication complete · then public archive</title>
+ <line x1="62" y1="60" x2="858" y2="60" stroke="#232931" stroke-width="2"/>
+ <rect x="62" y="57" width="260" height="6" rx="3" fill="#00c48c" fill-opacity=".38"/>
+ <rect x="322" y="57" width="276" height="6" rx="3" fill="#e0a24e" fill-opacity=".34"/>
+ <rect x="598" y="57" width="260" height="6" rx="3" fill="#3b9ef7" fill-opacity=".3"/>
+ <circle cx="62" cy="60" r="7" fill="#00c48c"/>
+ <circle cx="322" cy="60" r="7" fill="#e0a24e"/>
+ <circle cx="598" cy="60" r="7" fill="#3b9ef7"/>
+ <circle cx="858" cy="60" r="7" fill="#8b6cff"/>
+ <text x="62" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D0</text>
+ <text x="322" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D30</text>
+ <text x="598" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D44</text>
+ <text x="858" y="34" fill="#e9ecf1" font-size="13" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">D44+</text>
+ <text x="62" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">Window opens</text>
+ <text x="322" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">Submissions close</text>
+ <text x="598" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">Adjudication complete</text>
+ <text x="858" y="88" fill="#8d97a5" font-size="11" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" text-anchor="middle">Public archive</text>
+ <text x="192" y="118" fill="#3fe0b0" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">SUBMISSION · 30 DAYS</text>
+ <text x="460" y="118" fill="#e0a24e" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">ADJUDICATION · ≤14 DAYS</text>
+ <text x="728" y="118" fill="#3b9ef7" font-size="9.5" font-family="ui-monospace,Consolas,monospace" text-anchor="middle">PUBLIC ARCHIVE</text>
+ </svg>
+ </div>
+
+ <div class="steps">
+ <article class="step">
+ <div class="step-num">01</div>
+ <div>
+ <h3>Submit a challenge</h3>
+ <p class="step-time">D0–D30 / WINDOW</p>
+ <p>All material arrives in one submission inside the 30-day window; a submission outside it joins the next version discussion and does not block current issuance.</p>
+ </div>
+ </article>
+ <article class="step">
+ <div class="step-num">02</div>
+ <div>
+ <h3>Completeness check</h3>
+ <p class="step-time">COMPLETENESS CHECK</p>
+ <p>Three items are checked; complete means docketed. One missing and it is returned once, without entering adjudication.</p>
+ </div>
+ </article>
+ <article class="step">
+ <div class="step-num">03</div>
+ <div>
+ <h3>Adjudicate</h3>
+ <p class="step-time">≤ 14 DAYS</p>
+ <p>Only three outcomes are possible: uphold, revise, new version. The reasoning and a summary of the counter-example must be published.</p>
+ </div>
+ </article>
+ <article class="step">
+ <div class="step-num">04</div>
+ <div>
+ <h3>Public archive</h3>
+ <p class="step-time">D44+ / PUBLIC RECORD</p>
+ <p>Archive the rule id, the version diff, the blast radius and the list of labels to recompute; old labels keep their original version.</p>
+ </div>
+ </article>
+ </div>
+
+ <div class="evidence-grid">
+ <div class="evidence"><span>REQUIRED 01</span><h4>Counter-example data</h4><p>The twelve-field raw record, timestamps and batch number; the smallest reproducible sample.</p></div>
+ <div class="evidence"><span>REQUIRED 02</span><h4>Failure scenario</h4><p>Under which input distribution the rule takes the wrong action, and what that error costs.</p></div>
+ <div class="evidence"><span>REQUIRED 03</span><h4>Blast radius</h4><p>The affected label_id / decision_id list, plus the range of labels and batches to recompute.</p></div>
+ </div>
+
+ <div class="subhead"><h3>Outcomes</h3><span>ONLY THREE OUTCOMES</span></div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>result</th><th>Holds when</th><th>Version action</th></tr></thead>
+ <tbody>
+ <tr><td><code>Uphold</code></td><td>The counter-example fails, or its impact cannot change the criterion</td><td>Reason archived, no version change</td></tr>
+ <tr><td><code>Revise</code></td><td>A criterion or parameter needs adjustment but the rule's semantics stay the same</td><td>Ship MINOR / PATCH; old labels are not recomputed</td></tr>
+ <tr><td><code>New version</code></td><td>Touches an immutable item, a boundary, or the semantics of an output</td><td>Ship MAJOR; new chain genesis, old chain frozen</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </section>
+
+ <section class="section" id="boundary">
+ <div class="section-head">
+ <div class="sec-num">05</div>
+ <div>
+ <p class="sec-kicker">BOUNDARY / STANDARDS</p>
+ <h2>Relation to external standards </h2>
+ <p class="sec-desc">Standards are cited to align terminology and evidence requirements, never to imply certification. A certification conclusion can only come from an accreditation body.</p>
+ </div>
+ </div>
+ <div class="table-wrap">
+ <table class="data-table standards">
+ <thead><tr><th>Standard</th><th>What we cite</th><th>What we do not claim</th></tr></thead>
+ <tbody>
+ <tr><td>ISO 14067</td><td>Quantification framework for product carbon footprints: functional unit, system boundary, data quality</td><td>Not certified to ISO 14067; no claim of conformity</td></tr>
+ <tr><td>PAS 2050</td><td>Historical method reference for life-cycle GHG assessment</td><td>No claim of PAS 2050 compliance</td></tr>
+ <tr><td>GHG Protocol</td><td>Scope 1 / 2 / 3 boundaries and dual reporting</td><td>Not a certification of a corporate GHG inventory</td></tr>
+ <tr><td>ISO/IEC 17025</td><td>Calibration and testing competence requirements</td><td>Not an accredited laboratory; we issue no calibration certificates</td></tr>
+ <tr><td>ISO 19011</td><td>Reference for audit programmes, evidence and audit trails</td><td>Not a certification audit; no certification conclusion</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="notice-soft"><strong>Relationship statement:</strong> These standards are frames of reference, not compliance packaging. We borrow their terminology and evidence structure, but we do not claim certification, accreditation or registration by any body. A client who needs certification should engage an accreditation body separately; we provide a recomputable data package and do not stand in for the certifier.</p>
+ </section>
+
+ <section class="section" id="fixed">
+ <div class="section-head">
+ <div class="sec-num">06</div>
+ <div>
+ <p class="sec-kicker">CHANGE CONTROL</p>
+ <h2>What may change, what may not </h2>
+ <p class="sec-desc">Mutable items travel by version; immutable items travel by a new chain. Neither is something operations can quietly adjust.</p>
+ </div>
+ </div>
+
+ <div class="fixed-grid">
+ <article class="fixed-col mutable">
+ <div class="fixed-head">
+ <span class="fixed-tag">MUTABLE</span>
+ <h3>May change, but only with a release</h3>
+ </div>
+ <div class="fixed-list">
+ <div class="fixed-item"><span class="fixed-key">Thresholds</span><span class="fixed-detail">τ_min, the τ_lo coefficient, gate constants; a change applies to new decisions only.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Sample size</span><span class="fixed-detail">Plantlets sampled per batch, number of repeats.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Sampling rate</span><span class="fixed-detail">IoT reporting frequency, metering sampling window.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Crop parameters</span><span class="fixed-detail">Variety, browning baseline, growth-stage parameters.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Language</span><span class="fixed-detail">Translations of the label and decision notes; the semantics may not change.</span></div>
+ </div>
+ </article>
+ <article class="fixed-col immutable">
+ <div class="fixed-head">
+ <span class="fixed-tag">IMMUTABLE</span>
+ <h3>Cannot change; a new version only</h3>
+ </div>
+ <div class="fixed-list">
+ <div class="fixed-item"><span class="fixed-key">Hash algorithm</span><span class="fixed-detail">FNV-1a-64 + canonical JSON; changing it invalidates the old chain.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Abstention semantics</span><span class="fixed-detail">The four outputs and their precedence; they may not be collapsed into a binary.</span></div>
+ <div class="fixed-item"><span class="fixed-key">No retroactive versions</span><span class="fixed-detail">Old labels point at the old version forever; silent recomputation is prohibited.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Single-batch integrity</span><span class="fixed-detail">≥ 240 plantlets / 24 h merge / one harvest window.</span></div>
+ <div class="fixed-item"><span class="fixed-key">Baseline co-signing</span><span class="fixed-detail">Dual signature freezes it; the platform may not set a baseline alone.</span></div>
+ </div>
+ </article>
+ </div>
+ <p class="fixed-note"><strong>Note:</strong>“Sample size” means plantlets sampled per batch, not the 240-plantlet batch floor of MTH-10; that floor sits in the immutable column. Any change must update method_version, and old records are not recomputed.</p>
+
+ <div class="subhead"><h3>Change matrix</h3><span>VERSION BUMP RULE</span></div>
+ <div class="table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Change type</th><th>Version digit</th><th>Old labels</th></tr></thead>
+ <tbody>
+ <tr><td>Mutable parameter</td><td class="num">MINOR</td><td>Kept, pointing at the old version</td></tr>
+ <tr><td>Immutable item or output semantics</td><td class="num">MAJOR</td><td>Frozen; new chain genesis</td></tr>
+ <tr><td>Editorial fix that changes no criterion</td><td class="num">PATCH</td><td>Kept; not recomputed</td></tr>
+ </tbody>
+ </table>
+ </div>
+ </section>
+
+ <section class="section" id="claim">
+ <div class="section-head">
+ <div class="sec-num">07</div>
+ <div>
+ <p class="sec-kicker">CLAIM BOUNDARY</p>
+ <h2>What we refuse to claim</h2>
+ <p class="sec-desc">These six statements are product boundaries, not legal boilerplate. Sales material may not delete, reword or soften them.</p>
+ </div>
+ </div>
+ <div class="claims">
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 01</span>
+ <h3>Not a carbon credit</h3>
+ <p>What we issue is a carbon footprint label and a decision record built on metered energy. It is not a tradable credit and carries no additionality argument.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 02</span>
+ <h3>Not an offset</h3>
+ <p>There is no baseline additionality, no leakage provision and no permanence arrangement, so it may not be used to offset emissions in any scope.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 03</span>
+ <h3>Not certified</h3>
+ <p>We cite ISO 14067, PAS 2050, the GHG Protocol, ISO/IEC 17025 and ISO 19011, but no accreditation body has certified us. A certification conclusion can only be issued by an accreditation body.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 04</span>
+ <h3>No yield prediction</h3>
+ <p>This layer outputs contamination judgement, acclimatisation readiness and nutrient-fog selection only. Yield belongs to the client's own agronomy.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 05</span>
+ <h3>No pesticide prescription</h3>
+ <p>It outputs release, review or isolation only. It never names a pesticide, a dose or an application, and plant-protection decisions remain with qualified personnel.</p>
+ </article>
+ <article class="claim-card">
+ <span class="claim-no">REFUSE 06</span>
+ <h3>No plant-variety rights ruling</h3>
+ <p>Lineage fields exist for batch merging and traceability only, never for authenticity, ownership or infringement judgements.</p>
+ </article>
+ </div>
+ </section>
+
+ <section class="manifest" id="manifest">
+ <div class="manifest-head">
+ <div>
+ <p class="sec-kicker">MACHINE-READABLE MANIFEST</p>
+ <h2>Method manifest </h2>
+ </div>
+ <span class="chip mono">application/json</span>
+ </div>
+ <pre class="manifest-code">{"method":"CJV-MTH-1.0","hash":"9b12abef","effective":"2026-11-03","rules":12,"applies_to":["jev-decision","carbon-label"],"immutable":["hash","abstain-semantics","version-history","batch-integrity","baseline-cosign"]}</pre>
+ <p>The manifest exists for integration and automated checking. Where it conflicts with the prose, the immutable rule snapshot of CJV-MTH-1.0 governs.</p>
+ </section>
+
+ <footer class="footer">
+ <span><b>CJV-MTH-1.0</b> · effective 2026-11-03 · 12 rules</span>
+ <span>hash <b>9b12abef</b> · FNV-1a-64 canonical JSON</span>
+ <span>challenge 30 d · adjudication ≤ 14 d</span>
+ </footer>
+ </main>
+ </div>
+</div>
+<a class="zc-back" href="../../index.html" title="title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<script src="/lang.js"></script>
+</body>
+</html>

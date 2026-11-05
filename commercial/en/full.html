@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commercial offer and pricing · aeroponic coffee decision layer · CoffeeJeV</title>
+<meta name="description" content="content="CoffeeJeV — commercial offer and price anchors: three product lines (Zone seats, carbon label issuance, batch quality bonds) priced by evidence grade, with a quote calculator, anti-arbitrage rules and governance separation. A single-file offline page with no external requests.">
+<meta name="color-scheme" content="dark">
+<style>
+/* ============================================================ CoffeeJeV · Commercial / Pricing 设计系统：bg #08090b / card #11141a / card2 #171b21 border #232931 #313945 / text #e9ecf1 / dim #8d97a5 / dim2 #64748b green #00c48c #3fe0b0 / amber #e0a24e / red #ff5d6e / violet #8b6cff ============================================================ */
+:root{ --bg:#08090b; --bg2:#0a0c0f; --card:#11141a; --card2:#171b21; --line:#232931; --line2:#313945; --tx:#e9ecf1; --dim:#8d97a5; --dim2:#64748b; --green:#00c48c; --green2:#3fe0b0; --amber:#e0a24e; --red:#ff5d6e; --violet:#8b6cff; --g-bg:rgba(0,196,140,.09); --g-bd:rgba(0,196,140,.30); --a-bg:rgba(224,162,78,.09); --a-bd:rgba(224,162,78,.32); --r-bg:rgba(255,93,110,.09); --r-bd:rgba(255,93,110,.32); --v-bg:rgba(139,108,255,.10); --v-bd:rgba(139,108,255,.32); --r:13px; --r2:10px; --mono:ui-monospace,SFMono-Regular,Consolas,"Cascadia Mono","Liberation Mono",monospace; --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
+*{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:14.8px;line-height:1.68;-webkit-font-smoothing:antialiased}
+a{color:#8ec7ff;text-decoration:none} a:hover{text-decoration:underline} ::selection{background:rgba(0,196,140,.28)}
+::-webkit-scrollbar{width:10px;height:10px} ::-webkit-scrollbar-track{background:#0b0d10}
+::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px} ::-webkit-scrollbar-thumb:hover{background:#3a434f}
+b,strong{font-weight:700;color:#fff}
+code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;color:#cfe0ee;overflow-wrap:anywhere}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums} .nw{white-space:nowrap}
+/* ---------------- 布局 ---------------- */
+.app{display:grid;grid-template-columns:250px minmax(0,1fr)}
+.nav{position:sticky;top:0;height:100vh;padding:18px 14px 20px;border-right:1px solid var(--line); display:flex;flex-direction:column;overflow-y:auto; background:linear-gradient(180deg,#0a0c0f,#08090b 62%)}
+main{min-width:0} .wrap{max-width:1180px;padding:0 44px 0 40px;margin:0 auto} .brand{display:flex;align-items:center;gap:11px;padding:6px 8px 18px}
+.brand .mark{width:38px;height:38px;border-radius:11px;flex-shrink:0; background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35); display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 3px rgba(0,196,140,.05)}
+.brand .mark svg{width:22px;height:22px} .brand .txt b{display:block;font-size:15.5px;letter-spacing:.2px;line-height:1.25}
+.brand .txt span{display:block;font-size:10px;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;font-family:var(--mono)}
+.navlabel{font-size:10.5px;letter-spacing:1.3px;color:var(--dim2);text-transform:uppercase; padding:10px 10px 6px;font-family:var(--mono)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;color:var(--dim); font-size:13.4px;border:1px solid transparent;transition:.15s;text-decoration:none}
+.navitem:hover{background:rgba(255,255,255,.045);color:var(--tx);text-decoration:none}
+.navitem .n{font-family:var(--mono);font-size:11px;color:var(--dim2);width:16px;flex-shrink:0}
+.navitem.active{background:var(--g-bg);border-color:var(--g-bd);color:#fff;font-weight:600} .navitem.active .n{color:var(--green)}
+.navfoot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:11.4px;color:var(--dim2);line-height:1.7}
+.navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber); margin-right:6px;box-shadow:0 0 8px var(--amber);vertical-align:1px}
+.navfoot .k{font-family:var(--mono);color:var(--dim)}
+/* ---------------- 页首 ---------------- */
+.hero{padding:50px 0 34px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-46% -10% auto -10%;height:560px;pointer-events:none; background: radial-gradient(760px 320px at 6% -10%,rgba(0,196,140,.14),transparent 62%), radial-gradient(620px 300px at 94% -18%,rgba(139,108,255,.12),transparent 64%), radial-gradient(520px 260px at 52% 8%,rgba(224,162,78,.07),transparent 72%)}
+.hero>*{position:relative}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:10.8px; letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:15px}
+.eyebrow .sep{color:var(--dim2)} .eyebrow .mut{color:var(--dim)}
+h1.title{font-size:clamp(28px,4.3vw,46px);line-height:1.13;letter-spacing:-1.1px;font-weight:800;margin-bottom:10px}
+h1.title em{font-style:normal;background:linear-gradient(96deg,#00c48c 6%,#7fe0b6 48%,#8b6cff 98%); -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .zh{font-size:clamp(14px,2vw,18px);color:var(--dim);font-weight:600;letter-spacing:.4px;margin-bottom:16px}
+.lede{font-size:15.6px;color:#c3cbd6;max-width:78ch;line-height:1.82} .lede b{color:#fff} .lede .hi{color:var(--green2);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:999px;font-size:12.2px; background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
+.chip .k{font-family:var(--mono);font-size:10px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase}
+.chip.g{border-color:var(--g-bd);background:var(--g-bg);color:#a9f3d8} .chip.a{border-color:var(--a-bd);background:var(--a-bg);color:#f0d3a5}
+.chip.v{border-color:var(--v-bd);background:var(--v-bg);color:#cfc0ff}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(206px,1fr));gap:10px;margin-top:26px}
+.tile{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)); border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.tile .k{font-size:11.4px;color:var(--dim);letter-spacing:.2px}
+.tile .v{font-size:22px;font-weight:800;letter-spacing:-.6px;margin-top:2px; font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:11.5px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:2px}
+.tile .s{font-size:10.6px;color:var(--dim2);margin-top:1px}
+/* ---------------- 区块 ---------------- */
+.sec{padding:48px 0 16px;border-top:1px solid var(--line);scroll-margin-top:8px} .sechead{margin-bottom:20px}
+.sechead .num{font-family:var(--mono);font-size:11.5px;color:var(--green);letter-spacing:2px;margin-bottom:8px}
+.sechead h2{font-size:clamp(21px,2.9vw,28px);letter-spacing:-.6px;line-height:1.22;font-weight:800}
+.sechead .sub{font-size:13.4px;color:var(--dim);font-weight:600;margin-top:4px;letter-spacing:.4px}
+.sechead p{margin-top:12px;color:#b9c2ce;max-width:94ch;font-size:14.2px;line-height:1.8}
+h3.sub{font-size:16px;font-weight:750;margin:26px 0 11px;letter-spacing:-.2px; display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+h3.sub::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--green);display:inline-block}
+h3.sub .mut{font-size:11.5px;color:var(--dim2);font-weight:500;letter-spacing:0;font-family:var(--mono)}
+p.body{font-size:14.1px;color:#bcc5d0;line-height:1.84;margin:9px 0;max-width:96ch} p.body b{color:#fff}
+p.body .m{font-family:var(--mono);font-size:12.8px;color:#d6e6f2}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:11px}
+/* ---------------- 卡片 ---------------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px 14px}
+.card h4{font-size:14.4px;font-weight:750;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.4px;color:#b4bdc9;line-height:1.72} .card p+p{margin-top:6px}
+.card .cl{font-family:var(--mono);font-size:10.2px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
+.card.note{border-left:2px solid var(--amber);background:linear-gradient(90deg,var(--a-bg),transparent 58%)}
+.card.good{border-left:2px solid var(--green);background:linear-gradient(90deg,var(--g-bg),transparent 58%)}
+.card.bad{border-left:2px solid var(--red);background:linear-gradient(90deg,var(--r-bg),transparent 58%)}
+.card.vio{border-left:2px solid var(--violet);background:linear-gradient(90deg,var(--v-bg),transparent 58%)} .card2{background:var(--card2)}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed rgba(49,57,69,.65);font-size:13.2px}
+.kv:last-child{border-bottom:0} .kv .k{color:var(--dim)}
+.kv .v{font-family:var(--mono);font-variant-numeric:tabular-nums;color:#e2e9f1;font-weight:600}
+/* ---------------- 徽标 ---------------- */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;font-size:10.6px; font-weight:700;letter-spacing:.2px;border:1px solid;white-space:nowrap;vertical-align:1px}
+.pill.ok{color:var(--green2);border-color:rgba(0,196,140,.45);background:var(--g-bg)}
+.pill.warn{color:#ffbe72;border-color:var(--a-bd);background:var(--a-bg)}
+.pill.info{color:#8ec7ff;border-color:rgba(59,158,247,.45);background:rgba(59,158,247,.10)}
+.pill.gray{color:var(--dim);border-color:var(--line2);background:rgba(255,255,255,.03)}
+.pill.vio{color:#c0adff;border-color:var(--v-bd);background:var(--v-bg)} .pill.red{color:#ff9aa4;border-color:var(--r-bd);background:var(--r-bg)}
+.tg{display:inline-block;font-family:var(--mono);font-size:10px;border-radius:4px;padding:0 4px; letter-spacing:.3px;vertical-align:1px;white-space:nowrap;border:1px solid;line-height:1.55}
+.tg.der{color:#c0adff;border-color:var(--v-bd);background:var(--v-bg)} .tg.asm{color:#ffbe72;border-color:var(--a-bd);background:var(--a-bg)}
+.tg.cite{color:#9fe8d0;border-color:var(--g-bd);background:var(--g-bg)}
+/* ---------------- 表格 ---------------- */
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:13.1px;min-width:600px}
+thead th{background:linear-gradient(180deg,#191e26,#141821);color:var(--dim);font-weight:600; font-size:11.2px;letter-spacing:.5px;text-align:left;padding:9px 12px;border-bottom:1px solid var(--line2); text-transform:uppercase;white-space:nowrap;position:relative}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line);color:#c2cbd6;vertical-align:top} tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:rgba(255,255,255,.022)} tbody tr.alt td{background:rgba(255,255,255,.012)}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap} td.k{color:#e6edf4;font-weight:600}
+td .sm{display:block;font-size:11.4px;color:var(--dim2);font-weight:400;margin-top:1px;font-family:var(--font)}
+tr.total td{background:rgba(0,196,140,.06);border-top:1px solid var(--g-bd);font-weight:700;color:#fff} tr.total td.n{color:var(--green2)}
+.tblnote{font-size:11.8px;color:var(--dim2);padding:9px 13px;border-top:1px solid var(--line);line-height:1.7;background:rgba(255,255,255,.012)}
+.tblnote b{color:var(--dim)}
+/* ---------------- 提示块 ---------------- */
+.callout{border-radius:var(--r);padding:14px 17px;border:1px solid;display:flex;gap:13px;align-items:flex-start}
+.callout .bar{width:3px;border-radius:2px;align-self:stretch;flex-shrink:0} .callout .ct{font-size:13.9px;line-height:1.75;color:#c8d1db}
+.callout .ct b{color:#fff} .callout.g{background:linear-gradient(90deg,var(--g-bg),transparent 70%);border-color:var(--g-bd)}
+.callout.g .bar{background:var(--green)} .callout.a{background:linear-gradient(90deg,var(--a-bg),transparent 70%);border-color:var(--a-bd)}
+.callout.a .bar{background:var(--amber)} .callout.r{background:linear-gradient(90deg,var(--r-bg),transparent 70%);border-color:var(--r-bd)}
+.callout.r .bar{background:var(--red)} .callout.v{background:linear-gradient(90deg,var(--v-bg),transparent 70%);border-color:var(--v-bd)}
+.callout.v .bar{background:var(--violet)} .bigline{font-size:15.4px;line-height:1.8;color:#dfe6ee} .bigline b{color:#fff}
+/* ---------------- 计算器 ---------------- */
+.calc{margin-top:16px;background:linear-gradient(180deg,#141821,#0f1216);border:1px solid var(--line2); border-radius:var(--r);overflow:hidden}
+.calc-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap; padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
+.calc-head .t{font-size:14.6px;font-weight:750;display:flex;align-items:center;gap:9px} .calc-head .t svg{width:15px;height:15px}
+.calc-head .h{font-family:var(--mono);font-size:10.6px;color:var(--dim2);letter-spacing:.5px}
+.calc-body{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:0}
+.controls{padding:17px 18px;border-right:1px solid var(--line);background:rgba(0,0,0,.12)} .ctrl{margin-bottom:19px} .ctrl:last-child{margin-bottom:0}
+.ctrl .lab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12.2px; color:var(--dim);margin-bottom:9px;letter-spacing:.2px}
+.ctrl .lab .v{font-family:var(--mono);font-size:15.5px;color:#fff;font-weight:700;letter-spacing:-.3px}
+.ctrl .lab .v small{font-size:10.6px;color:var(--dim2);font-weight:500;margin-left:3px;letter-spacing:0}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:99px; background:linear-gradient(90deg,var(--green),#1b8f6e 55%,#2a3340 100%);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px; border-radius:50%;background:#eafff7;border:3px solid var(--green);cursor:pointer; box-shadow:0 0 0 4px rgba(0,196,140,.16),0 2px 6px rgba(0,0,0,.5)}
+input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#eafff7; border:3px solid var(--green);cursor:pointer;box-shadow:0 0 0 4px rgba(0,196,140,.16)}
+input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
+.scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px; color:var(--dim2);margin-top:5px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px; border:1px solid var(--line2);border-radius:var(--r2);background:var(--card);cursor:pointer;transition:.15s}
+.switch:hover{border-color:#3f4a58} .switch .st{font-size:13px;color:#dbe3ec}
+.switch .st .d{display:block;font-size:11.1px;color:var(--dim2);margin-top:1px;font-family:var(--font)}
+.sw{position:relative;width:42px;height:23px;border-radius:99px;background:#2a3340;flex-shrink:0; transition:.18s;border:1px solid var(--line2)}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%; background:#8d97a5;transition:.18s}
+.switch input{position:absolute;opacity:0;pointer-events:none} .switch input:checked + .sw{background:rgba(0,196,140,.28);border-color:var(--g-bd)}
+.switch input:checked + .sw::after{left:20px;background:var(--green2)} .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.seg button{appearance:none;font-family:var(--font);font-size:12.4px;padding:8px 4px;border-radius:var(--r2); border:1px solid var(--line2);background:var(--card);color:var(--dim);cursor:pointer;transition:.14s; display:flex;flex-direction:column;align-items:center;gap:1px}
+.seg button .gl{font-family:var(--mono);font-size:13.5px;font-weight:800;letter-spacing:.5px;color:#cfd8e2}
+.seg button .gp{font-family:var(--mono);font-size:10.3px;color:var(--dim2)} .seg button:hover{border-color:#3f4a58;color:var(--tx)}
+.seg button.on{border-color:var(--g-bd);background:var(--g-bg);color:#bfeedd} .seg button.on .gl{color:var(--green2)}
+.seg button.on .gp{color:#8fd9c1} .outs{padding:17px 18px 15px;background:linear-gradient(180deg,rgba(0,196,140,.035),transparent 60%)}
+.ogrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.obox{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:11px 13px}
+.obox.main{border-color:var(--g-bd);background:linear-gradient(180deg,rgba(0,196,140,.10),rgba(17,20,26,.9))}
+.obox.bad{border-color:var(--r-bd);background:linear-gradient(180deg,rgba(255,93,110,.07),rgba(17,20,26,.9))}
+.obox .k{font-size:11.2px;color:var(--dim);letter-spacing:.2px}
+.obox .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:21px;font-weight:800; letter-spacing:-.7px;margin-top:2px;color:#fff;line-height:1.25}
+.obox.main .v{color:var(--green2)} .obox.bad .v{color:#ff9aa4}
+.obox .v small{font-size:10.8px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:3px}
+.obox .s{font-family:var(--mono);font-size:10.5px;color:var(--dim2);margin-top:2px;line-height:1.5;letter-spacing:-.1px}
+.cfx{margin-top:10px;padding:10px 13px;border-radius:var(--r2);border:1px dashed var(--line2); background:rgba(255,255,255,.018);font-size:12.2px;color:var(--dim);line-height:1.7}
+.cfx b{color:#e6edf4;font-family:var(--mono);font-variant-numeric:tabular-nums} .cfx .warn{color:#ffbe72}
+.dyn{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:var(--mono);font-size:11.4px;color:var(--dim2)}
+.dyn b{color:#dfe6ee;font-variant-numeric:tabular-nums}
+/* ---------------- 飞轮 ---------------- */
+.wheel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin-top:13px; border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
+.wstep{padding:13px 14px;position:relative;border-right:1px solid var(--line)} .wstep:last-child{border-right:0}
+.wstep .wn{font-family:var(--mono);font-size:10.2px;color:var(--green);letter-spacing:1.4px}
+.wstep b{display:block;font-size:13px;margin:3px 0 3px;color:#eef3f8} .wstep p{font-size:11.8px;color:var(--dim);line-height:1.65}
+.wstep .fee{font-family:var(--mono);font-size:11px;color:var(--green2);margin-top:5px;display:block}
+.wstep::after{content:"›";position:absolute;right:-7px;top:50%;transform:translateY(-50%);z-index:2; color:var(--dim2);font-size:19px;line-height:1;background:var(--bg);padding:0 1px}
+.wstep:last-child::after{content:none}
+/* ---------------- 页脚 ---------------- */
+.foot{border-top:1px solid var(--line);margin-top:46px;padding:26px 0 40px}
+.foot .disc{background:linear-gradient(90deg,var(--a-bg),transparent 70%);border:1px solid var(--a-bd); border-radius:var(--r);padding:14px 17px;font-size:13.2px;color:#e5d5ba;line-height:1.75}
+.foot .meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:18px; font-family:var(--mono);font-size:11px;color:var(--dim2);letter-spacing:.2px}
+.foot .meta a{color:var(--dim)}
+/* ---------------- 响应式 ---------------- */
+@media (max-width:1080px){ .calc-body{grid-template-columns:1fr}
+ .controls{border-right:0;border-bottom:1px solid var(--line)} }
+@media (max-width:960px){ .app{grid-template-columns:1fr}
+ .nav{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;gap:10px; padding:0 12px;border-right:0;border-bottom:1px solid var(--line);z-index:40; background:rgba(8,9,11,.94);backdrop-filter:blur(10px);overflow-x:auto;overflow-y:hidden}
+ .brand{padding:9px 4px 9px 0;border-right:1px solid var(--line);flex-shrink:0} .brand .txt span{display:none}
+ .brand .mark{width:30px;height:30px;border-radius:9px} .brand .mark svg{width:18px;height:18px} .navlabel,.navfoot{display:none}
+ .navlist{flex-direction:row;gap:4px;padding:7px 0;flex:1 1 auto}
+ .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.2px;padding:6px 10px} .navitem .n{display:none} .wrap{padding:0 20px}
+ .hero{padding:32px 0 24px} .wheel{grid-template-columns:1fr} .wstep{border-right:0;border-bottom:1px solid var(--line)}
+ .wstep:last-child{border-bottom:0} .wstep::after{content:none} }
+@media (max-width:620px){ .ogrid{grid-template-columns:1fr}
+ .tiles{grid-template-columns:repeat(2,minmax(0,1fr))} .tile .v{font-size:19px} h1.title{letter-spacing:-.6px}
+ .foot .meta{flex-direction:column;gap:5px} }
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+<style id="zc-back-css">
+.zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;border:0;
+ font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.90);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28);transition:.15s}
+.zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+.zc-back svg{width:13px;height:13px;flex:none}
+@media (max-width:640px){.zc-back{top:12px;right:12px;padding:8px 12px;font-size:11.5px}}
+</style>
+<style>.rule-en{display:none}</style>
+</head>
+<body>
+<div class="app">
+<!-- ==================== 左侧固定导航 ==================== -->
+<nav class="nav" aria-label="aria-label="Page navigation">
+ <div class="brand">
+ <div class="mark" aria-hidden="true">
+ <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+ <path d="M12 2.6c-3.2 0-5.6 2-5.6 4.6 0 1.5.4 2.5.4 3.6 0 1.4-1 2.3-1 3.9 0 2.7 2.3 4.6 6.2 4.6s6.2-1.9 6.2-4.6c0-1.6-1-2.5-1-3.9 0-1.1.4-2.1.4-3.6 0-2.6-2.4-4.6-5.6-4.6Z" stroke="#00c48c" stroke-width="1.15"/>
+ <path d="M12 6.4c-1.5 0-2.6 1-2.6 2.2 0 .7.2 1.2.2 1.8 0 .7-.5 1.2-.5 1.9 0 1.2 1.1 2.1 2.9 2.1s2.9-.9 2.9-2.1c0-.7-.5-1.2-.5-1.9 0-.6.2-1.1.2-1.8 0-1.2-1.1-2.2-2.6-2.2Z" stroke="#3fe0b0" stroke-width=".9" opacity=".7"/>
+ <path d="M12 21.2V9" stroke="#00c48c" stroke-width="1.15" stroke-linecap="round" opacity=".55"/>
+ </svg>
+ </div>
+ <div class="txt">
+ <b>CoffeeJeV</b>
+ <span>commercial · pricing</span>
+ </div>
+ </div>
+ <div class="navlabel">price anchor v1.0</div>
+ <div class="navlist">
+ <a class="navitem" href="#why"><span class="n">01</span> The pricing logic in one line </a>
+ <a class="navitem" href="#tiers"><span class="n">02</span> Three product lines </a>
+ <a class="navitem" href="#zone"><span class="n">03</span> Why sell by Zone</a>
+ <a class="navitem" href="#evidence"><span class="n">04</span> Evidence pricing</a>
+ <a class="navitem" href="#anti"><span class="n">05</span> Anti-arbitrage rules</a>
+ <a class="navitem" href="#governance"><span class="n">06</span> Who is speaking</a>
+ </div>
+ <div class="navfoot">
+ <div><span class="dot"></span> All prices <b>unverified</b></div>
+ <div class="k">derived = computed on this site · assumption = an unverified premise</div>
+ <div class="k">single file / zero external requests</div>
+ </div>
+</nav>
+<main>
+<div class="wrap">
+<!-- ==================== HERO ==================== -->
+<header class="hero">
+ <div class="eyebrow">
+ <span>CoffeeJeV</span><span class="sep">/</span>
+ <span class="mut">12-field IoT · 3 judgers · hash-chained ledger</span>
+ <span class="sep">/</span><span>commercial offer v1.0</span>
+ </div>
+ <h1 class="title">We do not sell judgement;<br>we sell the judgement's <em>evidence</em>.</h1>
+ <div class="zh">The decision layer for aeroponic coffee nurseries · commercial offer and price anchors</div>
+ <p class="lede">
+ We do not sell per-call judgement. We sell the evidence judgement leaves <b>evidence</b>— a verifiable PCF label, a batch quality bond and an auditable ledger. A twelve-site IoT fleet writes every call of the three judgers (contamination / acclimatisation readiness / nutrient-fog selection) into a hash-chained ledger, and each batch gets a footprint and label built on metered energy.
+ <span class="hi">The grower pays for judgement, the buyer pays for evidence; one batch, paid for twice.</span>
+ </p>
+ <div class="chips">
+ <span class="chip g"><span class="k">unit</span> site · zone · batch · cargo value</span>
+ <span class="chip"><span class="k">ledger</span> hash-chained</span>
+ <span class="chip"><span class="k">pcf</span> metered energy</span>
+ <span class="chip a"><span class="k">status</span> price anchor · not market-tested</span>
+ <span class="chip v"><span class="k">tag</span> derived / assumption marked throughout</span>
+ </div>
+ <div class="tiles">
+ <div class="tile">
+ <div class="k">annual avoided loss at a 60,000-plantlet site</div>
+ <div class="v">¥28,000</div>
+ <div class="s">≈ $3,900 <span class="tg cite">cite</span></div>
+ </div>
+ <div class="tile">
+ <div class="k">annual cost of zone membership at 60,000 plantlets</div>
+ <div class="v">¥3,450</div>
+ <div class="s">coverage <b class="mono">8.1×</b> <span class="tg der">derived</span></div>
+ </div>
+ <div class="tile">
+ <div class="k">the threshold for buying the full hardware</div>
+ <div class="v">¥78,000</div>
+ <div class="s">payback at 60,000 plantlets <b style="color:#ff9aa4">∞</b> <span class="tg der">derived</span></div>
+ </div>
+ <div class="tile">
+ <div class="k">240,000/year · label batches</div>
+ <div class="v">500 <small>batch</small></div>
+ <div class="s">grade A issuance ¥40,000 <span class="tg der">derived</span></div>
+ </div>
+ </div>
+</header>
+<!-- ==================== 01 · WHY ==================== -->
+<section class="sec" id="why">
+ <div class="sechead">
+ <div class="num">01 / PRICING LOGIC</div>
+ <h2>The pricing logic in one line </h2>
+ <div class="sub">Why evidence, not inference, is the billable unit</div>
+ </div>
+ <div class="callout g" style="margin-bottom:18px">
+ <div class="bar"></div>
+ <div class="ct bigline">
+ We do not charge for judgement; we sell <b>the evidence judgement leaves behind</b>: a verifiable PCF label, a batch quality bond, and an auditable ledger.
+ <b>The grower buys judgement, the buyer buys evidence; one batch is paid for twice.</b>
+ </div>
+ </div>
+ <div class="grid3">
+ <div class="card">
+ <div class="cl">reason 01</div>
+ <h4>Judgement's marginal cost tends to zero; evidence's does not</h4>
+ <p>The judger is one forward pass: a fixed model, compute by the second, copyable in the cloud. Per-call pricing collapses to the server's marginal cost under competition, and pricing power ends up somewhere else.</p>
+ <p>The evidence chain does not collapse: metering happens in the physical world (sensors, energy meters), verification needs a third party, and liability needs a signature. Those costs do not fall when models get cheaper.</p>
+ </div>
+ <div class="card">
+ <div class="cl">reason 02</div>
+ <h4>Only evidence can be passed to the buyer</h4>
+ <p>The grower's budget line is a <b>cost item</b> — every yuan has to come out of money not lost; the buyer's budget line is <b>compliance and premium</b> — the label is a condition of entry and scope 3 primary data.</p>
+ <p>Charging for judgement sells once (the grower); charging for evidence sells twice (the grower pays for judgement access, the buyer pays for the label and the bond). One batch, two payers, two budget logics.</p>
+ </div>
+ <div class="card">
+ <div class="cl">reason 03</div>
+ <h4>Evidence can be graded, therefore priced</h4>
+ <p>Judgement has no grade, only "right or wrong" — it cannot go on a quote. Evidence has grades: a metered share of ≥70% / ≥45% / &lt;45% maps directly to grades A / B / C and issuance fees of ¥80 / ¥60 / ¥40.</p>
+ <p>The grade is the only mechanical interface between quality and price, and it is what makes every unit price on this page hold up.</p>
+ </div>
+ </div>
+ <h3 class="sub">Judgement vs evidence: what is being billed <span class="mut">why the unit matters</span></h3>
+ <div class="tblwrap">
+ <table>
+ <thead>
+ <tr><th>Dimension</th><th>Charging for judgement (not done)</th><th>Charging for evidence (this page)</th></tr>
+ </thead>
+ <tbody>
+ <tr><td class="k">Billing unit</td><td>call / invocation / token</td><td>site-year (seat) · batch (label) · cargo value (bond)</td></tr>
+ <tr class="alt"><td class="k">Marginal cost</td><td>tends to zero, collapses under competition</td><td>does not: metering, verification, liability, legal</td></tr>
+ <tr><td class="k">Payer</td><td>the grower only (a cost-item budget)</td><td>grower + buyer (a cost item and a compliance item, two budgets)</td></tr>
+ <tr class="alt"><td class="k">Verifiability</td><td>none ("our model is accurate")</td><td>yes: hash-chained ledger + metered share + third-party verification</td></tr>
+ <tr><td class="k">Gradability</td><td>no grades, cannot go on a quote</td><td>three grades A / B / C at ¥80 / ¥60 / ¥40</td></tr>
+ <tr class="alt"><td class="k">Scale effect</td><td>cheaper with use, until the margin crushes itself</td><td>more evidence with use, higher grades, a higher unit price</td></tr>
+ </tbody>
+ </table>
+ <div class="tblnote">The table is a qualitative comparison without numbers; unit prices are in <a href="#tiers">02 Three product lines</a>.</div>
+ </div>
+</section>
+<!-- ==================== 02 · TIERS ==================== -->
+<section class="sec" id="tiers">
+ <div class="sechead">
+ <div class="num">02 / PRODUCT LINES</div>
+ <h2>Three product lines </h2>
+ <div class="sub">Three lines: grower pays judgement, buyer pays evidence</div>
+ <p>The first line is sold to the grower as a cost item; the second and third go to the buyer as compliance and premium items that can be passed downstream. All three share one metering setup, one ledger and one dataset — the marginal cost is incurred once, on the first line.</p>
+ </div>
+ <div class="tblwrap">
+ <table>
+ <thead>
+ <tr>
+ <th style="min-width:150px">Product line</th>
+ <th style="min-width:190px">What is sold</th>
+ <th>Payer</th>
+ <th style="min-width:96px">Unit</th>
+ <th style="min-width:150px">Price</th>
+ <th class="n" style="min-width:132px">Per year <span style="display:block;font-size:9.6px;letter-spacing:0;text-transform:none;color:#4b5563">at 240,000 plantlets a year</span></th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="k">Judgement access<br><span class="sm">Zone seat</span></td>
+ <td>real-time judgement from three judgers (contamination / acclimatisation readiness / nutrient-fog selection) + ledger writes + edge-box sharing</td>
+ <td>Grower</td>
+ <td>site · year</td>
+ <td class="num" style="text-align:left">¥900 / site / year<br><span class="sm" style="font-family:var(--mono)">+ ¥0.03 / plantlet / year</span><span class="sm" style="font-family:var(--mono)">+ ¥750 / site / year (box share)</span></td>
+ <td class="n" style="font-size:15px;color:var(--green2)">¥8,850</td>
+ </tr>
+ <tr class="alt">
+ <td class="k">Carbon label issuance<br><span class="sm">by evidence grade</span></td>
+ <td>a PCF label per batch (line items from metered values; the grade sets how much weight it carries)</td>
+ <td>Buyer<br><span class="sm">passable downstream</span></td>
+ <td>batch</td>
+ <td class="num" style="text-align:left">¥80 / batch (A)<br><span class="sm" style="font-family:var(--mono)">¥60 / batch (B) · ¥40 / batch (C)</span></td>
+ <td class="n" style="font-size:15px;color:var(--green2)">¥40,000<br><span class="sm">B ¥30,000 / C ¥20,000</span></td>
+ </tr>
+ <tr>
+ <td class="k">Batch quality bond<br><span class="sm">batch assurance</span></td>
+ <td>cargo-value cover, with an enhanced clause that attaches the footprint and ledger evidence</td>
+ <td>Buyer</td>
+ <td>year · cargo value</td>
+ <td class="num" style="text-align:left">0.5% of cargo value (base)<br><span class="sm" style="font-family:var(--mono)">1.0% (with footprint and ledger evidence)</span></td>
+ <td class="n" style="font-size:15px;color:var(--green2)">¥15,000–30,000<br><span class="sm">¥3M cargo-value anchor</span></td>
+ </tr>
+ <tr class="total">
+ <td colspan="5">One 240,000-plantlet site, all three lines (grade A + the 1.0% bond ceiling)</td>
+ <td class="n">¥63,850–78,850</td>
+ </tr>
+ </tbody>
+ </table>
+ <div class="tblnote">
+ <b>Basis:</b> Line 1: ¥8,850 = seat ¥900 + metering 240,000 × ¥0.03 = ¥7,200 + box share ¥750 (see <a href="#zone">03</a>); line 2: batches = 240,000 ÷ 480 = 500; line 3: the cargo-value anchor is in <a href="#evidence">04</a>, which contains a basis conflict that must be locked before sale.
+ <b>Total range</b> grade A (¥40,000) at the 1.0% and 0.5% bond ends <span class="tg der">derived</span>.
+ </div>
+ </div>
+ <div class="callout a" style="margin-top:14px">
+ <div class="bar"></div>
+ <div class="ct">
+ <b>How one batch is paid for twice:</b> The grower pays ¥3,450–8,850 for "money not lost"; the buyer pays ¥35,000–70,000 for the labels and bonds that make the crop sellable. The two lines share no payer, only the same ledger over the same batch — which is why label fees can balance the books for a small site.
+ </div>
+ </div>
+</section>
+<!-- ==================== 03 · ZONE ==================== -->
+<section class="sec" id="zone">
+ <div class="sechead">
+ <div class="num">03 / PRICING UNIT</div>
+ <h2>Why we sell by Zone, not by farm </h2>
+ <div class="sub">Why the billable unit is a zone of 8–15 farms, not a farm</div>
+ <p>Conclusion first: self-build does not work mathematically at 60,000 plantlets, and zone sharing cuts fixed cost by an order of magnitude. <b>Zone = 8–15 neighbouring farms sharing one edge box</b> — metering happens at the farm, anchoring and issuance at the zone.</p>
+ </div>
+ <div class="grid3">
+ <div class="card">
+ <div class="cl">customer A · 60,000 plantlets/year</div>
+ <h4>avoided loss ≈ ¥28,000 / year</h4>
+ <div class="kv"><span class="k">USD basis</span><span class="v">≈ $3,900</span></div>
+ <div class="kv"><span class="k">avoided loss per plantlet per year</span><span class="v">¥0.4667 <span class="tg der">derived</span></span></div>
+ <div class="kv"><span class="k">annual zone cost</span><span class="v" style="color:var(--green2)">¥3,450</span></div>
+ <div class="kv"><span class="k">coverage</span><span class="v" style="color:var(--green2)">8.1×</span></div>
+ </div>
+ <div class="card">
+ <div class="cl">customer B · 240,000 plantlets/year</div>
+ <h4>avoided loss ≈ ¥112,000 / year</h4>
+ <div class="kv"><span class="k">USD basis</span><span class="v">≈ $15,600</span></div>
+ <div class="kv"><span class="k">avoided loss per plantlet per year</span><span class="v">same anchor, ¥0.4667 <span class="tg der">derived</span></span></div>
+ <div class="kv"><span class="k">annual zone cost</span><span class="v" style="color:var(--green2)">¥8,850</span></div>
+ <div class="kv"><span class="k">coverage</span><span class="v" style="color:var(--green2)">12.7×</span></div>
+ </div>
+ <div class="card bad">
+ <div class="cl">self-build · single site</div>
+ <h4>full hardware ¥78,000 → payback at a 60,000-plantlet site is ∞</h4>
+ <div class="kv"><span class="k">annual holding (3-year amortisation)</span><span class="v">¥26,000 <span class="tg asm">assumption</span></span></div>
+ <div class="kv"><span class="k">operations + model updates</span><span class="v">¥8,000 / year <span class="tg asm">assumption</span></span></div>
+ <div class="kv"><span class="k">total annual holding</span><span class="v" style="color:#ff9aa4">¥34,000</span></div>
+ <div class="kv"><span class="k">for a 60,000-plantlet site</span><span class="v" style="color:#ff9aa4">34,000 &gt; 28,000</span></div>
+ </div>
+ </div>
+ <p class="body">
+ The most expensive commercial finding on this site hides in the subtraction between these three cards: <b>self-build costs ¥34,000 a year to hold, against ¥28,000 of avoided loss</b> At 60,000 plantlets a grower who buys the full hardware never pays it back — not a long payback, a divergent one. Solving on the same basis, the break-even point is about <span class="m">72,857 plantlets a year</span>（¥34,000 ÷ ¥0.4667 <span class="tg der">derived</span>）。
+ <b>a 60,000 site sits below it, a 240,000 site above</b> — so self-build only works for large sites; small ones must share.
+ </p>
+ <div class="callout r" style="margin-top:12px">
+ <div class="bar"></div>
+ <div class="ct">
+ <b>So the unit of pricing is not the farm but the Zone.</b> One edge box at ¥18,000, amortised over 3 years and shared by 8 farms, costs ¥18,000 ÷ 3 ÷ 8 = <b>¥750/site/year</b>
+ <span class="tg der">derived</span>. At 15 farms per zone the box drops to ¥400/site/year and a 60,000-plantlet site totals ¥3,100 a year <span class="tg der">derived</span>. Diluted fixed cost is the only mechanical reason a small site's books can balance.
+ </div>
+ </div>
+ <h3 class="sub">Zone price list <span class="mut">price anchor · unverified</span></h3>
+ <div class="tblwrap">
+ <table>
+ <thead>
+ <tr>
+ <th style="min-width:170px">Item</th>
+ <th style="min-width:190px">Price</th>
+ <th class="n" style="min-width:110px">60,000 site</th>
+ <th class="n" style="min-width:110px">240,000 site</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="k">Seat fee</td>
+ <td class="num" style="text-align:left">¥900 / site / year</td>
+ <td class="n">¥900</td>
+ <td class="n">¥900</td>
+ </tr>
+ <tr class="alt">
+ <td class="k">Metering fee</td>
+ <td class="num" style="text-align:left">¥0.03 / plantlet / year</td>
+ <td class="n">¥1,800<br><span class="sm" style="font-family:var(--mono)">60,000 × 0.03</span></td>
+ <td class="n">¥7,200<br><span class="sm" style="font-family:var(--mono)">240,000 × 0.03</span></td>
+ </tr>
+ <tr>
+ <td class="k">Edge box (shared)</td>
+ <td class="num" style="text-align:left">¥18,000 / zone ÷ 3 years ÷ 8 farms<div class="sm" style="font-family:var(--mono)">= ¥750 / site / year <span class="tg der">derived</span></div></td>
+ <td class="n">¥750</td>
+ <td class="n">¥750</td>
+ </tr>
+ <tr class="total">
+ <td>Total / year</td>
+ <td class="num" style="text-align:left;color:var(--dim);font-size:11.8px;font-weight:500">excludes labels and bonds</td>
+ <td class="n">¥3,450</td>
+ <td class="n">¥8,850</td>
+ </tr>
+ <tr>
+ <td class="k" style="font-weight:500;color:var(--dim)">Annual avoided loss</td>
+ <td class="num" style="text-align:left;color:var(--dim);font-size:11.8px">≈ $3,900 / $15,600</td>
+ <td class="n" style="color:#dfe6ee">¥28,000</td>
+ <td class="n" style="color:#dfe6ee">¥112,000</td>
+ </tr>
+ <tr class="alt">
+ <td class="k" style="font-weight:500;color:var(--dim)">coverage</td>
+ <td class="num" style="text-align:left;color:var(--dim);font-size:11.8px">avoided loss ÷ annual cost</td>
+ <td class="n" style="color:var(--green2)">8.1× <span class="tg der">derived</span></td>
+ <td class="n" style="color:var(--green2)">12.7× <span class="tg der">derived</span></td>
+ </tr>
+ </tbody>
+ </table>
+ <div class="tblnote">
+ <b>Conclusion:</b> a 60,000 site pays ¥3,450 for ¥28,000 of avoided loss = <b>8.1× coverage</b>; self-build is <b>∞</b> (holding ¥34,000 &gt; ¥28,000, a gap of −¥6,000 a year). The implied USD/CNY rate is ≈ 7.18 <span class="tg der">derived</span> (28,000 ÷ 3,900 = 112,000 ÷ 15,600), used consistently across the page.
+ </div>
+ </div>
+ <div class="callout g" style="margin-top:14px">
+ <div class="bar"></div>
+ <div class="ct bigline">
+ A small site's books are not balanced on their own; <b>the buyer's label fee</b> balances them. At 60,000 plantlets: judgement access costs ¥3,450 and label revenue is 125 batches × ¥60 = <b>¥7,500</b>
+ <span class="tg der">derived</span> — that alone covers twice the quote, and the grower's net cost is negative.
+ </div>
+ </div>
+ <!-- ---------- 报价计算器 ---------- -->
+ <h3 class="sub">Quote calculator <span class="mut">pure js · no deps · tabular-nums</span></h3>
+ <div class="calc">
+ <div class="calc-head">
+ <div class="t">
+ <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+ <rect x="2" y="1.6" width="12" height="12.8" rx="2.2" stroke="#00c48c" stroke-width="1.2"/>
+ <path d="M5 5.4h6M5 8h2.6M5 10.6h2.6M9.6 8h1.6M9.6 10.6h1.6" stroke="#3fe0b0" stroke-width="1.2" stroke-linecap="round"/>
+ </svg>
+ annual cost / avoided loss / label revenue / net
+ </div>
+ <div class="h">anchor fixed · every output shows its derivation</div>
+ </div>
+ <div class="calc-body">
+ <div class="controls">
+ <div class="ctrl">
+ <label class="lab" for="c-plants">
+ <span>Plantlets dispatched per year</span>
+ <span class="v" id="c-plants-out">240,000<small>plantlets/year</small></span>
+ </label>
+ <input type="range" id="c-plants" min="20000" max="500000" step="10000" value="240000"
+ aria-label="aria-label="Plantlets dispatched per year" aria-valuetext="240000 plantlets a year">
+ <div class="scale"><span>20k</span><span>240k</span><span>500k</span></div>
+ </div>
+ <div class="ctrl">
+ <div class="lab"><span>Zone membership</span></div>
+ <label class="switch" for="c-zone">
+ <span class="st">Joined a zone <span class="d">8–15 farms share one edge box · ¥750 box share</span></span>
+ <input type="checkbox" id="c-zone" checked>
+ <span class="sw" aria-hidden="true"></span>
+ </label>
+ </div>
+ <div class="ctrl">
+ <div class="lab"><span>Data grade (metered share)</span></div>
+ <div class="seg" role="group" aria-label="aria-label="Data grade">
+ <button type="button" data-grade="A"><span class="gl">A</span><span class="gp">≥70% · ¥80</span></button>
+ <button type="button" data-grade="B" class="on"><span class="gl">B</span><span class="gp">≥45% · ¥60</span></button>
+ <button type="button" data-grade="C"><span class="gl">C</span><span class="gp">&lt;45% · ¥40</span></button>
+ </div>
+ </div>
+ </div>
+ <div class="outs">
+ <div class="ogrid">
+ <div class="obox" id="b-cost">
+ <div class="k">Annual cost <span class="tg der">derived</span></div>
+ <div class="v" id="o-cost">¥8,850</div>
+ <div class="s" id="o-cost-sub">seat ¥900 · metering ¥7,200 · box share ¥750</div>
+ </div>
+ <div class="obox">
+ <div class="k">Annual avoided loss <span class="tg der">derived</span></div>
+ <div class="v" id="o-avoid">¥112,000</div>
+ <div class="s" id="o-avoid-sub">≈ $15,600 · linear extrapolation, not measured</div>
+ </div>
+ <div class="obox">
+ <div class="k">Annual label revenue <span class="tg der">derived</span></div>
+ <div class="v" id="o-label">¥30,000</div>
+ <div class="s" id="o-label-sub">500 batches × ¥60 (grade B)</div>
+ </div>
+ <div class="obox main" id="b-net">
+ <div class="k">Net <span class="tg der">derived</span></div>
+ <div class="v" id="o-net">¥133,150</div>
+ <div class="s" id="o-net-sub">avoided loss + label revenue − annual cost</div>
+ </div>
+ </div>
+ <div class="cfx">
+ Compare: <b>self-build holds ¥34,000 a year</b> (hardware ¥78,000 ÷ 3 years = ¥26,000 + operations ¥8,000 <span class="tg asm">assumption</span>) → at the current plantlet count self-build covers <b id="o-self">3.3×</b>, the zone covers <b id="o-zone">12.7×</b>.
+ <span class="warn" id="o-cross"></span>
+ </div>
+ <div class="dyn">
+ <span>Batches <b id="o-batches">500</b></span>
+ <span>Avoided loss per plantlet <b>¥0.4667</b> <span class="tg der">derived</span></span>
+ <span>Implied FX rate <b>¥7.18 / $</b> <span class="tg der">derived</span></span>
+ <span id="o-mode">Mode: zone seat</span>
+ </div>
+ </div>
+ </div>
+ </div>
+ <p class="body" style="font-size:12.4px;color:var(--dim2)">
+ Calculator basis: avoided loss anchored at ¥28,000 for 60,000 plantlets <b>linearly extrapolated</b> to the chosen output (¥0.4667/plantlet/year), <b>not measured</b>; batches = plantlets ÷ 480 rounded; label revenue = batches × grade price; the net assumes the label fee counts on the grower's side as passable. In the self-build comparison, operations of ¥8,000 a year and 3-year depreciation are<label style="color:#ffbe72">assumption</label>, not measured values.
+ </p>
+</section>
+<!-- ==================== 04 · EVIDENCE ==================== -->
+<section class="sec" id="evidence">
+ <div class="sechead">
+ <div class="num">04 / EVIDENCE PRICING</div>
+ <h2>Pricing the certificate: by evidence grade, not by batch </h2>
+ <div class="sub">Per-batch, priced by evidence grade — the upsell engine</div>
+ <p>For the same 240-plantlet batch the label can cost ¥40, ¥60 or ¥80. The difference is not our labour, it is <b>how much of the data is metered</b>. The grade is what the buyer reads, the price is what the grower reads — and it is the same number.</p>
+ </div>
+ <div class="tblwrap">
+ <table>
+ <thead>
+ <tr>
+ <th style="min-width:88px">Data grade</th>
+ <th style="min-width:180px">Criterion (metered share)</th>
+ <th class="n" style="min-width:110px">Label issuance fee</th>
+ <th style="min-width:230px">Description</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="k"><span class="pill ok">A</span></td>
+ <td class="num" style="text-align:left">≥ 70% of line items metered</td>
+ <td class="n" style="color:var(--green2);font-size:14.5px">¥80 / batch</td>
+ <td>the buyer's preferred grade; usable as scope 3 primary data</td>
+ </tr>
+ <tr class="alt">
+ <td class="k"><span class="pill warn">B</span></td>
+ <td class="num" style="text-align:left">≥ 45%</td>
+ <td class="n" style="color:#f0d3a5;font-size:14.5px">¥60 / batch</td>
+ <td>where AP-0712 sits today — the current deployment is at this grade</td>
+ </tr>
+ <tr>
+ <td class="k"><span class="pill red">C</span></td>
+ <td class="num" style="text-align:left">&lt; 45%</td>
+ <td class="n" style="color:#ff9aa4;font-size:14.5px">¥40 / batch</td>
+ <td>needs more sensors to upgrade; the label still issues, but the buyer discounts it</td>
+ </tr>
+ </tbody>
+ </table>
+ <div class="tblnote">
+ The grade comes from one <b>metered share</b> — a single mechanical criterion, not a human rating. The grade freezes at issuance and enters the ledger with the label hash. 240,000 plantlets a year = 500 batches → grade A <b>¥40,000</b> / grade B <b>¥30,000</b> / grade C <b>¥20,000</b> <span class="tg der">derived</span>.
+ </div>
+ </div>
+ <h3 class="sub">The capacity math: what 500 batches bring in <span class="mut">revenue by grade</span></h3>
+ <div class="grid3">
+ <div class="card">
+ <div class="cl">grade A</div>
+ <h4>Grade A · 500 batches × ¥80</h4>
+ <div class="kv"><span class="k">annual label revenue</span><span class="v" style="color:var(--green2)">¥40,000</span></div>
+ <div class="kv"><span class="k">vs grade B</span><span class="v">+¥10,000</span></div>
+ <p style="margin-top:7px">Usable as scope 3 primary data and the buyer's preference — the premium sits on the buyer's side, not the issuer's.</p>
+ </div>
+ <div class="card">
+ <div class="cl">grade B</div>
+ <h4>Grade B · 500 batches × ¥60</h4>
+ <div class="kv"><span class="k">annual label revenue</span><span class="v" style="color:#f0d3a5">¥30,000</span></div>
+ <div class="kv"><span class="k">vs grade C</span><span class="v">+¥10,000</span></div>
+ <p style="margin-top:7px">The actual level at AP-0712: the "already sellable" baseline, and the starting point for an upgrade.</p>
+ </div>
+ <div class="card">
+ <div class="cl">grade C</div>
+ <h4>Grade C · 500 batches × ¥40</h4>
+ <div class="kv"><span class="k">annual label revenue</span><span class="v" style="color:#ff9aa4">¥20,000</span></div>
+ <div class="kv"><span class="k">the step to B</span><span class="v">+¥10,000 / year</span></div>
+ <p style="margin-top:7px">each grade = +¥20 per batch = +¥10,000 a year at 500 batches <span class="tg der">derived</span>. That is the direct return on adding sensors.</p>
+ </div>
+ </div>
+ <h3 class="sub">Batch quality bond <span class="mut">batch assurance · percentage of cargo value</span></h3>
+ <div class="grid2">
+ <div class="card">
+ <div class="cl">assurance · base</div>
+ <h4>Base bond: 0.5% of cargo value</h4>
+ <p>Covers batch quality and performance only, without the footprint or ledger evidence. Simplest terms, shortest legal path, and the launch version.</p>
+ <div class="kv" style="margin-top:8px"><span class="k">30 t green bean · cargo-value anchor</span><span class="v">¥3,000,000</span></div>
+ <div class="kv"><span class="k">× 0.5%</span><span class="v" style="color:var(--green2)">¥15,000 / year</span></div>
+ </div>
+ <div class="card vio">
+ <div class="cl">assurance · enhanced</div>
+ <h4>Enhanced bond: 1.0% of cargo value</h4>
+ <p>Adds the footprint and ledger evidence: a claim or audit rests on the hash-chained ledger and the metered PCF. This is the tier that turns judgement into liability.</p>
+ <div class="kv" style="margin-top:8px"><span class="k">30 t green bean · cargo-value anchor</span><span class="v">¥3,000,000</span></div>
+ <div class="kv"><span class="k">× 1.0%</span><span class="v" style="color:var(--green2)">¥30,000 / year</span></div>
+ </div>
+ </div>
+ <div class="callout a" style="margin-top:12px">
+ <div class="bar"></div>
+ <div class="ct">
+ <b>Check · the cargo-value basis must be locked before sale <span class="tg der">derived</span>：</b>
+ 30 t of green beans at ¥50/kg, multiplied out = <b>¥1,500,000</b>, giving ¥7,500 / ¥15,000 at 0.5% / 1.0%. This page uses the brief's ¥3,000,000 cargo-value anchor (equivalent to 60 t × ¥50/kg or 30 t × ¥100/kg), hence a bond range of ¥15,000–30,000. The two bases differ by a factor of two, so the contract template must fix "tonnage × unit price" rather than a single cargo-value total.
+ </div>
+ </div>
+ <h3 class="sub">The flywheel: why a grower adds sensors at its own cost <span class="mut">the upsell loop</span></h3>
+ <div class="wheel">
+ <div class="wstep">
+ <div class="wn">STEP 01</div>
+ <b>Add metering sensors</b>
+ <p>quoted separately (no hardware list on this page)</p>
+ </div>
+ <div class="wstep">
+ <div class="wn">STEP 02</div>
+ <b>metered share rises</b>
+ <p>line items switch from estimates to meter readings</p>
+ </div>
+ <div class="wstep">
+ <div class="wn">STEP 03</div>
+ <b>the grade moves up and the price rises</b>
+ <p>C→B→A, +¥20 per batch at each step</p>
+ <span class="fee">500 batches = +¥10,000 a year <span class="tg der">derived</span></span>
+ </div>
+ <div class="wstep">
+ <div class="wn">STEP 04</div>
+ <b>the label sells better and the grower returns</b>
+ <p>Grade A enters scope 3 primary data and the buyer pays a premium for it — which gives the next round of hardware a rationale.</p>
+ </div>
+ </div>
+ <p class="body">
+ This flywheel is not a marketing line; it is the price structure itself: <b>the grade sets the price, the price sets the return on the grower's hardware, and the hardware sets the next batch's grade</b>. The platform does not subsidise hardware; this return chain finances it.
+ </p>
+</section>
+<!-- ==================== 05 · ANTI-ARBITRAGE ==================== -->
+<section class="sec" id="anti">
+ <div class="sechead">
+ <div class="num">05 / ANTI-ARBITRAGE</div>
+ <h2>Anti-arbitrage rules (four, hard-coded) </h2>
+ <div class="sub">Hard rules — non-negotiable, checked before issuance</div>
+ <p>The hole in per-batch pricing is not in the price list but in splitting and double issuance. These four rules are not decoration in the terms; they are checks that must pass before issuance — if one fails, the system emits no label.</p>
+ </div>
+ <div class="tblwrap">
+ <table>
+ <thead>
+ <tr>
+ <th style="width:44px">#</th>
+ <th style="min-width:160px">Hard rule</th>
+ <th style="min-width:250px">Enforcement</th>
+ <th style="min-width:200px">Why it is hard-coded</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td class="num" style="text-align:left;color:var(--red)">R1</td>
+ <td class="k">240 plantlets minimum per batch</td>
+ <td>below 240 no label issues; a hard system check with no manual exception</td>
+ <td>metering noise and the fixed cost of issuance are out of proportion; below this size the label is noise</td>
+ </tr>
+ <tr class="alt">
+ <td class="num" style="text-align:left;color:var(--red)">R2</td>
+ <td class="k">same lineage within 24 hours bills as one batch; splitting is not allowed</td>
+ <td>billing aggregates by lineage id over a 24 h sliding window; split sub-batches merge back automatically</td>
+ <td>splitting is the only arbitrage that turns ¥40 a batch into N × ¥40</td>
+ </tr>
+ <tr>
+ <td class="num" style="text-align:left;color:var(--red)">R3</td>
+ <td class="k">one batch maps to one harvest window</td>
+ <td>the harvest-window id binds a unique batch number; nothing merges or inherits across windows</td>
+ <td>evidence maps to one physical event; a label merged across windows describes cargo that does not exist</td>
+ </tr>
+ <tr class="alt">
+ <td class="num" style="text-align:left;color:var(--red)">R4</td>
+ <td class="k">one batch cannot be issued twice; issuance freezes the hash</td>
+ <td>unique index on the batch number; after issuance the hash is on the chain and frozen, and a revision takes a new version number instead of overwriting</td>
+ <td>a label that can be edited is not evidence; selling one certificate twice zeroes the credibility of the whole ledger</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ <div class="callout r" style="margin-top:14px">
+ <div class="bar"></div>
+ <div class="ct bigline">
+ Without these four, per-batch pricing sells not evidence <b>but invoices</b>.
+ </div>
+ </div>
+ <p class="body" style="margin-top:12px">
+ One practical addition: the four rules must live in <b>the issuance service's code</b>, not only in the contract. Rules in a contract let arbitrage happen around it; rules in the validator reject it at the first API call. R1's 240-plantlet floor also explains every batch count here: 240,000 ÷ 480 = 500 batches, and 480 = 2 × 240 <span class="tg der">derived</span>.
+ </p>
+</section>
+<!-- ==================== 06 · GOVERNANCE ==================== -->
+<section class="sec" id="governance">
+ <div class="sechead">
+ <div class="num">06 / GOVERNANCE</div>
+ <h2>Who is speaking: the issuer must be separate from the seller </h2>
+ <div class="sub">Neutrality — why the issuer cannot be the vendor</div>
+ <p>If the body that issues the label is the same body that sells hardware, SaaS and bonds, the label is not evidence but marketing collateral. That is not a moral point, it is <b>the rating-agency conflict</b>.</p>
+ </div>
+ <div class="grid2">
+ <div class="card good">
+ <div class="cl">role A · non-profit · auditable</div>
+ <h4>Napell Verify</h4>
+ <p><b>holds the ledger's private key, sets the method, issues labels, is non-profit and can be audited.</b></p>
+ <div class="kv" style="margin-top:8px"><span class="k">Revenue</span><span class="v">issuance fees (cost recovery)</span></div>
+ <div class="kv"><span class="k">Must not</span><span class="v">sell hardware / SaaS / bonds</span></div>
+ <div class="kv"><span class="k">Audited by</span><span class="v">buyers + third parties</span></div>
+ </div>
+ <div class="card note">
+ <div class="cl">role B · commercial</div>
+ <h4>Napell Systems</h4>
+ <p><b>Selling hardware, SaaS and bonds.</b> An issuer certificate must be applied for from Verify; it may not be self-issued.</p>
+ <div class="kv" style="margin-top:8px"><span class="k">Revenue</span><span class="v">seats / metering / bonds</span></div>
+ <div class="kv"><span class="k">Must not</span><span class="v">issuing labels / holding the key</span></div>
+ <div class="kv"><span class="k">Conflict boundary</span><span class="v">Payer ≠ beneficiary</span></div>
+ </div>
+ </div>
+ <div class="grid2" style="margin-top:12px">
+ <div class="card">
+ <div class="cl">why split now</div>
+ <h4>Why separate it now</h4>
+ <p><b>payer = beneficiary</b> is the rating-agency conflict: the one paying is also the one selling the label, and its independence is bought out on day one.</p>
+ <p>A more practical reason: <b>separating 18 months from now costs ten times more</b>. By then it is not an org chart that moves but historical labels, frozen hashes and sold bonds — every one of which must answer "who signed it".</p>
+ </div>
+ <div class="card">
+ <div class="cl">data rights</div>
+ <h4>Data rights: written into the contract template</h4>
+ <p><b>Raw data belongs to the grower</b> — raw IoT readings, judgement logs and batch details do not change owner by being connected.</p>
+ <p><b>Aggregated, de-identified benchmarks belong to the platform</b> — cross-site, de-identified, non-attributable benchmarks used for grading and PCF baselines.</p>
+ <p>Both sentences belong in the contract template, not the privacy policy. A privacy policy can be amended unilaterally; a contract template cannot.</p>
+ </div>
+ </div>
+ <div class="grid2" style="margin-top:12px">
+ <div class="card vio">
+ <div class="cl">baseline co-sign</div>
+ <h4>Baseline co-signing: never set unilaterally by the platform</h4>
+ <p>The baseline is <b>frozen by both parties at contract signature</b>, not set by the platform. It is what makes a number like "53.5% reduction" challengeable — the <b>only entry point</b>: a baseline that can be co-signed can be questioned, and one that can be questioned can be relied on.</p>
+ <p>Arbitration: the frozen baseline snapshot is written into the ledger and either party may open a review from it; a unilateral change is technically impossible because the snapshot is hash-frozen.</p>
+ </div>
+ <div class="card bad">
+ <div class="cl">current gap</div>
+ <h4>The label can only print PENDING today</h4>
+ <p><code>/carbon/</code> The page still marks <b>not yet verified</b>: the method is written and the example has been run, but <b>the verifier has not been contracted</b>.</p>
+ <p>Until that contract exists the label may only print <b>PENDING</b> — it may issue, enter the ledger and carry a price, but it may not claim verification. That rule does not loosen because sales would like it to.</p>
+ </div>
+ </div>
+ <div class="callout v" style="margin-top:14px">
+ <div class="bar"></div>
+ <div class="ct">
+ <b>Governance is the most expensive line on this page and the cheapest risk control.</b> Splitting costs two sets of books, two audits, two legal teams; not splitting costs every label failing at once the first time a buyer asks. The first price is knowable, the second is not.
+ </div>
+ </div>
+
+ <div class="box" style="margin-top:22px;border-left:3px solid var(--green)">
+ <b>The verifier is named: ZeroCarbon Verify</b>
+ <p style="margin:8px 0 0">
+ Issuance authority sits with the verifier, not the platform. It holds the right to publish, veto and withdraw the method, has no equity relationship with CoffeeJeV, only a method-adoption agreement — <b>it may decline to accept a number CoffeeJeV computed</b>. The body is currently in formation and preparing for accreditation (not yet accredited), so every label basis on this page is marked <code>pending</code>.
+ <a href="https://zerocoffee.org.cn/" target="_blank" rel="noopener">See the accreditation route →</a>
+ </p>
+ <p style="margin:8px 0 0">
+ The contract annexes for revenue sharing and bonds are drafted:
+ <a href="../../trial/">Pilot and revenue-share trial agreement (pre-registration version) →</a>
+ </p>
+ </div>
+</section>
+<!-- ==================== FOOTER ==================== -->
+<footer class="foot">
+ <div class="wrap" style="padding:0">
+ <div class="disc">
+ Every price here is a design anchor (derived) and untested by the market; bonds and verification may only be sold after counsel and a third party confirm them.
+ </div>
+ <div class="meta">
+ <span>CoffeeJeV · the aeroponic coffee decision layer · commercial offer v1.0</span>
+ <span><a href="https://www.coffeejev.space">www.coffeejev.space</a> · <a href="../../carbon/">/carbon/</a> (not yet verified)</span>
+ <span>derived = computed here · assumption = an unverified premise · single file · zero external requests</span>
+ </div>
+ </div>
+</footer>
+</div><!-- /wrap -->
+</main>
+</div><!-- /app -->
+<script>
+/* ============================================================
+ 报价计算器 + 导航高亮
+ 纯手写 JS,无依赖。所有输入常量均来自 brief;
+ 推导量在渲染文案里逐项标注（推 / 假设）。
+ ============================================================ */
+(function () {
+ "use strict";
+ /* ---------- 常量：brief 给定 ---------- */
+ var P = {
+ seat: 900, // 席位费 ¥/场/年
+ metering: 0.03, // 计量费 ¥/plantlets/year
+ edgeZone: 18000, // edge 盒 ¥/zone
+ edgeYears: 3, // 3 年摊
+ edgeFarms: 8, // 8 场共享 1 台
+ avoidAnchorYuan: 28000, // 6 万株场年避免损失 ¥
+ avoidAnchorPlants: 60000, // 6 万株
+ fx: 7.1795, // 推：28,000/3,900 与 112,000/15,600 同为 7.1795
+ batchPlants: 480, // 批 = 株数/480
+ label: { A: 80, B: 60, C: 40 },
+ selfCapex: 78000, // 自建全套硬件 ¥
+ selfYears: 3, // 假设：与 edge 盒同口径 3 年摊
+ selfOps: 8000 // 假设：运维 + 模型更新
+ };
+ /* ---------- 推导常量 ---------- */
+ var perPlant = P.avoidAnchorYuan / P.avoidAnchorPlants; // ¥0.4667/plantlets/year（推）
+ var edgePerFarm = P.edgeZone / P.edgeYears / P.edgeFarms; // ¥750/场/年（推）
+ var selfAnnual = P.selfCapex / P.selfYears + P.selfOps; // ¥34,000/年（推 + 假设）
+ var crossPoint = selfAnnual / perPlant; // ≈72,857 plantlets/year (derived)
+ /* ---------- DOM ---------- */
+ var el = {
+ plants: document.getElementById("c-plants"),
+ plantsOut: document.getElementById("c-plants-out"),
+ zone: document.getElementById("c-zone"),
+ grades: document.querySelectorAll("[data-grade]"),
+ cost: document.getElementById("o-cost"),
+ costSub: document.getElementById("o-cost-sub"),
+ avoid: document.getElementById("o-avoid"),
+ avoidSub: document.getElementById("o-avoid-sub"),
+ label: document.getElementById("o-label"),
+ labelSub: document.getElementById("o-label-sub"),
+ net: document.getElementById("o-net"),
+ netSub: document.getElementById("o-net-sub"),
+ batches: document.getElementById("o-batches"),
+ selfCov: document.getElementById("o-self"),
+ zoneCov: document.getElementById("o-zone"),
+ cross: document.getElementById("o-cross"),
+ mode: document.getElementById("o-mode"),
+ boxNet: document.getElementById("b-net"),
+ boxCost: document.getElementById("b-cost")
+ };
+ if (!el.plants) return;
+ var state = { plants: 240000, inZone: true, grade: "B" };
+ function fmt(n) {
+ return Math.round(n).toLocaleString("en-US");
+ }
+ function fmt1(n) {
+ return (Math.round(n * 10) / 10).toFixed(1);
+ }
+ /* ---------- 渲染 ---------- */
+ function render() {
+ var plants = state.plants;
+ var inZone = state.inZone;
+ var grade = state.grade;
+ var batches = Math.max(1, Math.round(plants / P.batchPlants));
+ var fee = P.label[grade];
+ var labelYuan = batches * fee;
+ var avoid = plants * perPlant;
+ var cost, costSub, modeText;
+ if (inZone) {
+ var seat = P.seat;
+ var meter = plants * P.metering;
+ var edge = edgePerFarm;
+ cost = seat + meter + edge;
+ costSub = "seat ¥" + fmt(seat) + " · metering ¥" + fmt(meter) + " · box share ¥" + fmt(edge);
+ modeText = "Mode: zone seat (8–15 farms share one edge box)";
+ } else {
+ cost = selfAnnual;
+ costSub = "Self-build: hardware ¥78,000 ÷ 3 years = ¥" + fmt(P.selfCapex / P.selfYears) +
+ " + opex ¥" + fmt(P.selfOps) + " (assumption)";
+ modeText = "Mode: single-site self-build (no sharing)";
+ }
+ var net = avoid + labelYuan - cost;
+ var costCover = avoid / cost;
+ el.cost.textContent = "¥" + fmt(cost);
+ el.costSub.textContent = costSub;
+ el.avoid.textContent = "¥" + fmt(avoid);
+ el.avoidSub.textContent = "≈ $" + fmt(avoid / P.fx) + " · linear extrapolation, not measured";
+ el.label.textContent = "¥" + fmt(labelYuan);
+ el.labelSub.textContent = fmt(batches) + " batches × ¥" + fee + "（" + grade + " grade)";
+ el.net.textContent = (net < 0 ? "−¥" : "¥") + fmt(Math.abs(net));
+ el.netSub.textContent = "avoided loss + label revenue − annual cost";
+ el.boxNet.classList.toggle("bad", net < 0);
+ el.boxCost.classList.toggle("bad", !inZone && costCover < 1);
+ el.batches.textContent = fmt(batches);
+ el.selfCov.textContent = fmt1(avoid / selfAnnual) + "×";
+ el.zoneCov.textContent = fmt1(avoid / (P.seat + plants * P.metering + edgePerFarm)) + "×";
+ el.mode.textContent = modeText;
+ if (plants < crossPoint) {
+ el.cross.textContent = "· below the self-build break-even " + fmt(crossPoint) +
+ " plantlets/year → self-build payback does not converge (∞)";
+ } else {
+ el.cross.textContent = "· above the self-build break-even " + fmt(crossPoint) + " plantlets/year (derived)";
+ }
+ el.plantsOut.innerHTML = fmt(plants) + "<small>plantlets/year</small>";
+ el.plants.setAttribute("aria-valuetext", plants + " plantlets a year");
+ }
+ /* ---------- 事件 ---------- */
+ el.plants.addEventListener("input", function () {
+ state.plants = parseInt(el.plants.value, 10) || 0;
+ render();
+ });
+ el.zone.addEventListener("change", function () {
+ state.inZone = el.zone.checked;
+ render();
+ });
+ for (var i = 0; i < el.grades.length; i++) {
+ el.grades[i].addEventListener("click", function () {
+ var g = this.getAttribute("data-grade");
+ state.grade = g;
+ for (var j = 0; j < el.grades.length; j++) {
+ el.grades[j].classList.toggle("on", el.grades[j].getAttribute("data-grade") === g);
+ }
+ render();
+ });
+ }
+ render();
+ /* ---------- 导航高亮 ---------- */
+ var items = Array.prototype.slice.call(document.querySelectorAll(".navitem"));
+ var sections = items.map(function (a) {
+ var id = a.getAttribute("href").replace("#", "");
+ return { link: a, node: document.getElementById(id) };
+ }).filter(function (s) { return !!s.node; });
+ if ("IntersectionObserver" in window) {
+ var seen = {};
+ var io = new IntersectionObserver(function (entries) {
+ entries.forEach(function (e) {
+ if (e.isIntersecting) seen[e.target.id] = e.intersectionRatio;
+ else delete seen[e.target.id];
+ });
+ var bestId = null, best = -1;
+ Object.keys(seen).forEach(function (id) {
+ if (seen[id] > best) { best = seen[id]; bestId = id; }
+ });
+ if (!bestId && window.scrollY < 260) bestId = sections.length ? sections[0].node.id : null;
+ sections.forEach(function (s) {
+ s.link.classList.toggle("active", s.node.id === bestId);
+ });
+ }, { rootMargin: "-18% 0px -62% 0px", threshold: [0.01, 0.2, 0.5] });
+ sections.forEach(function (s) { io.observe(s.node); });
+ } else {
+ var onScroll = function () {
+ var y = window.scrollY + 140, cur = sections[0] ? sections[0].node.id : null;
+ sections.forEach(function (s) { if (s.node.offsetTop <= y) cur = s.node.id; });
+ sections.forEach(function (s) { s.link.classList.toggle("active", s.node.id === cur); });
+ };
+ window.addEventListener("scroll", onScroll, { passive: true });
+ onScroll();
+ }
+})();
+</script>
+<a class="zc-back" href="../../index.html" title="title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<script src="/lang.js"></script>
+</body>
+</html>

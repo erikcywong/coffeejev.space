@@ -116,6 +116,14 @@
 
   if (lang !== 'en') return;
 
+  // ---- some pages carry both languages inline and switch themselves: the
+  // homepage and the spec pages do. They need no notice and no redirect; just
+  // make sure the stored preference is what they render.
+  if (document.querySelector && document.querySelector('.en-only')) {
+    document.documentElement.setAttribute('data-lang', 'en');
+    return;
+  }
+
   // ---- English mode: go to the twin when it exists
   var file = p.split('/').pop() || 'index.html';
   if (tree && hasEnglish(file)) {
