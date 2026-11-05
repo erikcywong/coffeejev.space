@@ -116,6 +116,10 @@
 
   if (lang !== 'en') return;
 
+  // the Napell app shell is language-parameterised (?lang=zh|en|ar) and is not
+  // part of the page tree: it never needs a notice or a redirect
+  if (/\/napell\/app\.html$/.test(p)) return;
+
   // ---- some pages carry both languages inline and switch themselves: the
   // homepage and the spec pages do. They need no notice and no redirect; just
   // make sure the stored preference is what they render.

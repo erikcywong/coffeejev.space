@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>try{if(location.pathname.indexOf("/en/")!==-1){localStorage.setItem("cjv-lang","en");document.documentElement.dataset.lang="en";document.documentElement.lang="en";}}catch(e){}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Why we sell by Zone, not by farm · Pricing · CoffeeJeV</title>
@@ -431,7 +433,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  /* ---------- 常量：brief 给定 ---------- */
  var P = {
  seat: 900, // 席位费 ¥/场/年
- metering: 0.03, // 计量费 ¥/株/年
+ metering: 0.03, // 计量费 ¥/plantlets/year
  edgeZone: 18000, // edge 盒 ¥/zone
  edgeYears: 3, // 3 年摊
  edgeFarms: 8, // 8 场共享 1 台
@@ -445,7 +447,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  selfOps: 8000 // 假设：运维 + 模型更新
  };
  /* ---------- 推导常量 ---------- */
- var perPlant = P.avoidAnchorYuan / P.avoidAnchorPlants; // ¥0.4667/株/年（推）
+ var perPlant = P.avoidAnchorYuan / P.avoidAnchorPlants; // ¥0.4667/plantlets/year（推）
  var edgePerFarm = P.edgeZone / P.edgeYears / P.edgeFarms; // ¥750/场/年（推）
  var selfAnnual = P.selfCapex / P.selfYears + P.selfOps; // ¥34,000/年（推 + 假设）
  var crossPoint = selfAnnual / perPlant; // ≈72,857 plantlets/year (derived)

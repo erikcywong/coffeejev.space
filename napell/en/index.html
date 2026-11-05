@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-lang="zh">
+<html lang="en" data-lang="en">
 <head>
+<script>try{if(location.pathname.indexOf("/en/")!==-1){localStorage.setItem("cjv-lang","en");document.documentElement.dataset.lang="en";document.documentElement.lang="en";}}catch(e){}</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Napell Agent · iOS app — CoffeeJeV</title>
@@ -175,7 +177,7 @@
  <button data-lang="zh">中文</button>
  <button data-lang="en">EN</button>
  </div>
- <a class="btn primary" href="app.html" target="_blank" rel="noopener">
+ <a class="btn primary" href="../app.html" target="_blank" rel="noopener">
  <span class="zh-only">Open app ↗</span><span class="en-only">Open app ↗</span>
  </a>
  </header>
@@ -194,7 +196,7 @@
  <span class="chip"><span class="zh-only">Offline</span><span class="en-only">offline</span></span>
  </div>
  <div class="hero-cta">
- <a class="btn primary" href="app.html" target="_blank" rel="noopener">
+ <a class="btn primary" href="../app.html" target="_blank" rel="noopener">
  <span class="zh-only">Open in the browser ↗</span><span class="en-only">Open in browser ↗</span></a>
  <a class="btn" href="#install"><span class="zh-only">Add to home screen</span><span class="en-only">Install to home screen</span></a>
  </div>
@@ -204,7 +206,7 @@
  <div class="device-shell" id="devShell">
  <div class="device">
  <div class="island"></div>
- <iframe id="appFrame" src="app.html?lang=zh&tab=home" title="Napell Agent" loading="lazy"></iframe>
+ <iframe id="appFrame" src="../app.html?lang=en&tab=home" title="Napell Agent" loading="lazy"></iframe>
  </div>
  </div>
  <div class="tabchips" id="tabchips">
@@ -390,8 +392,8 @@
  <div>
  <a href="../../index.html"><span class="zh-only">Video home</span><span class="en-only">Video</span></a> ·
  <a href="../../spec/index.html"><span class="zh-only">Design spec</span><span class="en-only">Design spec</span></a> ·
- <a href="app.html">Napell Agent</a> ·
- <a href="manifest.webmanifest">manifest</a>
+ <a href="../app.html">Napell Agent</a> ·
+ <a href="../manifest.webmanifest">manifest</a>
  </div>
  <div><span class="zh-only">Every number inside the app is a design target or an adjustable assumption, not a measurement.</span>
  <span class="en-only">Every number in the app is a design target or an assumption, not a measurement.</span></div>
@@ -405,7 +407,7 @@
  function sync(){
  const q = new URLSearchParams({lang: state.lang, tab: state.tab});
  if (state.judge) q.set('judge', state.judge);
- frame.src = 'app.html?' + q.toString();
+ frame.src = '../app.html?' + q.toString();
  document.querySelectorAll('#tabchips button').forEach(b=>b.classList.toggle('on', b.dataset.tab===state.tab));
  document.querySelectorAll('.langcard').forEach(c=>c.classList.toggle('on', c.dataset.applang===state.lang));
  }
