@@ -20,7 +20,7 @@
     method: '*',
     carbon: '*',
     commercial: '*',
-    napell: '*'
+    napell: ['index.html']   // app.html is the device mock, language-neutral
   };
 
   var p = location.pathname;
