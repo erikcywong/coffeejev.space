@@ -289,14 +289,26 @@
   const dl = document.getElementById('dl');
   let lang = 'zh';
 
-  // keep every internal link carrying the current language: the spec has a parallel /spec/en/ tree
+  // keep every internal link carrying the current language: every section with
+  // an English twin (/spec/, /method/, /carbon/, /commercial/, /napell/,
+  // /trial/, /diligence/, /eudr/) and the single-page spec
+  const EN_TREES = /^(spec|method|carbon|commercial|napell|trial|diligence|eudr)\//;
   function syncLinks(l) {
     document.querySelectorAll('a[href]').forEach(a => {
       let href = a.getAttribute('data-base') || a.getAttribute('href');
       if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return;
       a.setAttribute('data-base', href);
       let out = href.split('?')[0];
-      if (l === 'en' && out.startsWith('spec/')) out = 'spec/en/' + out.slice(5);
+      if (l === 'en') {
+        if (out === 'spec.html') out = 'spec/en/spec.html';
+        else {
+          const m = out.match(EN_TREES);
+          if (m) {
+            const rest = out.slice(m[1].length + 1);        // '' or 'index.html' or 'foo.html'
+            out = m[1] + '/en/' + rest;
+          }
+        }
+      }
       a.setAttribute('href', out);
     });
   }
