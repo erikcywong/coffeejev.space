@@ -18,7 +18,7 @@
   var EN_READY = {
     spec: '*',
     method: '*',
-    carbon: ['index.html', 'why.html', 'risk.html']
+    carbon: ['index.html', 'why.html', 'boundary.html', 'points.html', 'risk.html']
   };
 
   var p = location.pathname;

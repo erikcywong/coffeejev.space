@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boundary and functional unit: what is included, and why each exclusion holds · Carbon · CoffeeJeV</title>
+<meta name="description" content="content="Carbon — boundary and functional unit">
+<style>
+:root{
+ --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
+ --line:#232931; --line2:#313945;
+ --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+ --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
+ --amber:#e0a24e; --amber-dk:rgba(224,162,78,.12);
+ --red:#ff5d6e; --cyan:#3b9ef7; --violet:#9d7bff;
+ --r:14px; --r2:11px;
+ --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.62;-webkit-font-smoothing:antialiased}
+a{color:#8ec7ff;text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(0,196,140,.28)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0b0d10}
+::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#3a434f}
+b,strong{font-weight:700;color:#fff}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.06);border:1px solid var(--line2);border-radius:5px;padding:1px 5px;color:#cfe0ee;overflow-wrap:anywhere}
+
+/* ---------- 布局 ---------- */
+.app{display:grid;grid-template-columns:258px minmax(0,1fr)}
+.nav{position:sticky;top:0;height:100vh;padding:18px 14px 24px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto;background:linear-gradient(180deg,#0a0c0f,#08090b 60%)}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 16px}
+.brand .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,196,140,.05) inset}
+.brand .mark svg{width:22px;height:22px}
+.brand .txt b{display:block;font-size:15.5px;letter-spacing:.2px;line-height:1.25}
+.brand .txt span{display:block;font-size:10.5px;color:var(--dim);letter-spacing:.9px;text-transform:uppercase;font-family:var(--mono)}
+.navlabel{font-size:10.5px;letter-spacing:1.3px;color:var(--dim2);text-transform:uppercase;padding:10px 10px 6px;font-family:var(--mono)}
+.navlist{display:flex;flex-direction:column;gap:2px}
+.navitem{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;color:var(--dim);font-size:13.5px;border:1px solid transparent;transition:.15s}
+.navitem:hover{background:rgba(255,255,255,.045);color:var(--tx);text-decoration:none}
+.navitem .n{font-family:var(--mono);font-size:11px;color:var(--dim2);width:16px;flex-shrink:0}
+.navitem.active{background:rgba(0,196,140,.1);border-color:rgba(0,196,140,.28);color:#fff;font-weight:600}
+.navitem.active .n{color:var(--green)}
+.navfoot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--dim2);line-height:1.7}
+.navfoot .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);margin-right:6px;box-shadow:0 0 8px var(--amber)}
+main{min-width:0}
+.wrap{max-width:1200px;padding:0 48px 0 44px}
+
+/* ---------- 页首 ---------- */
+.hero{padding:52px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-40% -10% auto -10%;height:520px;background:
+ radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.15),transparent 62%),
+ radial-gradient(620px 300px at 92% -20%,rgba(157,123,255,.13),transparent 62%),
+ radial-gradient(520px 260px at 55% 10%,rgba(224,162,78,.08),transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:16px}
+.eyebrow .sep{color:var(--dim2)}
+.eyebrow .mut{color:var(--dim)}
+h1.title{font-size:clamp(29px,4.4vw,48px);line-height:1.12;letter-spacing:-1.2px;font-weight:850;margin-bottom:10px}
+h1.title em{font-style:normal;background:linear-gradient(96deg,#00c48c 8%,#7fe0b6 46%,#9d7bff 96%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .zh{font-size:clamp(15px,2.1vw,20px);color:var(--dim);font-weight:600;letter-spacing:.4px;margin-bottom:18px}
+.lede{font-size:16px;color:#c3cbd6;max-width:78ch;line-height:1.78}
+.lede b{color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:12.5px;background:rgba(255,255,255,.035);border:1px solid var(--line2);color:#c9d2dd}
+.chip .k{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase}
+.chip.g{border-color:rgba(0,196,140,.32);background:rgba(0,196,140,.07);color:#a9f3d8}
+.chip.a{border-color:rgba(224,162,78,.32);background:rgba(224,162,78,.07);color:#f0d3a5}
+.chip.v{border-color:rgba(157,123,255,.32);background:rgba(157,123,255,.07);color:#cfc0ff}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:10px;margin-top:28px}
+.tile{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:13px;padding:13px 14px}
+.tile .k{font-size:11.5px;color:var(--dim);letter-spacing:.3px}
+.tile .v{font-size:23px;font-weight:800;letter-spacing:-.6px;margin-top:3px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tile .v small{font-size:12px;color:var(--dim);font-weight:600;letter-spacing:0;margin-left:2px}
+.tile .s{font-size:11px;color:var(--dim2);margin-top:2px}
+
+/* ---------- 区块 ---------- */
+.sec{padding:54px 0 20px;border-top:1px solid var(--line);scroll-margin-top:10px}
+.sechead{margin-bottom:24px}
+.sechead .num{font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:2px;margin-bottom:9px}
+.sechead h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;line-height:1.2;font-weight:800}
+.sechead .zh{font-size:14px;color:var(--dim);font-weight:600;margin-top:5px;letter-spacing:.5px}
+.sechead p{margin-top:13px;color:#b9c2ce;max-width:92ch;font-size:14.6px;line-height:1.78}
+h3.sub{font-size:16.5px;font-weight:750;margin:28px 0 12px;letter-spacing:-.2px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+h3.sub::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--green);display:inline-block}
+h3.sub .mut{font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:0;font-family:var(--mono)}
+p.body{font-size:14.4px;color:#bcc5d0;line-height:1.82;margin:10px 0;max-width:96ch}
+p.body b{color:#fff}
+p.body .m{font-family:var(--mono);font-size:13px;color:#d6e6f2}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:13px}
+.grid2b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+@media (max-width:900px){.grid2b{grid-template-columns:1fr}}
+
+/* ---------- 卡片 ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:17px 18px 15px}
+.card h4{font-size:14.8px;font-weight:750;margin-bottom:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card p{font-size:13.6px;color:#b4bdc9;line-height:1.7}
+.card p+p{margin-top:7px}
+.card.note{border-left:2px solid var(--amber);background:linear-gradient(90deg,rgba(224,162,78,.07),transparent 55%)}
+.card.good{border-left:2px solid var(--green);background:linear-gradient(90deg,rgba(0,196,140,.07),transparent 55%)}
+.card.bad{border-left:2px solid var(--red);background:linear-gradient(90deg,rgba(255,93,110,.07),transparent 55%)}
+.card.vio{border-left:2px solid var(--violet);background:linear-gradient(90deg,rgba(157,123,255,.08),transparent 55%)}
+.card .cl{font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+
+.pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.2px;border:1px solid;white-space:nowrap}
+.pill.ok{color:var(--green2);border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.1)}
+.pill.warn{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.pill.info{color:#8ec7ff;border-color:rgba(59,158,247,.45);background:rgba(59,158,247,.1)}
+.pill.gray{color:var(--dim);border-color:var(--line2);background:rgba(255,255,255,.03)}
+.pill.vio{color:#c0adff;border-color:rgba(157,123,255,.45);background:rgba(157,123,255,.12)}
+.pill.red{color:#ff9aa4;border-color:rgba(255,93,110,.45);background:rgba(255,93,110,.1)}
+
+.tbc{display:inline-block;font-family:var(--mono);font-size:10px;color:#ffbe72;border:1px solid rgba(224,162,78,.45);background:rgba(224,162,78,.1);border-radius:4px;padding:0 4px;letter-spacing:.3px;vertical-align:1px;white-space:nowrap}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;border-radius:4px;padding:0 4px;letter-spacing:.3px;white-space:nowrap;vertical-align:1px;border:1px solid}
+.tag.ari{color:#9fe8d0;border-color:rgba(0,196,140,.4);background:rgba(0,196,140,.1)}
+.tag.asm{color:#ffbe72;border-color:rgba(224,162,78,.45);background:rgba(224,162,78,.1)}
+.tag.law{color:#c0adff;border-color:rgba(157,123,255,.45);background:rgba(157,123,255,.12)}
+
+/* ---------- 表格 ---------- */
+.tblscroll{overflow-x:auto;border-radius:var(--r);max-width:100%}
+.tblscroll:has(thead th:nth-child(6)) .tbl{min-width:660px}
+.tblscroll:has(thead th:nth-child(7)) .tbl{min-width:760px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12.9px;margin:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.tbl th{background:rgba(255,255,255,.035);text-align:left;padding:9px 11px;font-size:11.2px;letter-spacing:.5px;color:var(--dim);font-weight:700;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 11px;border-bottom:1px solid rgba(35,41,49,.75);vertical-align:top;color:#bcc5d0;line-height:1.55}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.022)}
+.tbl td b{color:#fff}
+.tbl .mono,.tbl code{font-size:11.2px}
+.tbl td code{white-space:nowrap;overflow-wrap:normal}
+.tbl .num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tr.grp td{background:rgba(0,196,140,.055);color:#a9f3d8;font-weight:700;font-size:11.5px;letter-spacing:.6px;font-family:var(--mono);padding:7px 11px}
+.tbl tr.out td{background:rgba(255,93,110,.045)}
+.tbl tfoot td{background:rgba(255,255,255,.04);border-top:1px solid var(--line2);font-weight:700;color:#fff}
+.tbl tfoot tr.total td{background:rgba(0,196,140,.1);color:#c9ffe9;font-size:13.4px;border-top:1px solid rgba(0,196,140,.35)}
+.tbl tfoot tr.sub td{background:rgba(255,255,255,.035);color:#dfe6ee}
+.tbl.widem{min-width:640px}
+
+/* ---------- 代码 / JSON / 公式 ---------- */
+.code{background:#0a0d11;border:1px solid var(--line2);border-radius:11px;overflow:hidden;margin:10px 0}
+.code .ch2{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.5px;flex-wrap:wrap;gap:6px}
+.code pre{margin:0;padding:11px 13px;overflow-x:auto;font-family:var(--mono);font-size:11.8px;line-height:1.72;color:#c9d4e0;white-space:pre}
+.formula{background:linear-gradient(180deg,rgba(0,196,140,.07),rgba(0,196,140,.015));border:1px solid rgba(0,196,140,.24);border-radius:12px;padding:15px 16px;font-family:var(--mono);font-size:12.4px;line-height:1.9;color:#cfe0ee;overflow-x:auto;white-space:pre}
+.formula b{color:#a9f3d8}
+.formula .c{color:var(--dim2)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:12.8px}
+.kv dt{color:var(--dim2);font-family:var(--mono);font-size:11.4px;padding-top:2px;white-space:nowrap}
+.kv dd{color:#c0c9d5}
+.json{background:#0a0d11;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.json .jh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:rgba(255,255,255,.035);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.4px;flex-wrap:wrap}
+.json pre{margin:0;padding:10px 12px;overflow-x:auto;font-family:var(--mono);font-size:11.4px;line-height:1.62;color:#c9d4e0}
+.json pre .s{color:#8fd8b8}
+.json pre .n{color:#e8c98f}
+.json pre .k{color:#a8c7ff}
+
+/* ---------- SVG 图 ---------- */
+.diagram{background:linear-gradient(180deg,#0b0d11,#08090b);border:1px solid var(--line);border-radius:16px;padding:10px;overflow-x:auto}
+.diagram svg{display:block;width:100%;height:auto}
+.diagram.wide svg{min-width:800px}
+.caption{font-size:11.8px;color:var(--dim2);margin-top:9px;line-height:1.7}
+.caption b{color:var(--dim)}
+
+/* ---------- 碳标签样张 ---------- */
+.paper{position:relative;background:linear-gradient(168deg,#f7f4ec 0%,#efeade 58%,#e8e2d3 100%);border:1px solid #d6cfbd;border-radius:12px;padding:18px 18px 15px;color:#15191e;box-shadow:0 14px 34px rgba(0,0,0,.45);font-size:12.4px;line-height:1.5}
+.paper .phead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1.5px solid #15191e;padding-bottom:8px}
+.paper .brandline{font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:#3c434c}
+.paper .ptitle{font-size:12.6px;font-weight:800;letter-spacing:.2px;margin-top:2px;color:#101418}
+.paper .pnum{text-align:right;font-family:var(--mono);font-size:9.5px;color:#4a515a;line-height:1.5}
+.paper .big{display:flex;align-items:baseline;gap:8px;margin:11px 0 2px}
+.paper .big .v{font-family:var(--mono);font-size:31px;font-weight:800;letter-spacing:-1.4px;color:#0d1216;font-variant-numeric:tabular-nums}
+.paper .big .u{font-family:var(--mono);font-size:11.5px;color:#4a515a}
+.paper .big .d{font-size:10.5px;color:#1f6b4f;background:rgba(0,150,105,.12);border:1px solid rgba(0,150,105,.35);border-radius:999px;padding:1px 7px;font-weight:700;white-space:nowrap}
+.paper .psub{font-size:10.6px;color:#4a515a;margin-bottom:10px}
+.paper .bar{display:flex;height:9px;border-radius:3px;overflow:hidden;margin:8px 0 7px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.paper .bar i{display:block;height:100%}
+.paper .bleg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px;font-family:var(--mono);font-size:9.4px;color:#3a4149}
+.paper .bleg span{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.paper .bleg em{font-style:normal;color:#15191e;font-weight:700}
+.paper .dotc{width:7px;height:7px;border-radius:2px;flex-shrink:0;display:inline-block}
+.paper .pfoot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;border-top:1px dashed #b9b1a0;margin-top:11px;padding-top:9px}
+.paper .fields{font-family:var(--mono);font-size:9.3px;line-height:1.62;color:#383f47;min-width:0}
+.paper .fields b{color:#101418;font-weight:700}
+.paper .hash{word-break:break-all;font-size:8.6px;color:#4a515a;line-height:1.45;letter-spacing:.2px}
+.paper .qr{flex-shrink:0;text-align:center}
+.paper .qr svg{display:block;width:96px;height:96px;background:#fff;border-radius:3px}
+.paper .qr span{display:block;font-family:var(--mono);font-size:7.6px;color:#4a515a;margin-top:3px;letter-spacing:.2px}
+.paper .pnote{font-size:8.8px;color:#5b6169;margin-top:8px;line-height:1.5;border-top:1px solid rgba(0,0,0,.1);padding-top:6px}
+
+/* ---------- 注意条 ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:11px}
+.note-card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px 13px;border-top:2px solid rgba(224,162,78,.55)}
+.note-card.r{border-top-color:rgba(255,93,110,.6)}
+.note-card h4{font-size:14.2px;font-weight:750;margin-bottom:7px;display:flex;gap:8px;align-items:baseline;line-height:1.45;flex-wrap:wrap}
+.note-card h4 .ni{font-family:var(--mono);font-size:10.5px;color:var(--amber);flex-shrink:0}
+.note-card h4 .ni.r{color:var(--red)}
+.note-card p{font-size:13px;color:#b4bdc9;line-height:1.68}
+.note-card p+p{margin-top:6px}
+.note-card .fix{color:#9fe8d0}
+.note-card .fix::before{content:"CONTROL → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2)}
+.note-card .fix.d::before{content:"EXPOSURE → ";color:#ffbe72}
+
+.list{list-style:none;display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.list li{font-size:13.2px;color:#b4bdc9;padding-left:14px;position:relative;line-height:1.65}
+.list li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--line2)}
+.list li b{color:#e9ecf1;font-weight:650}
+.list li .m{font-family:var(--mono);font-size:12.2px;color:#9fe8d0}
+.nl{list-style:none;counter-reset:nl;display:flex;flex-direction:column;gap:7px;margin:8px 0}
+.nl li{font-size:13.2px;color:#b4bdc9;line-height:1.68;padding-left:24px;position:relative}
+.nl li::before{counter-increment:nl;content:counter(nl);position:absolute;left:0;top:1px;width:17px;height:17px;border-radius:5px;background:rgba(0,196,140,.12);border:1px solid rgba(0,196,140,.3);color:#9fe8d0;font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.nl li b{color:#fff}
+
+/* ---------- 页脚 ---------- */
+.foot{border-top:1px solid var(--line);margin-top:48px;padding:24px 0 56px;font-size:12.3px;color:var(--dim2);line-height:1.85}
+.foot b{color:var(--dim)}
+.foot .rule{color:#ffbe72}
+
+/* ---------- 响应式 ---------- */
+@media (max-width:1080px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .nav{position:static;height:auto;flex-direction:column;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;width:100%}
+ .navlabel,.navfoot{display:none}
+ .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;width:100%}
+ .navlist::-webkit-scrollbar{display:none}
+ .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
+ .navitem .n{display:none}
+ .brand{padding-bottom:8px}
+ .wrap{padding:0 20px}
+}
+@media (max-width:900px){
+ .grid2b{grid-template-columns:1fr}
+ .grid3{grid-template-columns:1fr}
+ .paper .bleg{grid-template-columns:1fr}
+}
+@media (max-width:620px){
+ .wrap{padding:0 14px}
+ .hero{padding:34px 0 26px}
+ .sec{padding:40px 0 16px}
+ .tile .v{font-size:20px}
+ .json pre,.code pre,.formula{font-size:10.8px}
+ .tbl{font-size:12.2px}
+ .tbl th,.tbl td{padding:8px 9px}
+ .paper{padding:14px 13px 12px}
+ .paper .big .v{font-size:26px}
+ .paper .qr svg{width:80px;height:80px}
+}
+@media print{.nav{display:none}.app{grid-template-columns:1fr}.sec{page-break-inside:avoid}body{background:#fff;color:#111}}
+</style>
+
+<style>
+ /* --- subpage chrome (added by tools/split_docs.py) --- */
+ h1,h2,h3,h4{scroll-margin-top:90px}
+ .zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;font:700 12.5px/1 -apple-system,
+ "Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.88);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28)}
+ .zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+ .zc-back svg{width:13px;height:13px}
+ .zc-wrap{max-width:1180px;margin:0 auto;padding:34px 26px 90px;display:grid;
+ grid-template-columns:236px minmax(0,1fr);gap:38px;align-items:start}
+ .zc-rail{position:sticky;top:26px;font:500 13px/1.6 -apple-system,"Segoe UI","PingFang SC",sans-serif}
+ .zc-rail .zc-brand{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.6px;
+ text-transform:uppercase;color:#64748b;margin-bottom:12px}
+ .zc-rail a{display:flex;gap:9px;align-items:baseline;padding:7px 10px;border-radius:8px;
+ text-decoration:none;color:#8d97a5;border:0}
+ .zc-rail a b{font-family:var(--mono,ui-monospace);font-size:10px;color:#4b5563;min-width:16px}
+ .zc-rail a:hover{background:rgba(255,255,255,.05);color:#e9ecf1}
+ .zc-rail a.on{background:rgba(0,196,140,.13);color:#a9f3d8}
+ .zc-rail a.on b{color:#3fe0b0}
+ .zc-rail .zc-rule{height:1px;background:rgba(255,255,255,.10);margin:12px 0}
+ .zc-rail a.zc-full{color:#64748b;font-size:12px}
+ .zc-main{min-width:0}
+ .zc-crumb{font-size:12.5px;color:#64748b;letter-spacing:.2px;margin-bottom:26px}
+ .zc-crumb a{color:#8d97a5;text-decoration:none;border:0}
+ .zc-crumb a:hover{color:#3fe0b0}
+ .zc-crumb b{color:#c9d2dd;font-weight:600}
+ .zc-pager{display:flex;gap:12px;justify-content:space-between;margin:64px 0 0;flex-wrap:wrap}
+ .zc-pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+ border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 15px;
+ background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.12)}
+ .zc-pager a:hover{border-color:rgba(0,196,140,.45);background:rgba(0,196,140,.06);text-decoration:none}
+ .zc-pager .k{font-family:var(--mono,ui-monospace);font-size:10px;letter-spacing:1.2px;
+ text-transform:uppercase;color:#64748b}
+ .zc-pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+ .zc-pager .r{align-items:flex-end;text-align:right}
+ /* paper-themed docs (trial-like) */
+ .zc-wrap.zc-paper .zc-crumb,.zc-wrap.zc-paper .zc-rail a{color:#71767d}
+ @media (max-width:900px){
+ .zc-wrap{grid-template-columns:1fr;gap:18px;padding:22px 18px 70px}
+ .zc-rail{position:static}
+ .zc-back{top:12px;right:12px}
+ }
+</style>
+
+<style>.rule-en{display:none}</style>
+</head>
+<body>
+<a class="zc-back" href="../../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="zc-wrap">
+<aside class="zc-rail"><div class="zc-brand">Carbon · 6 sections</div><a class="" href="why.html"><b>01</b> A metered number can be audited; a number in a spreadsheet is a guess</a><a class="on" href="boundary.html"><b>02</b> Boundary and functional unit: what is included, and why each exclusion holds</a><a class="" href="method.html"><b>03</b> Algorithm and factors: the formula chain, a worked batch, the hourly curve, and uncertainty</a><a class="" href="label.html"><b>04</b> The label: fields, a specimen, the JSON structure, and how anyone verifies it</a><a class="" href="points.html"><b>05</b> Points economics: the three-party ledger, and the arithmetic for 240,000 plantlets a year</a><a class="" href="risk.html"><b>06</b> Risk and compliance: twelve routes by which this design becomes a liability</a><div class="zc-rule"></div><a class="zc-full" href="full.html">Read the full text →</a></aside>
+<div class="zc-main">
+<div class="zc-crumb"><a href="../../index.html">CoffeeJeV</a> · <a href="index.html">Carbon</a> · <b>Boundary and functional unit: what is included, and why each exclusion holds</b></div>
+<section class="sec" id="boundary">
+ <div class="sechead">
+ <div class="num">02 / BOUNDARY &amp; FUNCTIONAL UNIT</div>
+ <h2>Boundary and functional unit: what is included, and why each exclusion holds</h2>
+ <div class="zh">cradle-to-gate · ISO 14067 / PAS 2050 aligned · GHG Protocol scopes</div>
+ <p>
+ The system boundary is <b>cradle-to-gate</b>: from upstream input production and nursery operation through delivery of the seedling at the gate (gate to gate, including outbound transport). It excludes the grow-out stage on the farm, consumer use and final disposal. Scope 1 / 2 / 3 follow the GHG Protocol, and every exclusion carries an auditable reason rather than "not counted for now".
+ </p>
+ </div>
+
+ <h3 class="sub">2.1 Functional unit and reference flow <span class="mut">functional unit</span></h3>
+ <div class="tblscroll">
+ <table class="tbl">
+ <thead><tr><th style="min-width:88px">item</th><th>Definition</th><th>Declared precision</th><th>Value</th><th>Note</th></tr></thead>
+ <tbody>
+ <tr><td><b>FU 1</b></td><td>One plantlet at delivery, about 45 days, covering the whole nursery cycle</td><td class="mono">0.001</td><td class="mono">0.200 kgCO2e/plantlet</td><td>Primary functional unit; both the label and the points use it</td></tr>
+ <tr><td><b>FU 2</b></td><td>1 kg green bean at the farm gate</td><td class="mono">0.01</td><td class="mono">to be established</td><td>later stage; the interface field is reserved <code>declared_unit</code> enumerated; no value on this page</td></tr>
+ <tr><td><b>Reference flow</b></td><td>480 plantlets per batch (<code>CJV-B-2026-0417</code>）</td><td class="mono">0.01</td><td class="mono">96.00 kgCO2e</td><td>the smallest closing unit for a label and its ledger</td></tr>
+ <tr><td><b>Time</b></td><td>2026-09-19 → 2026-11-03（45 d）</td><td class="mono">—</td><td class="mono">45 d</td><td>hourly bands in local time (UTC+8)</td></tr>
+ <tr><td><b>Geography</b></td><td>Pu'er, Yunnan; a provincial grid dominated by hydro</td><td class="mono">—</td><td class="mono">YN grid</td><td>the factor table follows the region, see §3.1</td></tr>
+ <tr><td><b>GWP</b></td><td>IPCC AR6，GWP100</td><td class="mono">—</td><td class="mono">AR6</td><td>the label must state the version; results are not comparable with AR5</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="caption">
+ Why FU 2 has no number yet: <b>the metering baseline for the grow-out stage does not exist</b> (no meter, no record of soil or substrate inputs). Producing a number for a stage with no primary data would refute this document's own central argument. The interface and fields stay; the number waits for the baseline.
+ </p>
+
+ <h3 class="sub">2.2 What is included and what is excluded <span class="mut">scope inventory</span></h3>
+ <div class="tblscroll">
+ <table class="tbl widem">
+ <thead><tr><th>Item</th><th style="width:78px">Scope</th><th style="width:74px">Included</th><th>Metering source / factor</th><th style="min-width:250px">Reason</th></tr></thead>
+ <tbody>
+ <tr class="grp"><td colspan="5">INCLUDED</td></tr>
+ <tr><td><b>Purchased electricity</b> (fogging pumps, LED, dehumidifier, gateway, control cabinet)</td><td><span class="pill vio">Scope 2</span></td><td><span class="pill ok">Included</span></td><td><code>power-meter-PuEr-01</code> 's <code>kwh_total</code> interval-by-interval difference × six-band MEF</td><td>61.4% of the total; metering-grade primary data and the foundation of every argument here</td></tr>
+ <tr><td><b>Nitrogen (nutrient salts)</b></td><td><span class="pill gray">Scope 3 · cat 1</span></td><td><span class="pill ok">Included</span></td><td>dosing-pump records accumulate N mass × 13.5 kgCO2e/kg N</td><td>4.2%; nitrate production energy and an N2O precursor — the only significant agricultural input in aeroponics</td></tr>
+ <tr><td><b>Packaging</b> (trays, root protection, outer cartons)</td><td><span class="pill gray">Scope 3 · cat 5</span></td><td><span class="pill ok">Included</span></td><td>0.012 kgCO2e/plantlet × sets actually dispatched</td><td>6.2%; should fall once returnable crates are in place, and must be updated against actual purchase orders</td></tr>
+ <tr><td><b>Outbound transport</b> (gate to customer)</td><td><span class="pill gray">Scope 3 · cat 4</span></td><td><span class="pill ok">Included</span></td><td>0.020 kgCO2e/plantlet (ambient trunk haul, tonne-kilometre method)</td><td>10.3%; a cold chain multiplies it by 1.6 <span class="tbc">to be verified</span>, the current plan is ambient</td></tr>
+ <tr><td><b>Embedded hardware amortisation</b> (8 devices)</td><td><span class="pill gray">Scope 3 · cat 2</span></td><td><span class="pill ok">Included</span></td><td>upstream manufacturing emissions ÷ 4 years ÷ annual plantlet output = 0.035 kgCO2e/plantlet</td><td>18.0%; dedicated assets can be attributed to a batch, and leaving them unamortised makes the hardware "free" in the ledger — a systematic understatement</td></tr>
+ <tr class="grp"><td colspan="5">EXCLUDED (with reasons)</td></tr>
+ <tr class="out"><td>Nursery substrate (peat / coir)</td><td><span class="pill gray">Scope 3</span></td><td><span class="pill gray">Excluded</span></td><td>—</td><td>Aeroponics does <b>not use substrate</b>; the source does not physically exist. Note that the difference shows up in the <b>baseline</b> rather than in this project, see §6.3</td></tr>
+ <tr class="out"><td>Scope 1 (backup diesel generator, refrigerant top-up)</td><td><span class="pill warn">Scope 1</span></td><td><span class="pill gray">not quantified</span></td><td>maintenance records (not yet structured)</td><td>No routine combustion source; refrigerant top-up is &lt;0.5 kg per chamber, allocated at &lt;0.5%, below the 1% cut-off. Under 14067 it must still be listed as a cut-off item</td></tr>
+ <tr class="out"><td>Mains water / RO supply</td><td><span class="pill gray">Scope 3 · cat 1</span></td><td><span class="pill gray">Excluded</span></td><td>—</td><td>water supply and RO energy are &lt;1% of the total and excluded under the cut-off rule; they are included in the upper bound of the sensitivity analysis (+0.004)</td></tr>
+ <tr class="out"><td>Buildings and civil works (capital goods)</td><td><span class="pill gray">Scope 3 · cat 2</span></td><td><span class="pill gray">Excluded</span></td><td>—</td><td>Shared assets that cannot be attributed to a batch; the difference from hardware is <b>attributability</b>, not the size of the emissions. That is a methodological choice, and it is disclosed</td></tr>
+ <tr class="out"><td>Land-use change (LUC)</td><td><span class="pill gray">Scope 3</span></td><td><span class="pill gray">Excluded</span></td><td>—</td><td>The nursery sits on existing agricultural land, so no LUC occurs; expanding onto forest land would require reassessment. Peat extraction on the baseline side falls outside this boundary, see §6</td></tr>
+ <tr class="out"><td>Biogenic CO2 (photosynthetic uptake)</td><td>—</td><td><span class="pill gray">Excluded</span></td><td>—</td><td>Under ISO 14067, biogenic uptake and short-term storage are not part of the product footprint and may not offset anything. A seedling is not a carbon sink and may not be marketed as one</td></tr>
+ <tr class="out"><td>Staff commuting / office / travel</td><td><span class="pill gray">Scope 3</span></td><td><span class="pill gray">Excluded</span></td><td>—</td><td>&lt;1% and physically unrelated to the product, excluded under the cut-off rule; marketing may not use this to claim a "complete boundary"</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="caption">
+ Cut-off rule: a source below 1% of the total, and below 5% in aggregate, may be excluded (PAS 2050 practice). Exclusions here total about 1.5%; Scope 1 is not quantified but is <b>a data gap</b> rather than a cut-off decision, and the maintenance ledger must be completed before verification.
+ </p>
+
+ <h3 class="sub">2.3 Boundary diagram <span class="mut">inputs → aeroponic floor → outputs &amp; emissions</span></h3>
+ <div class="diagram wide">
+ <svg viewBox="0 0 880 500" role="img" aria-label="气雾咖啡育苗批次碳足迹系统边界图">
+ <defs>
+ <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+ <path d="M0 0 L10 5 L0 10 z" fill="#39434f"/>
+ </marker>
+ <marker id="arwg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+ <path d="M0 0 L10 5 L0 10 z" fill="#00c48c"/>
+ </marker>
+ <marker id="arwa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+ <path d="M0 0 L10 5 L0 10 z" fill="#e0a24e"/>
+ </marker>
+ </defs>
+
+ <!-- 列标题 -->
+ <text x="16" y="20" fill="#8d97a5" font-size="10.5" font-family="ui-monospace,Consolas,monospace" letter-spacing="1.2">UPSTREAM INPUTS</text>
+ <text x="248" y="20" fill="#e9ecf1" font-size="10.5" font-family="ui-monospace,Consolas,monospace" letter-spacing="1.2">FOREGROUND · 45 d</text>
+ <text x="676" y="20" fill="#8d97a5" font-size="10.5" font-family="ui-monospace,Consolas,monospace" letter-spacing="1.2">OUTPUTS / EMISSIONS</text>
+
+ <!-- 左侧投入 -->
+ <g font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+ <rect x="16" y="34" width="188" height="42" rx="8" fill="#131a24" stroke="#9d7bff" stroke-opacity=".55"/>
+ <text x="26" y="52" fill="#e9ecf1" font-size="11.5" font-weight="600">Purchased electricity</text>
+ <text x="196" y="52" text-anchor="end" fill="#cfc0ff" font-size="9.4" font-family="ui-monospace,Consolas,monospace">61.4%</text>
+ <text x="26" y="68" fill="#a9b3c0" font-size="9" font-family="ui-monospace,Consolas,monospace">s2 · 0.28 kWh/plantlet · 0.1192</text>
+
+ <rect x="16" y="84" width="188" height="42" rx="8" fill="#131a24" stroke="#3b9ef7" stroke-opacity=".5"/>
+ <text x="26" y="102" fill="#e9ecf1" font-size="11.5" font-weight="600">Nutrient salts</text>
+ <text x="196" y="102" text-anchor="end" fill="#8ec7ff" font-size="9.4" font-family="ui-monospace,Consolas,monospace">4.2%</text>
+ <text x="26" y="118" fill="#a9b3c0" font-size="9" font-family="ui-monospace,Consolas,monospace">s3 · 0.6 g N · 13.5/kgN</text>
+
+ <rect x="16" y="134" width="188" height="42" rx="8" fill="#101419" stroke="#313945" stroke-dasharray="4 3"/>
+ <text x="26" y="152" fill="#8d97a5" font-size="11.5" font-weight="600">Water + RO</text>
+ <text x="196" y="152" text-anchor="end" fill="#69727e" font-size="9" font-family="ui-monospace,Consolas,monospace">excluded</text>
+ <text x="26" y="168" fill="#69727e" font-size="9" font-family="ui-monospace,Consolas,monospace">&lt;1% cut-off</text>
+
+ <rect x="16" y="184" width="188" height="42" rx="8" fill="#101419" stroke="#313945" stroke-dasharray="4 3"/>
+ <text x="26" y="202" fill="#8d97a5" font-size="11.5" font-weight="600">Plug / substrate</text>
+ <text x="196" y="202" text-anchor="end" fill="#69727e" font-size="9" font-family="ui-monospace,Consolas,monospace">excluded</text>
+ <text x="26" y="218" fill="#69727e" font-size="9" font-family="ui-monospace,Consolas,monospace">no substrate in aeroponics</text>
+
+ <rect x="16" y="234" width="188" height="42" rx="8" fill="#131a24" stroke="#3b9ef7" stroke-opacity=".5"/>
+ <text x="26" y="252" fill="#e9ecf1" font-size="11.5" font-weight="600">Packaging</text>
+ <text x="196" y="252" text-anchor="end" fill="#8ec7ff" font-size="9.4" font-family="ui-monospace,Consolas,monospace">6.2%</text>
+ <text x="26" y="268" fill="#a9b3c0" font-size="9" font-family="ui-monospace,Consolas,monospace">s3 · purchase order · 0.0120</text>
+
+ <rect x="16" y="284" width="188" height="42" rx="8" fill="#131a24" stroke="#3b9ef7" stroke-opacity=".5"/>
+ <text x="26" y="302" fill="#e9ecf1" font-size="11.5" font-weight="600">Outbound transport</text>
+ <text x="196" y="302" text-anchor="end" fill="#8ec7ff" font-size="9.4" font-family="ui-monospace,Consolas,monospace">10.3%</text>
+ <text x="26" y="318" fill="#a9b3c0" font-size="9" font-family="ui-monospace,Consolas,monospace">s3 · ambient trunk haul · 0.0200</text>
+
+ <rect x="16" y="334" width="188" height="42" rx="8" fill="#131a24" stroke="#3b9ef7" stroke-opacity=".5"/>
+ <text x="26" y="352" fill="#e9ecf1" font-size="11.5" font-weight="600">Hardware amortisation</text>
+ <text x="196" y="352" text-anchor="end" fill="#8ec7ff" font-size="9.4" font-family="ui-monospace,Consolas,monospace">18.0%</text>
+ <text x="26" y="368" fill="#a9b3c0" font-size="9" font-family="ui-monospace,Consolas,monospace">s3 · 8 dev / 4 yr · 0.0350</text>
+ </g>
+
+ <!-- 投入箭头 -->
+ <g stroke="#39434f" stroke-width="1.2" fill="none" marker-end="url(#arw)">
+ <path d="M204 55 H244"/>
+ <path d="M204 105 H244"/>
+ <path d="M204 155 H244" stroke-dasharray="3 3" stroke-opacity=".5"/>
+ <path d="M204 205 H244" stroke-dasharray="3 3" stroke-opacity=".5"/>
+ <path d="M204 255 H244"/>
+ <path d="M204 305 H244"/>
+ <path d="M204 355 H244"/>
+ </g>
+
+ <!-- 中间：气雾育苗车间 -->
+ <rect x="248" y="34" width="372" height="382" rx="14" fill="#101419" stroke="#313945"/>
+ <text x="434" y="56" text-anchor="middle" fill="#e9ecf1" font-size="13" font-weight="700" font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">Aeroponic nursery</text>
+ <text x="434" y="72" text-anchor="middle" fill="#8d97a5" font-size="9.5" font-family="ui-monospace,Consolas,monospace">batch 480 plantlets · 45 d · fog floor</text>
+
+ <g font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif" font-size="10.5">
+ <rect x="264" y="84" width="168" height="46" rx="7" fill="#0d1117" stroke="#232931"/>
+ <text x="274" y="101" fill="#dbe2ea" font-weight="600">Fogging control loop</text>
+ <text x="274" y="116" fill="#7f8b99" font-size="9" font-family="ui-monospace,Consolas,monospace">fog-ctrl-A3 · duty</text>
+
+ <rect x="440" y="84" width="164" height="46" rx="7" fill="#0d1117" stroke="#232931"/>
+ <text x="450" y="101" fill="#dbe2ea" font-weight="600">Root-zone chemistry</text>
+ <text x="450" y="116" fill="#7f8b99" font-size="9" font-family="ui-monospace,Consolas,monospace">ec ph do water_temp</text>
+
+ <rect x="264" y="138" width="168" height="46" rx="7" fill="#0d1117" stroke="#232931"/>
+ <text x="274" y="155" fill="#dbe2ea" font-weight="600">Canopy VPD</text>
+ <text x="274" y="170" fill="#7f8b99" font-size="9" font-family="ui-monospace,Consolas,monospace">climate-PuEr-01</text>
+
+ <rect x="440" y="138" width="164" height="46" rx="7" fill="#0d1117" stroke="#232931"/>
+ <text x="450" y="155" fill="#dbe2ea" font-weight="600">Edge vision</text>
+ <text x="450" y="170" fill="#7f8b99" font-size="9" font-family="ui-monospace,Consolas,monospace">root-cam / tray-scan</text>
+
+ <rect x="264" y="192" width="168" height="46" rx="7" fill="#161f19" stroke="#00c48c" stroke-opacity=".5"/>
+ <text x="274" y="209" fill="#c9ffe9" font-weight="600">Energy metering</text>
+ <text x="274" y="224" fill="#8fd8b8" font-size="9" font-family="ui-monospace,Consolas,monospace">power_kw · kwh_total</text>
+
+ <rect x="440" y="192" width="164" height="46" rx="7" fill="#0d1117" stroke="#232931"/>
+ <text x="450" y="209" fill="#dbe2ea" font-weight="600">Microbiology / biosecurity</text>
+ <text x="450" y="224" fill="#7f8b99" font-size="9" font-family="ui-monospace,Consolas,monospace">micro-lab-01 · CFU</text>
+ </g>
+
+ <!-- 批次账本 -->
+ <rect x="264" y="254" width="340" height="144" rx="9" fill="#0b1411" stroke="#00c48c" stroke-opacity=".38" stroke-dasharray="5 4"/>
+ <text x="276" y="273" fill="#a9f3d8" font-size="10.5" font-weight="700" font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">Batch ledger</text>
+ <g font-family="ui-monospace,Consolas,monospace" font-size="8.8" fill="#8fd8b8">
+ <text x="276" y="290">interval manifest · 43,200 × 60 s intervals</text>
+ <text x="276" y="304">MEF lookup → 6 bands · Σ(kWh × MEF)</text>
+ <text x="276" y="318">line items · electricity N pack trans hw</text>
+ <text x="276" y="332">allocation · per-unit = total / 480</text>
+ <text x="276" y="346">digest · sha256(canonical json)</text>
+ <text x="276" y="360">chain · prev_hash → this.hash</text>
+ <text x="276" y="374">declared · ceil(computed, 0.01)</text>
+ <text x="276" y="390" fill="#e0a24e">Note: the ledger appends, it never overwrites</text>
+ </g>
+
+ <!-- 中间到右侧箭头 -->
+ <g stroke="#39434f" stroke-width="1.2" fill="none" marker-end="url(#arw)">
+ <path d="M620 78 H672"/>
+ <path d="M620 122 H672"/>
+ <path d="M620 166 H672"/>
+ <path d="M620 210 H672"/>
+ <path d="M620 254 H672"/>
+ </g>
+
+ <!-- 右侧产出 -->
+ <g font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif">
+ <rect x="676" y="56" width="188" height="44" rx="8" fill="#0f1a16" stroke="#00c48c" stroke-opacity=".6"/>
+ <text x="686" y="74" fill="#e9ecf1" font-size="11.5" font-weight="600">1 plantlet · FU 1</text>
+ <text x="686" y="89" fill="#a9f3d8" font-size="9.5" font-family="ui-monospace,Consolas,monospace">0.200 kgCO2e / plantlet</text>
+
+ <rect x="676" y="108" width="188" height="44" rx="8" fill="#101419" stroke="#313945" stroke-dasharray="4 3"/>
+ <text x="686" y="126" fill="#8d97a5" font-size="11.5" font-weight="600">1 kg green bean · FU 2</text>
+ <text x="686" y="141" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">later stage · baseline pending</text>
+
+ <rect x="676" y="160" width="188" height="44" rx="8" fill="#101419" stroke="#313945"/>
+ <text x="686" y="178" fill="#c3cbd6" font-size="11.5" font-weight="600">Drain / wastewater</text>
+ <text x="686" y="193" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">recirculated · emissions not counted</text>
+
+ <rect x="676" y="212" width="188" height="44" rx="8" fill="#101419" stroke="#313945"/>
+ <text x="686" y="230" fill="#c3cbd6" font-size="11.5" font-weight="600">Culled seedlings / loss</text>
+ <text x="686" y="245" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">deducted from the denominator, never added to the numerator</text>
+
+ <rect x="676" y="264" width="188" height="44" rx="8" fill="#101419" stroke="#313945"/>
+ <text x="686" y="282" fill="#c3cbd6" font-size="11.5" font-weight="600">Hardware retirement</text>
+ <text x="686" y="297" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">outside the 4 yr amortisation · recovery not counted</text>
+
+ <rect x="676" y="326" width="188" height="48" rx="8" fill="#1a1410" stroke="#e0a24e" stroke-opacity=".6"/>
+ <text x="686" y="344" fill="#f0d3a5" font-size="11.5" font-weight="600">Declared emissions (this batch)</text>
+ <text x="686" y="359" fill="#ffbe72" font-size="10" font-family="ui-monospace,Consolas,monospace">96.00 kgCO2e / 480 plantlets</text>
+ <text x="686" y="371" fill="#c9a273" font-size="8.6" font-family="ui-monospace,Consolas,monospace">= 0.200 × 480 (rounded up)</text>
+ </g>
+ <path d="M656 350 H672" stroke="#e0a24e" stroke-width="1.4" fill="none" marker-end="url(#arwa)"/>
+
+ <!-- 图例 -->
+ <g font-family="-apple-system,Segoe UI,Microsoft YaHei,sans-serif" font-size="10">
+ <rect x="16" y="430" width="9" height="9" rx="2" fill="#9d7bff" fill-opacity=".7"/>
+ <text x="31" y="439" fill="#a9b3c0">scope 2 · electricity 61.4%</text>
+ <rect x="176" y="430" width="9" height="9" rx="2" fill="#3b9ef7" fill-opacity=".7"/>
+ <text x="191" y="439" fill="#a9b3c0">scope 3 · upstream 38.6%</text>
+ <rect x="336" y="430" width="9" height="9" rx="2" fill="#e0a24e" fill-opacity=".7"/>
+ <text x="351" y="439" fill="#a9b3c0">scope 1 · not quantified &lt;0.5%</text>
+ <rect x="512" y="430" width="9" height="9" rx="2" fill="#69727e"/>
+ <text x="527" y="439" fill="#8d97a5">dashed = excluded item (reason in 2.2)</text>
+ <text x="16" y="464" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">boundary: cradle-to-gate · excludes grow-out / use / disposal</text>
+ <text x="16" y="480" fill="#69727e" font-size="9.5" font-family="ui-monospace,Consolas,monospace">Share basis: line items of the 0.200 kgCO2e per plantlet (packaging 6.2% + outbound 10.3% + hardware 18.0% = 34.5% secondary data)</text>
+ </g>
+ </svg>
+ </div>
+ <p class="caption">
+ Every share in the figure matches the worked example in §3.2. <b>Mind the direction of the boundary</b>: aeroponics excludes substrate because "there is no substrate in our numerator"; the baseline for a conventional soil nursery <b>has</b> does include it (mostly peat), and it is counted on the baseline side — see §6 on the risk of a self-declared baseline.
+ </p>
+</section
+<div class="zc-pager"><a href="why.html"><span class="k">← Previous </span><span class="t">A metered number can be audited; a number in a spreadsheet is a guess</span></a><a class="r" href="method.html"><span class="k">Next → </span><span class="t">Algorithm and factors: the formula chain, a worked batch, the hourly curve, and uncertainty</span></a></div>
+</div>
+</div>
+<script>try{
+(function () {
+ /* 侧栏高亮 */
+ var items = Array.prototype.slice.call(document.querySelectorAll('.navitem'));
+ var secs = items.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+ function sync() {
+ var y = window.scrollY + 120, idx = 0;
+ for (var i = 0; i < secs.length; i++) {
+ if (secs[i] && secs[i].offsetTop <= y) idx = i;
+ }
+ items.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+ }
+ window.addEventListener('scroll', sync, { passive: true });
+ window.addEventListener('resize', sync);
+ sync();
+
+ /* 二维码占位：25×25 模块，三个定位图案 + 伪随机数据模块（仅装饰，不含真实编码） */
+ var svg = document.getElementById('qrmock');
+ if (!svg) return;
+ var NS = 'http://www.w3.org/2000/svg', N = 25, seed = 20261103;
+ function rnd() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+ function put(x, y) {
+ var r = document.createElementNS(NS, 'rect');
+ r.setAttribute('x', x); r.setAttribute('y', y);
+ r.setAttribute('width', 1); r.setAttribute('height', 1);
+ r.setAttribute('fill', '#101418');
+ svg.appendChild(r);
+ }
+ function finder(ox, oy) {
+ for (var y = 0; y < 7; y++) {
+ for (var x = 0; x < 7; x++) {
+ var edge = (x === 0 || x === 6 || y === 0 || y === 6);
+ var core = (x >= 2 && x <= 4 && y >= 2 && y <= 4);
+ if (edge || core) put(ox + x, oy + y);
+ }
+ }
+ }
+ function inFinder(x, y) {
+ return (x < 8 && y < 8) || (x >= N - 8 && y < 8) || (x < 8 && y >= N - 8);
+ }
+ svg.innerHTML = '';
+ for (var y = 0; y < N; y++) {
+ for (var x = 0; x < N; x++) {
+ if (inFinder(x, y)) continue;
+ if ((x === 6 || y === 6) && rnd() > 0.45) put(x, y); /* 时序线 */
+ else if ((x === 8 && y % 2 === 0) || (y === 8 && x % 2 === 0)) put(x, y);
+ else if (rnd() > 0.52) put(x, y);
+ }
+ }
+ finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+})();
+}catch(e){console.warn("skip",e.message)}</script>
+<script src="/lang.js"></script>
+</body>
+</html>
