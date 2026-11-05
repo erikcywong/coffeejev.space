@@ -86,6 +86,26 @@
       'backdrop-filter:blur(8px);box-shadow:0 6px 20px rgba(0,0,0,.3)}' +
       '#cjv-zhpill:hover{background:rgba(0,196,140,.2)}';
     document.head.appendChild(css);
+
+    // some pages carry a fixed call-to-action in the same corner; lift the pill
+    // above whatever is already sitting there rather than covering it
+    setTimeout(function () {
+      var r = a.getBoundingClientRect();
+      var bump = 0;
+      var all = document.body.querySelectorAll('a, button, div');
+      for (var i = 0; i < all.length; i++) {
+        var el = all[i];
+        if (el === a) continue;
+        var cs = getComputedStyle(el);
+        if (cs.position !== 'fixed' || cs.visibility === 'hidden' || cs.display === 'none') continue;
+        var b = el.getBoundingClientRect();
+        if (b.width === 0 || b.bottom < window.innerHeight - 120) continue;
+        var overlaps = !(b.right < r.left - 4 || b.left > r.right + 4 ||
+                         b.bottom < r.top - 4 || b.top > r.bottom + 4);
+        if (overlaps) bump = Math.max(bump, r.bottom - b.top + 8);
+      }
+      if (bump) a.style.bottom = (20 + bump) + 'px';
+    }, 120);
   }
 
   if (inEnTree) {
@@ -100,6 +120,11 @@
   var file = p.split('/').pop() || 'index.html';
   if (tree && hasEnglish(file)) {
     location.replace('en/' + file);
+    return;
+  }
+  // the single-page specification sits at the root, outside the /spec/ tree
+  if (p.indexOf('/spec.html') === p.length - '/spec.html'.length) {
+    location.replace('spec/en/spec.html');
     return;
   }
 
