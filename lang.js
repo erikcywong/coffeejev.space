@@ -18,11 +18,13 @@
   var EN_READY = {
     spec: '*',
     method: '*',
-    carbon: '*'
+    carbon: '*',
+    commercial: '*',
+    napell: '*'
   };
 
   var p = location.pathname;
-  var m = p.match(/\/(spec|method|carbon)\/(en\/)?([^\/]*\.html)?$/);
+  var m = p.match(/\/(spec|method|carbon|commercial|napell)\/(en\/)?([^\/]*\.html)?$/);
   var tree = m ? m[1] : null;
   var inEnTree = !!m && !!m[2];
 

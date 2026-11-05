@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Napell Agent · iOS app — CoffeeJeV</title>
+<meta name="description" content="Napell Agent：CoffeeJeV 判断层的 iOS 应用。五个页面覆盖十四个决策节点，三语（中文 / English / العربية），可离线。">
+<meta property="og:title" content="Napell Agent · CoffeeJeV">
+<meta property="og:description" content="The CoffeeJeV decision layer as an iOS app — five screens, three languages, offline.">
+<meta property="og:image" content="https://www.coffeejev.space/napell/icon-512.png">
+<link rel="canonical" href="https://www.coffeejev.space/napell/">
+<script>try{var L=localStorage.getItem('cjv-lang')||'zh';var Q=new URLSearchParams(location.search).get('lang');if(Q==='en'||Q==='zh')L=Q;document.documentElement.dataset.lang=L;document.documentElement.lang=(L==='en')?'en':'zh-CN';}catch(e){}</script>
+<style>
+ :root{
+ --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e; --line:#313945;
+ --brand:#00c48c; --brand2:#3fe0b0; --amber:#e0a24e; --red:#ff5d6e; --violet:#8b6cff;
+ --bg:#08090b; --card:#11141a; --card2:#171b21;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+ --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+ }
+ *{margin:0;padding:0;box-sizing:border-box}
+ html,body{height:auto}
+ body{
+ background:var(--bg);color:var(--tx);font-family:var(--font);font-size:15px;line-height:1.65;
+ background-image:radial-gradient(900px 460px at 10% -10%,rgba(0,196,140,.13),transparent 62%),
+ radial-gradient(760px 420px at 92% -12%,rgba(139,108,255,.10),transparent 62%);
+ overflow-x:hidden;
+ }
+ html[data-lang="zh"] .en-only{display:none!important}
+ html[data-lang="en"] .zh-only{display:none!important}
+ a{color:var(--brand2);text-decoration:none}
+
+ .wrap{max-width:1180px;margin:0 auto;padding:0 24px 70px}
+
+ /* ---------- top bar ---------- */
+ header.bar{display:flex;align-items:center;gap:14px;padding:16px 0;flex-wrap:wrap;
+ border-bottom:.5px solid rgba(255,255,255,.08)}
+ .logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+ .logo .mark{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(150deg,#123a2e,#0b1f18);border:1px solid rgba(0,196,140,.35)}
+ .logo b{font-size:15px;font-weight:800;letter-spacing:.2px}
+ .navlinks{display:flex;gap:4px;margin-inline-start:10px}
+ .navlinks a{font-size:12.5px;font-weight:600;color:#b7c0cc;padding:6px 11px;border-radius:8px;text-decoration:none}
+ .navlinks a:hover{color:#fff;background:rgba(255,255,255,.07)}
+ .navlinks a.on{color:#a9f3d8;background:rgba(0,196,140,.14)}
+ .spacer{flex:1}
+ .langtoggle{display:flex;background:#0c1015;border:1px solid var(--line);border-radius:999px;padding:2px}
+ .langtoggle button{border:0;background:none;color:var(--dim);font:inherit;font-size:12px;font-weight:700;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+ .langtoggle button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+ .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;border:1px solid var(--line);
+ background:var(--card);color:#dfe6ee;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit}
+ .btn:hover{border-color:rgba(0,196,140,.5);color:#fff}
+ .btn.primary{background:linear-gradient(180deg,#12d69b,#00a878);border-color:rgba(0,196,140,.6);color:#04120d}
+ .btn.primary:hover{filter:brightness(1.06);color:#04120d}
+
+ /* ---------- hero ---------- */
+ .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:start;padding:46px 0 34px}
+ .hero > div:first-child{padding-top:26px}
+ @media (max-width:900px){.hero{grid-template-columns:1fr;gap:26px;padding:30px 0 20px;text-align:start}}
+ .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:1.6px;color:var(--brand2);text-transform:uppercase;margin-bottom:12px}
+ h1{font-size:clamp(34px,5vw,54px);line-height:1.06;letter-spacing:-1.6px;font-weight:850;margin-bottom:14px}
+ h1 em{font-style:normal;background:linear-gradient(96deg,#00c48c,#7fe0b6 55%,#bf5af2);
+ -webkit-background-clip:text;background-clip:text;color:transparent}
+ .lede{font-size:16px;color:#b9c2ce;max-width:52ch}
+ .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+ .chip{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.04);
+ border:1px solid var(--line);color:#c9d2dd}
+ .chip b{color:#fff;font-weight:800}
+ .hero-cta{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+
+ /* ---------- device ---------- */
+ .device-stage{display:flex;flex-direction:column;align-items:center;gap:16px}
+ .device-shell{position:relative;transform-origin:top center}
+ .device{
+ position:relative;width:393px;height:852px;border-radius:54px;overflow:hidden;background:#000;
+ box-shadow:0 0 0 10px #1a1a1c,0 0 0 11px #2c2c2e,0 40px 90px rgba(0,0,0,.7);
+ }
+ .device .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+ background:#000;border-radius:20px;z-index:3;pointer-events:none}
+ .device iframe{width:393px;height:852px;border:0;display:block;border-radius:54px}
+ @media (max-width:900px){
+ .device{width:min(393px,88vw);height:min(852px,72vh);border-radius:40px}
+ .device iframe{width:100%;height:100%;border-radius:40px}
+ .device .island{display:none}
+ }
+ .tabchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:420px}
+ .tabchips button{font:inherit;font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;
+ background:var(--card);border:1px solid var(--line);color:#b7c0cc;transition:.15s}
+ .tabchips button:hover{color:#fff;border-color:rgba(0,196,140,.45)}
+ .tabchips button.on{background:rgba(0,196,140,.16);border-color:rgba(0,196,140,.5);color:#a9f3d8}
+
+ /* ---------- sections ---------- */
+ section{padding:56px 0 8px;border-top:.5px solid rgba(255,255,255,.07)}
+ section:first-of-type{border-top:0}
+ .shead{margin-bottom:24px}
+ .shead .n{font-family:var(--mono);font-size:11px;letter-spacing:2px;color:var(--brand2);margin-bottom:8px}
+ .shead h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.7px;font-weight:820;line-height:1.2}
+ .shead p{color:#aeb8c5;margin-top:10px;max-width:78ch;font-size:14.5px}
+
+ .grid{display:grid;gap:12px}
+ .g5{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+ .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+ .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px;position:relative;
+ display:flex;flex-direction:column;gap:8px;transition:.16s}
+ .card:hover{border-color:rgba(0,196,140,.35);background:var(--card2)}
+ .card .top{display:flex;align-items:center;gap:9px}
+ .card .ico{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+ background:rgba(0,196,140,.12);border:1px solid rgba(0,196,140,.3);flex:none}
+ .card .ico svg{width:16px;height:16px;stroke:var(--brand2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ .card h3{font-size:15px;font-weight:800;letter-spacing:-.2px}
+ .card p{font-size:12.8px;color:#a8b2bf;line-height:1.6}
+ .card .open{margin-top:auto;font-size:12px;font-weight:700;color:var(--brand2);background:none;border:0;
+ padding:0;cursor:pointer;font-family:inherit;text-align:start;display:inline-flex;align-items:center;gap:5px}
+ .card .open:hover{color:#fff}
+ .tag{font-family:var(--mono);font-size:10px;letter-spacing:.8px;color:var(--dim2);text-transform:uppercase}
+
+ .maths{font-family:var(--mono);font-size:11.5px;color:#9fb0c0;background:#0b0e12;border:1px solid var(--line);
+ border-radius:9px;padding:9px 11px;line-height:1.7;overflow-x:auto;white-space:pre}
+
+ /* language cards */
+ .langcard{display:flex;align-items:center;gap:12px;cursor:pointer}
+ .langcard .flag{font-size:20px;line-height:1}
+ .langcard .l{flex:1}
+ .langcard b{display:block;font-size:14.5px;color:#eef1f5}
+ .langcard span{font-size:12px;color:var(--dim)}
+ .langcard.on{border-color:rgba(0,196,140,.5);background:rgba(0,196,140,.07)}
+
+ /* steps */
+ .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;counter-reset:s}
+ .step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px}
+ .step .k{font-family:var(--mono);font-size:11px;color:var(--brand2);letter-spacing:1.4px;margin-bottom:6px}
+ .step b{display:block;font-size:14.5px;margin-bottom:4px}
+ .step p{font-size:12.8px;color:#a8b2bf}
+
+ .note{margin-top:22px;padding:13px 15px;border-radius:12px;border:1px solid var(--line);
+ background:rgba(255,255,255,.03);font-size:12.5px;color:var(--dim);line-height:1.7}
+ footer{margin-top:44px;padding-top:18px;border-top:.5px solid rgba(255,255,255,.08);
+ font-size:12px;color:var(--dim2);line-height:1.9;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+ footer a{color:var(--dim)}
+ footer a:hover{color:var(--brand2)}
+</style>
+<style id="zc-back-css">
+.zc-back{position:fixed;top:18px;right:20px;z-index:999;display:inline-flex;align-items:center;gap:7px;
+ padding:9px 15px;border-radius:999px;text-decoration:none;border:0;
+ font:700 12.5px/1 -apple-system,"Segoe UI","PingFang SC",sans-serif;letter-spacing:.2px;
+ background:rgba(10,14,18,.90);border:1px solid rgba(0,196,140,.42);color:#a9f3d8;
+ backdrop-filter:blur(10px);box-shadow:0 6px 22px rgba(0,0,0,.28);transition:.15s}
+.zc-back:hover{background:rgba(0,196,140,.16);color:#fff;text-decoration:none}
+.zc-back svg{width:13px;height:13px;flex:none}
+@media (max-width:640px){.zc-back{top:12px;right:12px;padding:8px 12px;font-size:11.5px}}
+</style>
+<style>.rule-en{display:none}</style>
+</head>
+<body>
+<a class="zc-back" href="../../index.html" title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<div class="wrap">
+ <header class="bar">
+ <a class="logo" href="../../index.html">
+ <span class="mark" aria-hidden="true">
+ <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.8" stroke-linecap="round">
+ <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/>
+ <path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/><path d="M8 21h8" stroke-opacity=".55"/>
+ </svg>
+ </span>
+ <b>CoffeeJeV</b>
+ </a>
+ <nav class="navlinks">
+ <a href="../../index.html"><span class="zh-only">Video</span><span class="en-only">Video</span></a>
+ <a href="../../spec/index.html"><span class="zh-only">Design spec</span><span class="en-only">Design spec</span></a>
+ <a href="index.html" class="on">Napell Agent</a>
+ </nav>
+ <div class="spacer"></div>
+ <div class="langtoggle" id="langtoggle">
+ <button data-lang="zh">中文</button>
+ <button data-lang="en">EN</button>
+ </div>
+ <a class="btn primary" href="app.html" target="_blank" rel="noopener">
+ <span class="zh-only">Open app ↗</span><span class="en-only">Open app ↗</span>
+ </a>
+ </header>
+
+ <div class="hero">
+ <div>
+ <div class="eyebrow">iOS APP · PWA · v1.0</div>
+ <h1>Napell <em>Agent</em></h1>
+ <p class="lede zh-only">The CoffeeJeV judgement layer in a phone: six screens covering fourteen decision nodes and eight field devices, three judgers wired together, three languages, and it works offline.</p>
+ <p class="lede en-only">The CoffeeJeV decision layer, in your pocket: six screens covering fourteen decision nodes and eight live devices, three live judgers, three languages, fully offline.</p>
+ <div class="chips">
+ <span class="chip"><b>6</b> <span class="zh-only">Screens</span><span class="en-only">screens</span></span>
+ <span class="chip"><b>14</b> <span class="zh-only">Decision nodes</span><span class="en-only">nodes</span></span>
+ <span class="chip"><b>3</b> <span class="zh-only">Judgers</span><span class="en-only">judgers</span></span>
+ <span class="chip"><b>3</b> <span class="zh-only">Language</span><span class="en-only">languages</span></span>
+ <span class="chip"><span class="zh-only">Offline</span><span class="en-only">offline</span></span>
+ </div>
+ <div class="hero-cta">
+ <a class="btn primary" href="app.html" target="_blank" rel="noopener">
+ <span class="zh-only">Open in the browser ↗</span><span class="en-only">Open in browser ↗</span></a>
+ <a class="btn" href="#install"><span class="zh-only">Add to home screen</span><span class="en-only">Install to home screen</span></a>
+ </div>
+ </div>
+
+ <div class="device-stage">
+ <div class="device-shell" id="devShell">
+ <div class="device">
+ <div class="island"></div>
+ <iframe id="appFrame" src="app.html?lang=zh&tab=home" title="Napell Agent" loading="lazy"></iframe>
+ </div>
+ </div>
+ <div class="tabchips" id="tabchips">
+ <button data-tab="home" class="on"><span class="zh-only">Today</span><span class="en-only">Today</span></button>
+ <button data-tab="judges"><span class="zh-only">Judgers</span><span class="en-only">Judgers</span></button>
+ <button data-tab="devices"><span class="zh-only">Devices</span><span class="en-only">Devices</span></button>
+ <button data-tab="carbon"><span class="zh-only">Carbon</span><span class="en-only">Carbon</span></button>
+ <button data-tab="review"><span class="zh-only">Review</span><span class="en-only">Review</span></button>
+ <button data-tab="more"><span class="zh-only">More</span><span class="en-only">More</span></button>
+ </div>
+ </div>
+ </div>
+
+ <!-- ---------- five screens ---------- -->
+ <section id="screens">
+ <div class="shead">
+ <div class="n">01 / SIX SCREENS</div>
+ <h2><span class="zh-only">Six screens covering eleven sections of the spec and the device layer</span><span class="en-only">Six screens covering eleven sections and the device floor</span></h2>
+ <p class="zh-only">The phone on the left is really running the app, not a screenshot. Tap a card below or a tab, and it jumps to that screen.</p>
+ <p class="en-only">The phone on the left is running the real app, not a screenshot. Tap a card or a tab below and it jumps to that screen.</p>
+ </div>
+ <div class="grid g5">
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg></span>
+ <div><h3><span class="zh-only">Today</span><span class="en-only">Today</span></h3><div class="tag">home</div></div></div>
+ <p class="zh-only">Batch readiness, risk level, the two decisions waiting on you, and four KPIs.</p>
+ <p class="en-only">Current batch readiness, risk level, the two decisions waiting on you, four KPIs.</p>
+ <button class="open" data-go="home"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/></svg></span>
+ <div><h3><span class="zh-only">Judgers</span><span class="en-only">Judgers</span></h3><div class="tag">judges</div></div></div>
+ <p class="zh-only">Three sliders drive the three judgers; the verdict and the JSON refresh live.</p>
+ <p class="en-only">Three sets of sliders drive the three judgers; verdict and JSON update live.</p>
+ <button class="open" data-go="judges"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="7" height="6" rx="1.4"/><rect x="3.5" y="14" width="7" height="6" rx="1.4"/><path d="M14 8h6M14 17h6"/></svg></span>
+ <div><h3><span class="zh-only">Devices</span><span class="en-only">Devices</span></h3><div class="tag">devices</div></div></div>
+ <p class="zh-only">A registry of eight field devices: channel, state, key readings. Open one to send a command, or point it at the platform to read live data.</p>
+ <p class="en-only">The registry of eight field devices: transport, status, key readings, and a command sheet. Point it at the platform URL to read real data.</p>
+ <button class="open" data-go="devices"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9 4l6 2 5-2v14l-5 2-6-2-5 2V6zM9 4v14M15 6v14"/></svg></span>
+ <div><h3><span class="zh-only">Map</span><span class="en-only">Map</span></h3><div class="tag">map</div></div></div>
+ <p class="zh-only">Fourteen nodes; open any one to see its inputs, outputs and upgrade conditions.</p>
+ <p class="en-only">Fourteen nodes; open any one for its inputs, outputs and escalation rule.</p>
+ <button class="open" data-go="map"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+ <div><h3><span class="zh-only">Review</span><span class="en-only">Review</span></h3><div class="tag">review</div></div></div>
+ <p class="zh-only">The review queue (accept / override / request evidence) and the hash-chained decision ledger.</p>
+ <p class="en-only">A review queue (accept / override / ask for evidence) and a hash-chained ledger.</p>
+ <button class="open" data-go="review"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 12h.01M12 12h.01M18 12h.01"/></svg></span>
+ <div><h3><span class="zh-only">More</span><span class="en-only">More</span></h3><div class="tag">more</div></div></div>
+ <p class="zh-only">Language switching, the economics calculator, API examples, version and disclaimer.</p>
+ <p class="en-only">Language switch, economics, API example, version and disclaimer.</p>
+ <button class="open" data-go="more"><span class="zh-only">See it in the app →</span><span class="en-only">See it in the app →</span></button>
+ </div>
+ </div>
+ </section>
+
+ <!-- ---------- judgers ---------- -->
+ <section id="judgers">
+ <div class="shead">
+ <div class="n">02 / THE THREE JUDGERS</div>
+ <h2><span class="zh-only">The same mathematics, in a phone</span><span class="en-only">The same mathematics, in your hand</span></h2>
+ <p class="zh-only">Identical to the web version and to <code>service/</code> 's Python reference implementation — the shell changes, not the algorithm.</p>
+ <p class="en-only">Identical to the web edition and to the Python reference in <code>service/</code>. The shell changes; the algorithm does not.</p>
+ </div>
+ <div class="grid g3">
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+ <div><h3><span class="zh-only">A · Contamination Noul</span><span class="en-only">A · Contamination</span></h3><div class="tag">noul</div></div></div>
+ <p class="zh-only">A calibrated probability, a threshold derived from cost, and an operating floor that keeps the threshold usable on a real floor.</p>
+ <p class="en-only">A calibrated probability, a cost-derived threshold, plus an operating floor so the threshold is actually executable.</p>
+ <div class="maths">τ_cost = C_FP / (C_FP + C_FN) → 4.3% τ_hi = max(τ_cost, τ_min) → 15% bands: [0,τ_lo) release · [τ_lo,τ_hi) review · [τ_hi,1] hold</div>
+ <button class="open" data-go="judges" data-judge="a"><span class="zh-only">Try the sliders →</span><span class="en-only">Try it →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M7 15l4-5 3 3 4-6"/></svg></span>
+ <div><h3><span class="zh-only">B · Acclimatisation score</span><span class="en-only">B · Readiness</span></h3><div class="tag">score</div></div></div>
+ <p class="zh-only">Six weighted scores, but hard gates cap the result: with fewer than three roots, no leaf colour is good enough to release.</p>
+ <p class="en-only">Six weighted sub-scores, but hard gates cap the result: fewer than three roots and great leaf colour will not release it.</p>
+ <div class="maths">score = Σ wᵢ·sᵢ w = 22/20/10/12/18/18 % caps: roots&lt;3 → ≤55 · browning&gt;60 → ≤60 · p≥0.5 → ≤40 band: ≥80 transplant · 60–79 delay · &lt;60 continue</div>
+ <button class="open" data-go="judges" data-judge="b"><span class="zh-only">Try the sliders →</span><span class="en-only">Try it →</span></button>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></span>
+ <div><h3><span class="zh-only">C · Nutrient fog choice</span><span class="en-only">C · Nutrient fog</span></h3><div class="tag">choice</div></div></div>
+ <p class="zh-only">Hard constraints first, then utility, then a softmax over the feasible set — with no feasible solution the output is stop-and-review.</p>
+ <p class="en-only">Hard constraints first, then utility, then a softmax over the feasible set. Nothing feasible → stop and review.</p>
+ <div class="maths">EC 0.8–2.0 · pH 5.3–6.4 · DO≥5 · root temp ≤26 · solution temp ≤24 U = w_s·u_surv + w_c·u_cost + w_q·u_qual p_i ∝ exp(β·U_i), β = 6</div>
+ <button class="open" data-go="judges" data-judge="c"><span class="zh-only">Try the sliders →</span><span class="en-only">Try it →</span></button>
+ </div>
+ </div>
+ </section>
+
+ <!-- ---------- languages ---------- -->
+ <section id="languages">
+ <div class="shead">
+ <div class="n">03 / THREE LANGUAGES</div>
+ <h2><span class="zh-only">Chinese, English, العربية</span><span class="en-only">Chinese, English, Arabic</span></h2>
+ <p class="zh-only">Arabic is a full RTL layout, not swapped glyphs: arrows mirror, the tab bar flips, and digits and Latin strings keep their order.</p>
+ <p class="en-only">Arabic is a real RTL layout, not a text swap: mirrored chevrons, reversed tab bar, numbers and Latin strings kept in logical order.</p>
+ </div>
+ <div class="grid g3">
+ <div class="card langcard" data-applang="zh"><span class="flag">🇨🇳</span>
+ <div class="l"><b>Chinese · Mandarin</b><span>zh-CN · LTR · default</span></div>
+ <span class="tag">LTR</span></div>
+ <div class="card langcard" data-applang="en"><span class="flag">🇬🇧</span>
+ <div class="l"><b>English</b><span>en · LTR</span></div>
+ <span class="tag">LTR</span></div>
+ <div class="card langcard" data-applang="ar"><span class="flag">🇸🇦</span>
+ <div class="l"><b>العربية</b><span dir="rtl">ar-SA · RTL</span></div>
+ <span class="tag">RTL</span></div>
+ </div>
+ <div class="note">
+ <span class="zh-only">Tap any card and the phone above switches at once. The choice is written into both the site and the app, and survives a reload. Deep link: <code>?lang=ar</code>。</span>
+ <span class="en-only">Tap any card and the phone above switches language immediately. The choice is shared by the site and the app and survives a reload. Deep link: <code>?lang=ar</code>.</span>
+ </div>
+ </section>
+
+ <!-- ---------- ledger ---------- -->
+ <section id="ledger">
+ <div class="shead">
+ <div class="n">04 / REVIEW &amp; LEDGER</div>
+ <h2><span class="zh-only">putting judgement at the right price</span><span class="en-only">People at the right price point</span></h2>
+ </div>
+ <div class="grid g3">
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5z"/><path d="M3 12l9 4.5 9-4.5"/><path d="M3 16.5L12 21l9-4.5"/></svg></span>
+ <h3><span class="zh-only">Review queue</span><span class="en-only">Review queue</span></h3></div>
+ <p class="zh-only">Every item carries its evidence and a reason code. Three actions — accept, override, request evidence — all written to the ledger.</p>
+ <p class="en-only">Every item carries evidence and a reason code. Three actions — accept, override, ask for evidence — all land in the ledger.</p>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7.5h.01M7 17h.01"/></svg></span>
+ <h3><span class="zh-only">Hash-chained ledger</span><span class="en-only">Hash-chained ledger</span></h3></div>
+ <p class="zh-only">every judgement is recorded <code>prev</code> and <code>hash</code>, the page verifies the chain on the spot, and anything edited turns red.</p>
+ <p class="en-only">Each judgement stores <code>prev</code> and <code>hash</code>; the app verifies the chain in place and turns red if anything was altered.</p>
+ </div>
+ <div class="card">
+ <div class="top"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M17 7H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+ <h3><span class="zh-only">Economics</span><span class="en-only">Economics</span></h3></div>
+ <p class="zh-only">Payback, annual net cash flow and cost per decision are computed on the device, with the same formulas as the web version.</p>
+ <p class="en-only">Payback, annual net cash flow and cost per decision, computed on device with the same formulas as the web edition.</p>
+ </div>
+ </div>
+ </section>
+
+ <!-- ---------- install ---------- -->
+ <section id="install">
+ <div class="shead">
+ <div class="n">05 / INSTALL</div>
+ <h2><span class="zh-only">Install it to the home screen and open it like a native app</span><span class="en-only">Put it on the home screen and open it like a native app</span></h2>
+ <p class="zh-only">It is a PWA: no App Store, no account, and it runs offline after the first visit.</p>
+ <p class="en-only">It is a PWA: no App Store, no account, and it keeps working offline after the first load.</p>
+ </div>
+ <div class="steps">
+ <div class="step"><div class="k">STEP 1</div><b>iPhone · Safari</b>
+ <p class="zh-only">Open it in Safari <code>coffeejev.space/napell/app.html</code>, tap the share button at the bottom.</p>
+ <p class="en-only">Open <code>coffeejev.space/napell/app.html</code> in Safari, tap the share button.</p></div>
+ <div class="step"><div class="k">STEP 2</div><b><span class="zh-only">Add to Home Screen</span><span class="en-only">Add to Home Screen</span></b>
+ <p class="zh-only">Choose "Add to Home Screen" in the share sheet; the icon is Napell's leaf mark.</p>
+ <p class="en-only">Choose “Add to Home Screen”; the icon is the Napell leaf mark.</p></div>
+ <div class="step"><div class="k">STEP 3</div><b><span class="zh-only">Open it from the home screen</span><span class="en-only">Launch from the home screen</span></b>
+ <p class="zh-only">It then runs full screen with no address bar, works offline, and handles the status bar and safe areas.</p>
+ <p class="en-only">It then runs full-screen with no address bar, offline, with the status bar and safe areas handled.</p></div>
+ </div>
+ <div class="note">
+ <span class="zh-only">To ship on the App Store there are two paths: wrap it with Capacitor (about a day; camera and push become available), or rewrite in SwiftUI (2–3 weeks, with the judger engine ported directly). Details in the repo <code>napell/README.md</code>。</span>
+ <span class="en-only">To ship on the App Store there are two paths: wrap with Capacitor (about a day, gives you camera and push) or rewrite in SwiftUI (two to three weeks, porting the judger engine directly). See <code>napell/README.md</code>.</span>
+ </div>
+ </section>
+
+ <footer>
+ <div>
+ <a href="../../index.html"><span class="zh-only">Video home</span><span class="en-only">Video</span></a> ·
+ <a href="../../spec/index.html"><span class="zh-only">Design spec</span><span class="en-only">Design spec</span></a> ·
+ <a href="app.html">Napell Agent</a> ·
+ <a href="manifest.webmanifest">manifest</a>
+ </div>
+ <div><span class="zh-only">Every number inside the app is a design target or an adjustable assumption, not a measurement.</span>
+ <span class="en-only">Every number in the app is a design target or an assumption, not a measurement.</span></div>
+ </footer>
+</div>
+
+<script>
+ const frame = document.getElementById('appFrame');
+ const state = { lang: document.documentElement.dataset.lang || 'zh', tab: 'home', judge: null };
+
+ function sync(){
+ const q = new URLSearchParams({lang: state.lang, tab: state.tab});
+ if (state.judge) q.set('judge', state.judge);
+ frame.src = 'app.html?' + q.toString();
+ document.querySelectorAll('#tabchips button').forEach(b=>b.classList.toggle('on', b.dataset.tab===state.tab));
+ document.querySelectorAll('.langcard').forEach(c=>c.classList.toggle('on', c.dataset.applang===state.lang));
+ }
+
+ function setLang(l){
+ state.lang = l;
+ document.documentElement.dataset.lang = l;
+ document.documentElement.lang = l === 'en' ? 'en' : 'zh-CN';
+ try { localStorage.setItem('cjv-lang', l); } catch(e){}
+ document.querySelectorAll('#langtoggle button').forEach(b=>b.classList.toggle('on', b.dataset.lang===l));
+ sync();
+ }
+
+ document.getElementById('langtoggle').addEventListener('click', e=>{
+ const b = e.target.closest('button'); if(b) setLang(b.dataset.lang);
+ });
+ document.getElementById('tabchips').addEventListener('click', e=>{
+ const b = e.target.closest('button'); if(!b) return;
+ state.tab = b.dataset.tab; state.judge = null; sync();
+ });
+ document.querySelectorAll('[data-go]').forEach(btn=>btn.addEventListener('click', ()=>{
+ state.tab = btn.dataset.go; state.judge = btn.dataset.judge || null; sync();
+ document.getElementById('devShell').scrollIntoView({behavior:'smooth', block:'center'});
+ }));
+ document.querySelectorAll('.langcard').forEach(c=>c.addEventListener('click', ()=>setLang(c.dataset.applang)));
+
+ // scale the device down on short viewports so the phone always fits the fold
+ function fit(){
+ const shell = document.getElementById('devShell');
+ const avail = window.innerHeight * 0.84;
+ const s = Math.min(1, avail / 852);
+ shell.style.transform = `scale(${s})`;
+ shell.style.height = (852 * s) + 'px';
+ }
+ window.addEventListener('resize', fit);
+ fit();
+ sync();
+</script>
+<script src="/lang.js"></script>
+</body>
+</html>
