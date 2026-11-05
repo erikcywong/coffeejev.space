@@ -226,7 +226,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
 <style>.rule-en{display:none}</style>
 </head>
 <body>
-<a class="zc-back" href="../../index.html" title="返回 CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
+<a class="zc-back" href="../../index.html" title="title="Back to CoffeeJeV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>CoffeeJeV</a>
 <div class="zc-wrap">
 <aside class="zc-rail"><div class="zc-brand">Pricing · 6 sections</div><a class="" href="why.html"><b>01</b> The pricing logic in one line </a><a class="" href="tiers.html"><b>02</b> Three product lines </a><a class="on" href="zone.html"><b>03</b> Why we sell by Zone, not by farm </a><a class="" href="evidence.html"><b>04</b> Pricing the certificate: by evidence grade, not by batch </a><a class="" href="anti.html"><b>05</b> Anti-arbitrage rules (four, hard-coded) </a><a class="" href="governance.html"><b>06</b> Who is speaking: the issuer must be separate from the seller </a><div class="zc-rule"></div><a class="zc-full" href="full.html">Read the full text →</a></aside>
 <div class="zc-main">
@@ -357,7 +357,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  <span class="v" id="c-plants-out">240,000<small>plantlets/year</small></span>
  </label>
  <input type="range" id="c-plants" min="20000" max="500000" step="10000" value="240000"
- aria-label="aria-label="Plantlets dispatched per year" aria-valuetext="240000 株每年">
+ aria-label="aria-label="Plantlets dispatched per year" aria-valuetext="240000 plantlets a year">
  <div class="scale"><span>20k</span><span>240k</span><span>500k</span></div>
  </div>
  <div class="ctrl">
@@ -448,7 +448,7 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  var perPlant = P.avoidAnchorYuan / P.avoidAnchorPlants; // ¥0.4667/株/年（推）
  var edgePerFarm = P.edgeZone / P.edgeYears / P.edgeFarms; // ¥750/场/年（推）
  var selfAnnual = P.selfCapex / P.selfYears + P.selfOps; // ¥34,000/年（推 + 假设）
- var crossPoint = selfAnnual / perPlant; // ≈72,857 株/年（推）
+ var crossPoint = selfAnnual / perPlant; // ≈72,857 plantlets/year (derived)
  /* ---------- DOM ---------- */
  var el = {
  plants: document.getElementById("c-plants"),
@@ -494,24 +494,24 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  var meter = plants * P.metering;
  var edge = edgePerFarm;
  cost = seat + meter + edge;
- costSub = "席位 ¥" + fmt(seat) + " · 计量 ¥" + fmt(meter) + " · 盒摊 ¥" + fmt(edge);
- modeText = "模式：zone 席位（8–15 场共享 1 台 edge 盒）";
+ costSub = "seat ¥" + fmt(seat) + " · metering ¥" + fmt(meter) + " · box share ¥" + fmt(edge);
+ modeText = "Mode: zone seat (8–15 farms share one edge box)";
  } else {
  cost = selfAnnual;
- costSub = "自建：硬件 ¥78,000 ÷ 3 年 = ¥" + fmt(P.selfCapex / P.selfYears) +
- " + 运维 ¥" + fmt(P.selfOps) + "（假设）";
- modeText = "模式：单场自建（无共享）";
+ costSub = "Self-build: hardware ¥78,000 ÷ 3 years = ¥" + fmt(P.selfCapex / P.selfYears) +
+ " + opex ¥" + fmt(P.selfOps) + " (assumption)";
+ modeText = "Mode: single-site self-build (no sharing)";
  }
  var net = avoid + labelYuan - cost;
  var costCover = avoid / cost;
  el.cost.textContent = "¥" + fmt(cost);
  el.costSub.textContent = costSub;
  el.avoid.textContent = "¥" + fmt(avoid);
- el.avoidSub.textContent = "≈ $" + fmt(avoid / P.fx) + " · 线性外推，未经实测";
+ el.avoidSub.textContent = "≈ $" + fmt(avoid / P.fx) + " · linear extrapolation, not measured";
  el.label.textContent = "¥" + fmt(labelYuan);
- el.labelSub.textContent = fmt(batches) + " 批 × ¥" + fee + "（" + grade + " 级）";
+ el.labelSub.textContent = fmt(batches) + " batches × ¥" + fee + "（" + grade + " grade)";
  el.net.textContent = (net < 0 ? "−¥" : "¥") + fmt(Math.abs(net));
- el.netSub.textContent = "避免损失 + 标签收入 − 年成本";
+ el.netSub.textContent = "avoided loss + label revenue − annual cost";
  el.boxNet.classList.toggle("bad", net < 0);
  el.boxCost.classList.toggle("bad", !inZone && costCover < 1);
  el.batches.textContent = fmt(batches);
@@ -519,13 +519,13 @@ input[type=range]:focus-visible{box-shadow:0 0 0 3px rgba(0,196,140,.25)}
  el.zoneCov.textContent = fmt1(avoid / (P.seat + plants * P.metering + edgePerFarm)) + "×";
  el.mode.textContent = modeText;
  if (plants < crossPoint) {
- el.cross.textContent = "· 低于自建回本临界 " + fmt(crossPoint) +
- " 株/年 → 自建回收期不收敛（∞）";
+ el.cross.textContent = "· below the self-build break-even " + fmt(crossPoint) +
+ " plantlets/year → self-build payback does not converge (∞)";
  } else {
- el.cross.textContent = "· 高于自建回本临界 " + fmt(crossPoint) + " 株/年（推）";
+ el.cross.textContent = "· above the self-build break-even " + fmt(crossPoint) + " plantlets/year (derived)";
  }
  el.plantsOut.innerHTML = fmt(plants) + "<small>plantlets/year</small>";
- el.plants.setAttribute("aria-valuetext", plants + " 株每年");
+ el.plants.setAttribute("aria-valuetext", plants + " plantlets a year");
  }
  /* ---------- 事件 ---------- */
  el.plants.addEventListener("input", function () {

@@ -4,18 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Decision map · CoffeeJeV</title>
-<meta name="description" content="CoffeeJeV — Decision map">
+<meta name="description" content="content="CoffeeJeV — decision map">
+<script>try{var L=localStorage.getItem('cjv-lang')||'zh';
+document.documentElement.dataset.lang=L;
+document.documentElement.lang=(L==='en')?'en':'zh-CN';}catch(e){}</script>
 <style>
 :root{
-  --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
-  --line:#232931; --line2:#313945;
-  --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
-  --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
-  --amber:#e0a24e; --coffee:#c08552; --amber-dk:rgba(224,162,78,.12);
-  --cyan:#3b9ef7; --violet:#8b6cff; --red:#ff5d6e; --yellow:#ffc83d;
-  --r:16px; --r2:12px;
-  --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
-  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+ --bg:#08090b; --bg2:#0b0d10; --card:#11141a; --card2:#161a21; --card3:#1b2029;
+ --line:#232931; --line2:#313945;
+ --tx:#e9ecf1; --dim:#8d97a5; --dim2:#69727e;
+ --green:#00c48c; --green2:#3fe0b0; --green-dk:rgba(0,196,140,.12);
+ --amber:#e0a24e; --coffee:#c08552; --amber-dk:rgba(224,162,78,.12);
+ --cyan:#3b9ef7; --violet:#8b6cff; --red:#ff5d6e; --yellow:#ffc83d;
+ --r:16px; --r2:12px;
+ --mono:ui-monospace,SFMono-Regular,"Cascadia Mono","Consolas","Liberation Mono",monospace;
+ --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -51,29 +54,29 @@ b,strong{font-weight:700;color:#fff}
 main{min-width:0}
 .wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
 @media (max-width:1080px){
-  .app{grid-template-columns:minmax(0,1fr)}
-  .nav{position:static;height:auto;flex-direction:column;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;min-width:0;width:100%}
-  .navlabel,.navfoot{display:none}
-  .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;min-width:0;width:100%}
-  .navlist::-webkit-scrollbar{display:none}
-  .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
-  .navitem .n{display:none}
-  .brand{padding-bottom:10px}
-  .wrap{padding:0 20px}
-  main{min-width:0}
-  .lab>*,.explorer>*,.api>*,.econ>*,.grid2>*,.grid3>*,.chain>*,.lab,.explorer,.api,.econ,.ndgrid,.ldgrid{min-width:0}
-  .panel,.ldetail,.nodedetail,.card{min-width:0;max-width:100%}
-  .json,.tblscroll,.code,.outs,.verdict{max-width:100%}
-  .verdict .vd{overflow-wrap:anywhere}
+ .app{grid-template-columns:minmax(0,1fr)}
+ .nav{position:static;height:auto;flex-direction:column;gap:2px;border-right:none;border-bottom:1px solid var(--line);padding:10px 12px 8px;overflow:visible;min-width:0;width:100%}
+ .navlabel,.navfoot{display:none}
+ .navlist{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px;scrollbar-width:none;min-width:0;width:100%}
+ .navlist::-webkit-scrollbar{display:none}
+ .navitem{width:auto;flex:0 0 auto;white-space:nowrap;font-size:12.5px;padding:7px 11px}
+ .navitem .n{display:none}
+ .brand{padding-bottom:10px}
+ .wrap{padding:0 20px}
+ main{min-width:0}
+ .lab>*,.explorer>*,.api>*,.econ>*,.grid2>*,.grid3>*,.chain>*,.lab,.explorer,.api,.econ,.ndgrid,.ldgrid{min-width:0}
+ .panel,.ldetail,.nodedetail,.card{min-width:0;max-width:100%}
+ .json,.tblscroll,.code,.outs,.verdict{max-width:100%}
+ .verdict .vd{overflow-wrap:anywhere}
 }
 @media (max-width:620px){.wrap{padding:0 14px}}
 
 /* ---------- 页首 ---------- */
 .hero{padding:52px 0 44px;position:relative;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:-40% -10% auto -10%;height:520px;background:
-  radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.16),transparent 62%),
-  radial-gradient(620px 300px at 92% -20%,rgba(224,162,78,.13),transparent 62%),
-  radial-gradient(520px 260px at 55% 10%,rgba(59,158,247,.07),transparent 70%);pointer-events:none}
+ radial-gradient(760px 320px at 8% -10%,rgba(0,196,140,.16),transparent 62%),
+ radial-gradient(620px 300px at 92% -20%,rgba(224,162,78,.13),transparent 62%),
+ radial-gradient(520px 260px at 55% 10%,rgba(59,158,247,.07),transparent 70%);pointer-events:none}
 .hero>*{position:relative}
 .eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:1.4px;color:var(--green);text-transform:uppercase;margin-bottom:16px}
 .eyebrow .sep{color:var(--dim2)}
@@ -139,7 +142,7 @@ h3.sub .mut{font-size:12px;color:var(--dim2);font-weight:500;letter-spacing:0}
 .gap .why{font-size:13px;color:#aab4c1;line-height:1.62}
 .gap .fix{font-size:13px;color:#8ef0cd;line-height:1.6;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line2)}
 .gap .fix b{color:var(--green2);font-weight:700}
-.gap .fix::before{content:"v1.0 对策 → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.4px}
+.gap .fix::before{content:"v1.0 FIX → ";font-family:var(--mono);font-size:10.5px;color:var(--dim2);letter-spacing:.4px}
 .sev{position:absolute;top:0;right:0;width:34px;height:3px;border-radius:0 14px 0 3px}
 .sev.hi{background:var(--red)}.sev.mid{background:var(--amber)}.sev.lo{background:var(--dim2)}
 
@@ -345,87 +348,105 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 
 <style>
-  html[data-lang="zh"] .en-only{display:none !important}
-  .wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
-  .langmini{display:flex;gap:2px;margin:0 10px 12px;padding:3px;border-radius:999px;
-    background:#0c1015;border:1px solid var(--line2)}
-  .langmini a{flex:1;text-align:center;text-decoration:none;color:var(--dim);
-    font-size:11.5px;font-weight:700;padding:6px 8px;border-radius:999px;transition:.15s}
-  .langmini a:hover{color:#fff}
-  .langmini a.on{background:rgba(0,196,140,.16);color:#a9f3d8}
-  .crumb{padding:22px 0 0;font-size:12.5px;color:var(--dim2);letter-spacing:.3px}
-  .crumb a{color:var(--dim);text-decoration:none}
-  .crumb a:hover{color:var(--green2)}
-  .crumb b{color:#c9d2dd;font-weight:600}
-  .pager{display:flex;gap:10px;justify-content:space-between;margin:44px 0 10px;flex-wrap:wrap}
-  .pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
-    border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);transition:.15s}
-  .pager a:hover{border-color:rgba(0,196,140,.45);background:var(--card2)}
-  .pager .k{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim2);font-family:var(--mono)}
-  .pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
-  .pager .r{text-align:right;align-items:flex-end}
-  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin-top:22px}
-  .toc a{display:flex;gap:12px;align-items:flex-start;text-decoration:none;border:1px solid var(--line);
-    border-radius:14px;padding:15px 16px;background:var(--card);transition:.16s}
-  .toc a:hover{border-color:rgba(0,196,140,.4);background:var(--card2);transform:translateY(-1px)}
-  .toc .n{font-family:var(--mono);font-size:11px;color:var(--green2);border:1px solid rgba(0,196,140,.35);
-    border-radius:6px;padding:2px 6px;flex-shrink:0;margin-top:2px}
-  .toc .b b{display:block;font-size:14.5px;color:#eef1f5;margin-bottom:3px}
-  .toc .b span{font-size:12.5px;color:var(--dim);line-height:1.55}
-  .mtnote{margin:26px 0 0;padding:12px 14px;border-radius:12px;font-size:12px;line-height:1.7;
-    color:var(--dim);background:rgba(255,255,255,.03);border:1px solid var(--line)}
+ /* —— site-wide language switch —— */
+ html[data-lang="en"] .en-only{display:none !important}
+ html[data-lang="en"] .zh-only{display:none !important}
+
+ .wrap{max-width:1240px;margin:0;padding:0 56px 0 48px}
+
+ .langmini{display:flex;gap:2px;margin:0 10px 12px;padding:3px;border-radius:999px;
+ background:#0c1015;border:1px solid var(--line2)}
+ .langmini a{flex:1;text-align:center;text-decoration:none;color:var(--dim);
+ font-size:11.5px;font-weight:700;padding:6px 8px;border-radius:999px;transition:.15s}
+ .langmini a:hover{color:#fff}
+ .langmini a.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+
+ .crumb{padding:22px 0 0;font-size:12.5px;color:var(--dim2);letter-spacing:.3px}
+ .crumb a{color:var(--dim);text-decoration:none}
+ .crumb a:hover{color:var(--green2)}
+ .crumb b{color:#c9d2dd;font-weight:600}
+
+ .en-sum{border:1px solid rgba(0,196,140,.28);background:linear-gradient(180deg,rgba(0,196,140,.07),rgba(0,196,140,.02));
+ border-radius:16px;padding:18px 20px;margin:26px 0 0}
+ .en-sum .k{font:700 10.5px/1 var(--mono);letter-spacing:1.6px;color:var(--green2);text-transform:uppercase}
+ .en-sum h3{font-size:19px;font-weight:800;margin:9px 0 4px;color:#fff;letter-spacing:-.2px}
+ .en-sum .lead{font-size:13.5px;color:#b9c2ce;margin-bottom:10px}
+ .en-sum ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+ .en-sum li{font-size:13px;color:#aeb8c5;line-height:1.6;padding-left:15px;position:relative}
+ .en-sum li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--green)}
+ .en-sum .note{margin-top:11px;font-size:11.5px;color:var(--dim2)}
+
+ .pager{display:flex;gap:10px;justify-content:space-between;margin:44px 0 10px;flex-wrap:wrap}
+ .pager a{flex:1;min-width:220px;display:flex;flex-direction:column;gap:3px;text-decoration:none;
+ border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);transition:.15s}
+ .pager a:hover{border-color:rgba(0,196,140,.45);background:var(--card2)}
+ .pager .k{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim2);font-family:var(--mono)}
+ .pager .t{font-size:14px;font-weight:700;color:#e9ecf1}
+ .pager .r{text-align:right;align-items:flex-end}
+
+ .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px;margin-top:22px}
+ .toc a{display:flex;gap:12px;align-items:flex-start;text-decoration:none;border:1px solid var(--line);
+ border-radius:14px;padding:15px 16px;background:var(--card);transition:.16s}
+ .toc a:hover{border-color:rgba(0,196,140,.4);background:var(--card2);transform:translateY(-1px)}
+ .toc .n{font-family:var(--mono);font-size:11px;color:var(--green2);border:1px solid rgba(0,196,140,.35);
+ border-radius:6px;padding:2px 6px;flex-shrink:0;margin-top:2px}
+ .toc .b b{display:block;font-size:14.5px;color:#eef1f5;margin-bottom:3px}
+ .toc .b span{font-size:12.5px;color:var(--dim);line-height:1.55}
 </style>
 
+<style>.rule-en{display:none}</style>
 </head>
 <body>
 <div class="app">
 <aside class="nav">
-  <div class="brand">
-    <div class="mark">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.6" stroke-linecap="round">
-        <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/><path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/>
-        <path d="M8 21h8" stroke-opacity=".55"/><circle cx="12" cy="4.2" r="1.1" fill="#3fe0b0" stroke="none" opacity=".8"/>
-      </svg>
-    </div>
-    <div class="txt"><b>CoffeeJeV</b><span>design spec v1.0</span></div>
-  </div>
-  <a href="../../index.html" style="display:flex;align-items:center;justify-content:center;gap:7px;margin:0 10px 10px;padding:9px 11px;border-radius:999px;border:1px solid rgba(0,196,140,.45);background:linear-gradient(180deg,rgba(0,196,140,.16),rgba(0,196,140,.07));color:#c9ffe9;text-decoration:none;font-size:12.5px;font-weight:700"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg>Video</a>
-  <div class="langmini"><a href="../chain.html">中文</a><a href="#" class="on">EN</a></div>
-  <div class="navlabel">11 sections</div>
-  <nav class="navlist" id="navlist">
-    <a class="navitem" href="review.html"><span class="n">01</span>Design review</a>
-    <a class="navitem" href="arch.html"><span class="n">02</span>Architecture</a>
-    <a class="navitem on" href="chain.html"><span class="n">03</span>Decision map</a>
-    <a class="navitem" href="lab.html"><span class="n">04</span>Judger lab</a>
-    <a class="navitem" href="api.html"><span class="n">05</span>Contract & API</a>
-    <a class="navitem" href="hitl.html"><span class="n">06</span>Human in the loop</a>
-    <a class="navitem" href="learn.html"><span class="n">07</span>Learning loop</a>
-    <a class="navitem" href="kpi.html"><span class="n">08</span>Metrics & economics</a>
-    <a class="navitem" href="roadmap.html"><span class="n">09</span>90-day plan</a>
-    <a class="navitem" href="risk.html"><span class="n">10</span>Risk & governance</a>
-    <a class="navitem" href="appendix.html"><span class="n">11</span>Appendix</a>
-    <a class="navitem" href="index.html"><span class="n">≡</span>All sections</a>
-  </nav>
-  <div class="navfoot">
-    <div><span class="dot"></span>Interactive spec</div>
-    <div style="margin-top:6px">All numbers here are <b style="color:#aab3bf">design targets or assumptions</b>, not measurements.</div>
-  </div>
+ <div class="brand">
+ <div class="mark">
+ <svg viewBox="0 0 24 24" fill="none" stroke="#3fe0b0" stroke-width="1.6" stroke-linecap="round">
+ <path d="M12 21c0-4.5 0-8 0-11"/><path d="M12 10c0 0-5-1-5-5 3.4 0 5 2 5 5Z"/><path d="M12 13c0 0 5-1 5-5-3.4 0-5 2-5 5Z"/>
+ <path d="M8 21h8" stroke-opacity=".55"/><circle cx="12" cy="4.2" r="1.1" fill="#3fe0b0" stroke="none" opacity=".8"/>
+ </svg>
+ </div>
+ <div class="txt"><b>CoffeeJeV</b><span class="zh-only">design spec v1.0</span></div>
+ </div>
+ <a href="../../index.html" style="display:flex;align-items:center;justify-content:center;gap:7px;margin:0 10px 10px;padding:9px 11px;border-radius:999px;border:1px solid rgba(0,196,140,.45);background:linear-gradient(180deg,rgba(0,196,140,.16),rgba(0,196,140,.07));color:#c9ffe9;text-decoration:none;font-size:12.5px;font-weight:700"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.2-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2Z"/></svg><span class="zh-only">Video</span></a>
+ <div class="langmini" id="langmini" role="group" aria-label="Language">
+ <a href="../chain.html" class="on">中文</a><a href="chain.html">EN</a>
+ </div>
+ <div class="navlabel"><span class="zh-only">11 sections · one page each</span></div>
+ <nav class="navlist" id="navlist">
+ <a class="navitem" href="review.html"><span class="n">01</span><span class="zh-only">Design review</span></a>
+ <a class="navitem" href="arch.html"><span class="n">02</span><span class="zh-only">Full-stack architecture</span></a>
+ <a class="navitem on" href="chain.html"><span class="n">03</span><span class="zh-only">Decision map</span></a>
+ <a class="navitem" href="lab.html"><span class="n">04</span><span class="zh-only">Judger lab</span></a>
+ <a class="navitem" href="api.html"><span class="n">05</span><span class="zh-only">Contract & API</span></a>
+ <a class="navitem" href="hitl.html"><span class="n">06</span><span class="zh-only">human review</span></a>
+ <a class="navitem" href="learn.html"><span class="n">07</span><span class="zh-only">Learning loop</span></a>
+ <a class="navitem" href="kpi.html"><span class="n">08</span><span class="zh-only">Metrics & economics</span></a>
+ <a class="navitem" href="roadmap.html"><span class="n">09</span><span class="zh-only">90-day plan</span></a>
+ <a class="navitem" href="risk.html"><span class="n">10</span><span class="zh-only">Risk & governance</span></a>
+ <a class="navitem" href="appendix.html"><span class="n">11</span><span class="zh-only">Appendix</span></a>
+ <a class="navitem" href="index.html"><span class="n">≡</span><span class="zh-only">All sections</span></a>
+ </nav>
+ <div class="navfoot">
+ <div><span class="dot"></span><span class="zh-only">Interactive specification</span></div>
+ <div style="margin-top:6px" class="zh-only">Every number on this page is a <b style="color:#aab3bf">design target or an adjustable assumption</b>, not a measurement.</div>
+ </div>
 </aside>
 <main>
 <div class="wrap">
-<div class="crumb"><a href="../../index.html">Home</a> · <a href="index.html">Design spec</a> · <b>03 Decision map</b></div>
+<div class="crumb"><a href="../../index.html"><span class="zh-only">Home</span></a> · <a href="index.html"><span class="zh-only">Design spec</span></a> · <b>03 <span class="zh-only">Decision map</span></b></div>
 <section class="sec" id="chain">
  <div class="sechead">
-    <div class="num">03 / DECISION MAP</div>
-    <h2>Decision map</h2>
-    <div class="zh">Fourteen nodes: from one explant to a deliverable bag of coffee</div>
-    <p>The difficulty is not at either end of the chain. It is the handoff in the middle, where plantlets leave a sterile, steady, humid world and must start transpiring for themselves.</p>
-  </div>
+ <div class="num">03 / DECISION MAP</div>
+ <h2>Decision map</h2>
+ <div class="zh">Fourteen nodes: from one explant to a deliverable bag of coffee</div>
+ <p>The hard part of the chain is not at either end but at the <b>handover gate</b>: a tissue-culture plantlet moves from a sterile, isothermal, humid world into one that is unsterile, variable and demands its own transpiration. This step has the highest failure rate and is the one a Score judger is best placed to gate. Click any node to see its contract.</p>
+ </div>
 
  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-  <span class="pill warn">★ Key gate: Node 6 / 7 / 8</span>
-  <span class="pill info">Newly added: Node 12 isolation radius · Node 13 energy consumption scheduling</span>
-  <span class="pill gray">Click any node to view the contract</span>
+ <span class="pill warn">★ Key gate: Node 6 / 7 / 8</span>
+ <span class="pill info">Newly added: Node 12 isolation radius · Node 13 energy consumption scheduling</span>
+ <span class="pill gray">Click any node to view the contract</span>
  </div>
 
  <div class="chain" id="chainbox"></div>
@@ -433,34 +454,34 @@ textarea{resize:vertical;line-height:1.6}
 
  <h3 class="sub">3.1 Why are these three stars marked? <span class="mut">acclimation readiness is the “exchange rate” of the entire chain</span></h3>
  <div class="grid3">
-  <div class="card">
-   <h4>⑥ acclimation readiness <span class="pill warn">connect</span></h4>
-   <p>It is between tissue culture and aerosol culture <b>unique exchange rate</b>: If the setting is too loose, the aerosol culture end will bear high mortality; if the setting is too tight, the tissue culture end will squeeze the goods and the cost will be piled in the bottle. This threshold will change the economics of both production lines at the same time, so it must be determined by <b>Downstream survival rate</b> Counter-calibration, rather than setting it by the tissue culture workshop itself.</p>
-  </div>
-  <div class="card">
-   <h4>⑦ Transplanting gate <span class="pill warn">Irreversible</span></h4>
-   <p>Out of the bottle is <b>Irreversible operation</b>: Once contamination is brought into the aeroponic trough, it will be a risk to the entire tank. So here the default <code>human_review=true</code>, AI is only responsible for "suggestion + sorting + picking out things that should not be moved", and is not responsible for releasing. New varieties transplanted for the first time must be transplanted manually.</p>
-  </div>
-  <div class="card">
-   <h4>⑧ Nutritional mist formula <span class="pill warn">high frequency</span></h4>
-   <p>It may be triggered dozens of times a day, making it the most suitable node for "quick decision" and the node most prone to accidents (the root tip can be burned if the EC is raised for 20 minutes). Design points:<b>The hard limit is in the PLC and the software only sends pictures</b>, and each adjustment must be able to be rolled back.</p>
-  </div>
+ <div class="card">
+ <h4>⑥ acclimation readiness <span class="pill warn">connect</span></h4>
+ <p>It is between tissue culture and aerosol culture <b>unique exchange rate</b>: set it loose and the aeroponic side eats the mortality; set it tight and the culture side piles up stock with cost trapped in jars. The threshold moves the economics of both lines, so it must be <b>Downstream survival rate</b> Counter-calibration, rather than setting it by the tissue culture workshop itself.</p>
+ </div>
+ <div class="card">
+ <h4>⑦ Transplanting gate <span class="pill warn">Irreversible</span></h4>
+ <p>Out of the bottle is <b>Irreversible operation</b>: Once contamination is brought into the aeroponic trough, it will be a risk to the entire tank. So here the default <code>human_review=true</code>, AI is only responsible for "suggestion + sorting + picking out things that should not be moved", and is not responsible for releasing. New varieties transplanted for the first time must be transplanted manually.</p>
+ </div>
+ <div class="card">
+ <h4>⑧ Nutritional mist formula <span class="pill warn">high frequency</span></h4>
+ <p>It may be triggered dozens of times a day, making it the most suitable node for "quick decision" and the node most prone to accidents (the root tip can be burned if the EC is raised for 20 minutes). Design points: <b>The hard limit is in the PLC and the software only sends pictures</b>, and each adjustment must be able to be rolled back.</p>
+ </div>
  </div>
 
  <h3 class="sub">3.2 Four migration gates of state machine <span class="mut">"Which stage are you currently in?" itself is a question that needs to be judged.</span></h3>
  <div class="tblscroll">
  <table class="tbl">
-  <thead><tr><th style="width:190px">Migrate</th><th>Release conditions (all met)</th><th style="width:190px">Fallback condition (any trigger)</th></tr></thead>
-  <tbody>
-   <tr><td>Sterile establishment → propagation</td><td>No contamination observed for 2 consecutive times; browning area <15%; visible buds</td><td>Any contamination category present; medium pH shift >0.3</td></tr>
-   <tr><td>Proliferate → take root</td><td>Proliferation coefficient ≥3; no vitrification; plant height ≥2cm</td><td>Proliferation coefficient for two consecutive generations <2; vitrification rate >20%</td></tr>
-   <tr><td>take root → tame</td><td>Number of roots ≥3; root tip browning <30%; no contamination</td><td>Sudden browning of root tips; record of root rot odor</td></tr>
-   <tr><td>acclimation → aeroponics <span class="pill warn">Artificial</span></td><td>readiness ≥80; water loss test passed; root mass intact; bacterial test negative</td><td>Readiness decreases for 7 consecutive days; bacteria test is positive</td></tr>
-  </tbody>
+ <thead><tr><th style="width:190px">Migrate</th><th>Release conditions (all met)</th><th style="width:190px">Fallback condition (any trigger)</th></tr></thead>
+ <tbody>
+ <tr><td>Sterile establishment → propagation</td><td>No contamination observed for 2 consecutive times; browning area</td><td>any contamination class present; medium pH drift &gt;0.3</td></tr>
+ <tr><td>Multiplication → rooting</td><td>multiplication factor ≥3; no vitrification; shoot height ≥2 cm</td><td>multiplication factor &lt;2 for two generations; vitrification &gt;20%</td></tr>
+ <tr><td>take root → tame</td><td>Number of roots ≥3; root tip browning</td><td>Sudden browning of root tips; record of root rot odor</td></tr>
+ <tr><td>acclimation → aeroponics <span class="pill warn">Artificial</span></td><td>readiness ≥80; water loss test passed; root mass intact; bacterial test negative</td><td>Readiness decreases for 7 consecutive days; bacteria test is positive</td></tr>
+ </tbody>
  </table>
  </div>
-</section><div class="mtnote">Translated from the Chinese edition. Terms follow the product glossary; where wording is ambiguous the Chinese original is authoritative. <a href="../chain.html" style="color:#3fe0b0">查看中文原文</a></div>
-<pager_html>
+</section>
+<div class="pager"><a class="" href="arch.html"><span class="k"><span class="zh-only">← Previous</span></span><span class="t">02 · <span class="zh-only">Full-stack architecture</span></span></a><a class="r" href="lab.html"><span class="k"><span class="zh-only">Next →</span></span><span class="t">04 · <span class="zh-only">Judger lab</span></span></a></div>
 <div style="height:40px"></div>
 </div>
 </main>
@@ -468,22 +489,22 @@ textarea{resize:vertical;line-height:1.6}
 <script>
 
 /* ============================================================
-   CoffeeJeV · demo engine
-   与 coffeejev/service/judgers.py 同一套数学（见附录 C）
-   ============================================================ */
+ CoffeeJeV · demo engine
+ 与 coffeejev/service/judgers.py 同一套数学（见附录 C）
+ ============================================================ */
 const __stub = new Proxy(function () {}, {
-  get(t, k) {
-    if (k === 'classList') return { add() {}, remove() {}, toggle() {}, contains() { return false; } };
-    if (k === 'style') return {};
-    if (k === 'dataset') return {};
-    if (k === 'value') return '0';
-    if (k === 'textContent' || k === 'innerHTML') return '';
-    if (k === 'addEventListener' || k === 'removeEventListener' ||
-        k === 'appendChild' || k === 'removeChild' || k === 'focus') return function () {};
-    return __stub;
-  },
-  set() { return true; },
-  apply() { return __stub; }
+ get(t, k) {
+ if (k === 'classList') return { add() {}, remove() {}, toggle() {}, contains() { return false; } };
+ if (k === 'style') return {};
+ if (k === 'dataset') return {};
+ if (k === 'value') return '0';
+ if (k === 'textContent' || k === 'innerHTML') return '';
+ if (k === 'addEventListener' || k === 'removeEventListener' ||
+ k === 'appendChild' || k === 'removeChild' || k === 'focus') return function () {};
+ return __stub;
+ },
+ set() { return true; },
+ apply() { return __stub; }
 });
 const $ = (s, r) => (r || document).querySelector(s) || __stub;
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -501,1003 +522,1019 @@ const clip = (t, n = 80) => (t.length > n ? t.slice(0, n - 1) + '…' : t);
 /* ---------- JSON 语法高亮 ---------- */
 function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 function hl(obj) {
-  const s = esc(JSON.stringify(obj, null, 2));
-  return s.replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
-    (m, str, col, lit, num) => {
-      if (str !== undefined) return col ? '<span class="k">' + str + '</span>' + col : '<span class="s">' + str + '</span>';
-      if (lit !== undefined) return lit === 'null' ? '<span class="nl">null</span>' : '<span class="b">' + lit + '</span>';
-      return '<span class="n">' + num + '</span>';
-    });
+ const s = esc(JSON.stringify(obj, null, 2));
+ return s.replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
+ (m, str, col, lit, num) => {
+ if (str !== undefined) return col ? '<span class="k">' + str + '</span>' + col : '<span class="s">' + str + '</span>';
+ if (lit !== undefined) return lit === 'null' ? '<span class="nl">null</span>' : '<span class="b">' + lit + '</span>';
+ return '<span class="n">' + num + '</span>';
+ });
 }
 const put = (el, obj) => { el.innerHTML = hl(obj); };
 
 /* ============================================================
-   1. 审计账本（哈希链，仅演示）
-   ============================================================ */
+ 1. 审计账本（哈希链，仅演示）
+ ============================================================ */
 function fnv(str) {
-  let h = 0x811c9dc5;
-  for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 0x01000193) >>> 0; }
-  return ('0000000' + h.toString(16)).slice(-8);
+ let h = 0x811c9dc5;
+ for (let k = 0; k < str.length; k++) { h ^= str.charCodeAt(k); h = Math.imul(h, 0x01000193) >>> 0; }
+ return ('0000000' + h.toString(16)).slice(-8);
 }
 const h64 = s => fnv(s) + fnv('|' + s + '|');
 
 const LEDGER = {
-  seq: 0,
-  entries: [],
-  append(e) {
-    const seq = ++this.seq;
-    const prev = this.entries.length ? this.entries[this.entries.length - 1].hash : 'genesis';
-    const payload = JSON.stringify({ seq, stage: e.stage, decision: e.decision, conf: e.conf, hr: !!e.human_review, src: e.src || 'api' });
-    const entry = {
-      seq,
-      ts: new Date().toISOString().replace('T', ' ').slice(0, 19),
-      audit_id: 'cjv_' + String(seq).padStart(4, '0'),
-      prev, payload, hash: h64(prev + payload),
-      stage: e.stage, decision: e.decision, conf: e.conf, human_review: !!e.human_review
-    };
-    this.entries.push(entry);
-    renderLedger();
-    return entry.audit_id;
-  },
-  verify() {
-    let prev = 'genesis', ok = true;
-    for (const e of this.entries) {
-      if (e.prev !== prev) { ok = false; break; }
-      if (h64(e.prev + e.payload) !== e.hash) { ok = false; break; }
-      prev = e.hash;
-    }
-    return ok;
-  }
+ seq: 0,
+ entries: [],
+ append(e) {
+ const seq = ++this.seq;
+ const prev = this.entries.length ? this.entries[this.entries.length - 1].hash : 'genesis';
+ const payload = JSON.stringify({ seq, stage: e.stage, decision: e.decision, conf: e.conf, hr: !!e.human_review, src: e.src || 'api' });
+ const entry = {
+ seq,
+ ts: new Date().toISOString().replace('T', ' ').slice(0, 19),
+ audit_id: 'cjv_' + String(seq).padStart(4, '0'),
+ prev, payload, hash: h64(prev + payload),
+ stage: e.stage, decision: e.decision, conf: e.conf, human_review: !!e.human_review
+ };
+ this.entries.push(entry);
+ renderLedger();
+ return entry.audit_id;
+ },
+ verify() {
+ let prev = 'genesis', ok = true;
+ for (const e of this.entries) {
+ if (e.prev !== prev) { ok = false; break; }
+ if (h64(e.prev + e.payload) !== e.hash) { ok = false; break; }
+ prev = e.hash;
+ }
+ return ok;
+ }
 };
 
 function renderLedger() {
-  const box = $('#audit');
-  if (!box) return;
-  if (!LEDGER.entries.length) {
-    box.innerHTML = "<div class=\"empty\">No records yet. Go to Lab 04 and click \"Record Decision Ledger\", or process a review in 06.2. </div>";
-    $('#chain-flag').textContent = "Empty chain"; $('#chain-flag').className = 'pill gray';
-    return;
-  }
-  box.innerHTML = LEDGER.entries.slice().reverse().map(e => `
-    <div class="arow">
-      <span class="aid">#${e.seq}</span>
-      <span class="adec">${e.stage} → <b style="color:#fff">${e.decision}</b> · p=${e.conf === null ? '—' : e.conf}</span>
-      <span class="ah">${e.hash.slice(0, 10)}… ${e.human_review ? '👤' : ''}</span>
-    </div>`).join('');
-  const ok = LEDGER.verify();
-  $('#chain-flag').textContent = ok ? `The chain is complete · ${LEDGER.entries.length}` : "Chain exception";
-  $('#chain-flag').className = 'pill ' + (ok ? 'ok' : 'bad');
+ const box = $('#audit');
+ if (!box) return;
+ if (!LEDGER.entries.length) {
+ box.innerHTML = ', or process a review in 06.2. </div>';
+ $('#chain-flag').textContent = 'Empty chain'; $('#chain-flag').className = 'pill gray';
+ return;
+ }
+ box.innerHTML = LEDGER.entries.slice().reverse().map(e => `
+ <div class="arow">
+ <span class="aid">#${e.seq}</span>
+ <span class="adec">${e.stage} → <b style="color:#fff">${e.decision}</b> · p=${e.conf === null ? '—' : e.conf}</span>
+ <span class="ah">${e.hash.slice(0, 10)}… ${e.human_review ? '👤' : ''}</span>
+ </div>`).join('');
+ const ok = LEDGER.verify();
+ $('#chain-flag').textContent = ok ? `Chain intact · ${LEDGER.entries.length} entries` : 'Chain exception';
+ $('#chain-flag').className = 'pill ' + (ok ? 'ok' : 'bad');
 }
 
 /* ============================================================
-   2. 判断器 A：污染 Noul
-   ============================================================ */
+ 2. 判断器 A：污染 Noul
+ ============================================================ */
 function judgeContamination(i) {
-  const prior = clamp(i.hist, 1e-3, 0.5);
-  const blend = i.q * logit(i.pRaw) + (1 - i.q) * logit(prior)
-    + 0.35 * (i.temp - 24) / 3 + 0.25 * (i.rh - 65) / 15
-    + 0.12 * (i.days - 14) / 7;
-  const pCal = sigmoid(blend / 1.35);
-  const tauCost = clamp(i.cfp / (i.cfp + i.cfn), 0.02, 0.5);   // 纯成本解（极小）
-  const tauMin = i.tauMin === undefined ? 0.15 : i.tauMin;      // 运营可承受下限
-  const tauHi = clamp(Math.max(tauCost, tauMin), 0.02, 0.5);
-  const tauLo = Math.max(0.06, 0.45 * tauHi);
-  const decision = pCal >= tauHi ? 'isolate_and_sample' : (pCal >= tauLo ? 'review_microscopy' : 'continue');
-  const confidence = Math.max(pCal, 1 - pCal);
-  const ood = i.q < 0.55 || i.hist === 0;
+ const prior = clamp(i.hist, 1e-3, 0.5);
+ const blend = i.q * logit(i.pRaw) + (1 - i.q) * logit(prior)
+ + 0.35 * (i.temp - 24) / 3 + 0.25 * (i.rh - 65) / 15
+ + 0.12 * (i.days - 14) / 7;
+ const pCal = sigmoid(blend / 1.35);
+ const tauCost = clamp(i.cfp / (i.cfp + i.cfn), 0.02, 0.5); // 纯成本解（极小）
+ const tauMin = i.tauMin === undefined ? 0.15 : i.tauMin; // 运营可承受下限
+ const tauHi = clamp(Math.max(tauCost, tauMin), 0.02, 0.5);
+ const tauLo = Math.max(0.06, 0.45 * tauHi);
+ const decision = pCal >= tauHi ? 'isolate_and_sample' : (pCal >= tauLo ? 'review_microscopy' : 'continue');
+ const confidence = Math.max(pCal, 1 - pCal);
+ const ood = i.q < 0.55 || i.hist === 0;
 
-  const reasons = [];
-  if (confidence < 0.70) reasons.push('low_confidence');
-  if (ood) reasons.push('ood');
-  // review_microscopy 的语义就是「叫人来镜检」，它自己就必须带复核理由
-  if (decision === 'review_microscopy') reasons.push('boundary_zone');
-  if (decision === 'isolate_and_sample') reasons.push('irreversible_action');
+ const reasons = [];
+ if (confidence < 0.70) reasons.push('low_confidence');
+ if (ood) reasons.push('ood');
+ // review_microscopy 的语义就是「叫人来镜检」，它自己就必须带复核理由
+ if (decision === 'review_microscopy') reasons.push('boundary_zone');
+ if (decision === 'isolate_and_sample') reasons.push('irreversible_action');
 
-  const pct = Math.round(pCal * 100);
-  const reason = decision === 'isolate_and_sample'
-    ? `The contamination probability after calibration is ${pct}%, which has exceeded the effective threshold ${(tauHi * 100).toFixed(1)}% (the cost solution ${(tauCost * 100).toFixed(1)}% is raised by the lower operating limit). It is recommended that the entire system be isolated and sent for inspection.`
-    : decision === 'review_microscopy'
-      ? `The probability ${pct}% falls in the review area [${(tauLo * 100).toFixed(1)}%, ${(tauHi * 100).toFixed(1)}%]. It is recommended to undergo 24h endoscopy and not be released.`
-      : `The probability ${pct}% is lower than the lower review limit ${(tauLo * 100).toFixed(1)}% and can be released; note ${ood ? "Image quality is low, marked OOD" : "Keep observing next time"}.`;
+ const pct = Math.round(pCal * 100);
+ const reason = decision === 'isolate_and_sample'
+ ? `Calibrated contamination probability ${pct}% is above the effective threshold ${(tauHi * 100).toFixed(1)}% (the cost solution of ${(tauCost * 100).toFixed(1)}% was raised by the operating floor); isolate the whole tray and send samples.`
+ : decision === 'review_microscopy'
+ ? `Probability ${pct}% falls in the review band [${(tauLo * 100).toFixed(1)}%, ${(tauHi * 100).toFixed(1)}%]; microscopy within 24 h, do not release.`
+ : `Probability ${pct}% is below the review floor ${(tauLo * 100).toFixed(1)}%, so release is allowed; note ${ood ? 'the image quality is low and has been flagged OOD' : 'keep watching next round'}.`;
 
-  return {
-    jev_type: 'noul', decision, confidence: r4(confidence), p: pCal, tauHi, tauLo, tauCost, tauMin, ood,
-    scores: { p_contaminated: r4(pCal), tau_cost: r4(tauCost), tau_hi: r4(tauHi), tau_lo: r4(tauLo), image_quality: i.q },
-    review_reasons: reasons,
-    // 只有 continue 才可能免复核。旧写法漏了 review_microscopy：
-    // 边界区样本返回 human_review=false，等于「叫人来镜检」却没有人被叫。
-    human_review: decision !== 'continue' || confidence < 0.70 || ood,
-    reason: clip(reason)
-  };
+ return {
+ jev_type: 'noul', decision, confidence: r4(confidence), p: pCal, tauHi, tauLo, tauCost, tauMin, ood,
+ scores: { p_contaminated: r4(pCal), tau_cost: r4(tauCost), tau_hi: r4(tauHi), tau_lo: r4(tauLo), image_quality: i.q },
+ review_reasons: reasons,
+ // 只有 continue 才可能免复核。旧写法漏了 review_microscopy：
+ // 边界区样本返回 human_review=false，等于「叫人来镜检」却没有人被叫。
+ human_review: decision !== 'continue' || confidence < 0.70 || ood,
+ reason: clip(reason)
+ };
 }
 
 /* ============================================================
-   3. 判断器 B：驯化 readiness
-   ============================================================ */
+ 3. 判断器 B：驯化 readiness
+ ============================================================ */
 const RW = [0.22, 0.20, 0.10, 0.12, 0.18, 0.18];
 // 株高/根数比是「矮壮苗」指标，目标带 0.35–0.65，不是越大越好。
 // 旧写法 clamp(ratio/0.6*100)：徒长苗（ratio 1.2）拿满分，根数 0 时也拿 100。
 function ratioScore(shoot, roots) {
-  if (!(roots > 0)) return 0;
-  const r = shoot / roots;
-  if (r >= 0.35 && r <= 0.65) return 100;
-  const dist = r < 0.35 ? 0.35 - r : r - 0.65;
-  return clamp(100 - dist / 0.35 * 100, 0, 100);
+ if (!(roots > 0)) return 0;
+ const r = shoot / roots;
+ if (r >= 0.35 && r <= 0.65) return 100;
+ const dist = r < 0.35 ? 0.35 - r : r - 0.65;
+ return clamp(100 - dist / 0.35 * 100, 0, 100);
 }
 function judgeReadiness(i) {
-  const s = [
-    Math.min(100, Math.max(0, i.roots) / 12 * 100),
-    100 - i.browning,
-    ratioScore(i.shoot, i.roots),
-    i.leaf, i.wax,
-    clamp(100 - i.waterLoss / 25 * 100, 0, 100)
-  ];
-  const raw = s.reduce((acc, v, k) => acc + v * RW[k], 0);
-  let score = Math.round(raw);
-  const caps = [];
-  if (i.roots < 3) { score = Math.min(score, 55); caps.push("Number of roots<3"); }
-  if (i.browning > 60) { score = Math.min(score, 60); caps.push("Browning>60"); }
-  if (i.cont >= 0.5) { score = Math.min(score, 40); caps.push("Contamination probability ≥0.5"); }
+ const s = [
+ Math.min(100, Math.max(0, i.roots) / 12 * 100),
+ 100 - i.browning,
+ ratioScore(i.shoot, i.roots),
+ i.leaf, i.wax,
+ clamp(100 - i.waterLoss / 25 * 100, 0, 100)
+ ];
+ const raw = s.reduce((acc, v, k) => acc + v * RW[k], 0);
+ let score = Math.round(raw);
+ const caps = [];
+ if (i.roots < 3) { score = Math.min(score, 55); caps.push('Number of roots<3'); }
+ if (i.browning > 60) { score = Math.min(score, 60); caps.push('Browning>60'); }
+ if (i.cont >= 0.5) { score = Math.min(score, 40); caps.push('Contamination probability ≥0.5'); }
 
-  const band = score >= 80 ? 'transplant_ready' : (score >= 60 ? 'delay_adjust' : 'continue_acclimation');
-  // 证据完整度 = 6 个形态学读数里真实拿到几个（由调用方传入）。
-  // 旧实现写死 1：6 个读数全是默认值时仍报 0.80 置信度，违背「不猜」的契约。
-  const completeness = i.completeness === undefined ? 1 : clamp(i.completeness, 0, 1);
-  const confidence = clamp(0.62 + 0.30 * completeness - 0.35 * (sd(s) / 50), 0.35, 0.97);
-  const binding = caps.length ? `(Hard gate takes effect: ${caps.join('、')})` : '';
-  const reason = (band === 'transplant_ready'
-    ? `Readiness ${score}, all items meet the standard ${binding}, transplanting can be arranged; manual check is required before release.`
-    : band === 'delay_adjust'
-      ? `readiness ${score}, it is recommended to delay for 3–7 days and reduce VPD and increase ventilation ${binding}.`
-      : `Readiness ${score}, less than 60, continue to domesticate; if there is no improvement, discard ${binding}.`);
-  const reasonClipped = clip(reason);
+ const band = score >= 80 ? 'transplant_ready' : (score >= 60 ? 'delay_adjust' : 'continue_acclimation');
+ // 证据完整度 = 6 个形态学读数里真实拿到几个（由调用方传入）。
+ // 旧实现写死 1：6 个读数全是默认值时仍报 0.80 置信度，违背「不猜」的契约。
+ const completeness = i.completeness === undefined ? 1 : clamp(i.completeness, 0, 1);
+ const confidence = clamp(0.62 + 0.30 * completeness - 0.35 * (sd(s) / 50), 0.35, 0.97);
+ const binding = caps.length ? ` (hard gates active: ${caps.join(', ')})` : '';
+ const reason = (band === 'transplant_ready'
+ ? `readiness ${score}, every criterion met${binding}, transplant can be scheduled; a human must tick it off first.`
+ : band === 'delay_adjust'
+ ? `readiness ${score}, delay 3–7 days, lower VPD and increase air exchange${binding}.`
+ : `readiness ${score}, below 60, continue acclimatisation; discard if it does not improve${binding}.`);
+ const reasonClipped = clip(reason);
 
-  const reasons = [];
-  if (confidence < 0.70) reasons.push('low_confidence');
-  if (band === 'transplant_ready') reasons.push('irreversible_action');
-  if (caps.length) reasons.push('gate_capped');
+ const reasons = [];
+ if (confidence < 0.70) reasons.push('low_confidence');
+ if (band === 'transplant_ready') reasons.push('irreversible_action');
+ if (caps.length) reasons.push('gate_capped');
 
-  return {
-    jev_type: 'score', decision: band, confidence: r4(confidence), score,
-    subs: s, weights: RW, caps,
-    scores: { readiness: score, contamination_risk: Math.round(i.cont * 100), root_health: Math.round(s[0] * 0.6 + s[1] * 0.4) },
-    human_review: reasons.length > 0,
-    review_reasons: reasons, reason: reasonClipped
-  };
+ return {
+ jev_type: 'score', decision: band, confidence: r4(confidence), score,
+ subs: s, weights: RW, caps,
+ scores: { readiness: score, contamination_risk: Math.round(i.cont * 100), root_health: Math.round(s[0] * 0.6 + s[1] * 0.4) },
+ human_review: reasons.length > 0,
+ review_reasons: reasons, reason: reasonClipped
+ };
 }
 
 /* ============================================================
-   4. 判断器 C：营养雾 Choice
-   ============================================================ */
+ 4. 判断器 C：营养雾 Choice
+ ============================================================ */
 const FT = { ec: 1.4, ph: 5.8, vpd: 0.9, temp: 24, do: 6.5, droplet: 35 };
 const FS = { ec: 0.8, ph: 0.9, vpd: 0.5, temp: 6, do: 3.0, droplet: 25 };
 const FR = { do: 0.28, temp: 0.24, ph: 0.18, ec: 0.16, vpd: 0.09, droplet: 0.05 };
 const OPTS = [
-  { id: 'sop_baseline', label: "Maintain as per SOP", d: [0, 0, 0, 0, 0, 0], cost: 0.00, qual: 0.05 },
-  { id: 'lower_ec', label: "Down EC", d: [-0.25, 0, 0, 0, 0, 0], cost: 0.06, qual: 0.12 },
-  { id: 'raise_do', label: "Solubilized oxygen", d: [0, 0, 0, -0.5, 1.2, 0], cost: 0.18, qual: 0.02 },
-  { id: 'adjust_ph', label: "Adjust pH", d: [0, null, 0, 0, 0, 0], cost: 0.10, qual: 0.04 },
-  { id: 'dry_back', label: "Stop fog and reduce humidity", d: [0.1, 0, 0.25, 0.5, 0, 0], cost: 0.04, qual: 0.08 },
-  { id: 'flush_reservoir', label: "Fluid replacement and flushing", d: [-0.45, 0, 0, 0, 0.5, 0], cost: 0.30, qual: 0.18 }
+ { id: 'sop_baseline', label: 'Maintain as per SOP', d: [0, 0, 0, 0, 0, 0], cost: 0.00, qual: 0.05 },
+ { id: 'lower_ec', label: 'Down EC', d: [-0.25, 0, 0, 0, 0, 0], cost: 0.06, qual: 0.12 },
+ { id: 'raise_do', label: 'Solubilized oxygen', d: [0, 0, 0, -0.5, 1.2, 0], cost: 0.18, qual: 0.02 },
+ { id: 'adjust_ph', label: 'Adjust pH', d: [0, null, 0, 0, 0, 0], cost: 0.10, qual: 0.04 },
+ { id: 'dry_back', label: 'Stop fog and reduce humidity', d: [0.1, 0, 0.25, 0.5, 0, 0], cost: 0.04, qual: 0.08 },
+ { id: 'flush_reservoir', label: 'Fluid replacement and flushing', d: [-0.45, 0, 0, 0, 0.5, 0], cost: 0.30, qual: 0.18 }
 ];
 const KEYS = ['ec', 'ph', 'vpd', 'temp', 'do', 'droplet'];
 // 置信度尺度：ΔU = 0.02 约等于「一半一半」，比 softmax 概率更能表达「我有多确定该选它」
 const CONF_TAU = 0.01;
 
 function judgeFog(i) {
-  const cur = { ec: i.ec, ph: i.ph, vpd: i.vpd, temp: i.temp, do: i.do, droplet: i.droplet };
-  // 液温/根温是「整套系统」的前置状态，不是某个候选动作的属性。
-  // 旧实现把它塞进每个选项的 violations → 6 个选项同时不可行，
-  // 输出变成「请确认探头是否失效」，而真实原因是冷水机/遮阴。
-  const zoneGates = [];
-  // 只把「没有任何候选动作能改变」的量放进前置闸门：液温靠冷水机，不靠配方。
-  // 根温则受 raise_do / dry_back 影响，仍留在选项级硬约束里，否则会误判成「无解」。
-  if (i.waterTemp > 24) zoneGates.push(`Nutrient solution ${i.waterTemp.toFixed(1)}°C Super 24°C`);
-  const totalW = (i.ws + i.wc + i.wq) || 1;
-  const W = { s: i.ws / totalW, c: i.wc / totalW, q: i.wq / totalW };
+ const cur = { ec: i.ec, ph: i.ph, vpd: i.vpd, temp: i.temp, do: i.do, droplet: i.droplet };
+ // 液温/根温是「整套系统」的前置状态，不是某个候选动作的属性。
+ // 旧实现把它塞进每个选项的 violations → 6 个选项同时不可行，
+ // 输出变成「请确认探头是否失效」，而真实原因是冷水机/遮阴。
+ const zoneGates = [];
+ // 只把「没有任何候选动作能改变」的量放进前置闸门：液温靠冷水机，不靠配方。
+ // 根温则受 raise_do / dry_back 影响，仍留在选项级硬约束里，否则会误判成「无解」。
+ if (i.waterTemp > 24) zoneGates.push(`nutrient solution ${i.waterTemp.toFixed(1)}°C above 24°C`);
+ const totalW = (i.ws + i.wc + i.wq) || 1;
+ const W = { s: i.ws / totalW, c: i.wc / totalW, q: i.wq / totalW };
 
-  const opts = OPTS.map(o => {
-    const delta = o.d.map(v => v === null ? (FT.ph - cur.ph) * 0.8 : v);
-    const post = {}, dev = {}, viol = [];
-    KEYS.forEach((k, idx) => { post[k] = cur[k] + delta[idx]; dev[k] = clamp(Math.abs(post[k] - FT[k]) / FS[k], 0, 2); });
+ const opts = OPTS.map(o => {
+ const delta = o.d.map(v => v === null ? (FT.ph - cur.ph) * 0.8 : v);
+ const post = {}, dev = {}, viol = [];
+ KEYS.forEach((k, idx) => { post[k] = cur[k] + delta[idx]; dev[k] = clamp(Math.abs(post[k] - FT[k]) / FS[k], 0, 2); });
 
-    if (post.ec < 0.8 || post.ec > 2.0) viol.push('ec_out_of_range');
-    if (post.ph < 5.3 || post.ph > 6.4) viol.push('ph_out_of_range');
-    if (post.do < 5.0) viol.push('do_too_low');
-    if (post.temp > 26) viol.push('temp_too_high');
+ if (post.ec < 0.8 || post.ec > 2.0) viol.push('ec_out_of_range');
+ if (post.ph < 5.3 || post.ph > 6.4) viol.push('ph_out_of_range');
+ if (post.do < 5.0) viol.push('do_too_low');
+ if (post.temp > 26) viol.push('temp_too_high');
 
-    const uSurv = 1 - KEYS.reduce((s, k) => s + FR[k] * dev[k] / 2, 0);
-    const uCost = 1 - o.cost, uQual = 1 - o.qual;
-    const utility = W.s * uSurv + W.c * uCost + W.q * uQual;
-    return { action: o.id, label: o.label, feasible: viol.length === 0, violations: viol, utility, post,
-      components: { survival: r3(uSurv), cost: r3(uCost), quality: r3(uQual) } };
-  });
+ const uSurv = 1 - KEYS.reduce((s, k) => s + FR[k] * dev[k] / 2, 0);
+ const uCost = 1 - o.cost, uQual = 1 - o.qual;
+ const utility = W.s * uSurv + W.c * uCost + W.q * uQual;
+ return { action: o.id, label: o.label, feasible: viol.length === 0, violations: viol, utility, post,
+ components: { survival: r3(uSurv), cost: r3(uCost), quality: r3(uQual) } };
+ });
 
-  const feas = opts.filter(o => o.feasible);
-  let norm = 0;
-  if (feas.length) {
-    const mx = Math.max(...feas.map(o => o.utility));
-    feas.forEach(o => { o.p = Math.exp(6 * (o.utility - mx)); norm += o.p; });
-    feas.forEach(o => { o.p = o.p / norm; });
-  }
-  opts.forEach(o => { if (!o.feasible) o.p = 0; });
+ const feas = opts.filter(o => o.feasible);
+ let norm = 0;
+ if (feas.length) {
+ const mx = Math.max(...feas.map(o => o.utility));
+ feas.forEach(o => { o.p = Math.exp(6 * (o.utility - mx)); norm += o.p; });
+ feas.forEach(o => { o.p = o.p / norm; });
+ }
+ opts.forEach(o => { if (!o.feasible) o.p = 0; });
 
-  let decision = 'stop_and_review', confidence = 0, best = null, margin = 0;
-  if (feas.length) {
-    best = feas.slice().sort((a, b) => b.utility - a.utility)[0];
-    decision = best.action;
-    const u = feas.map(o => o.utility).sort((a, b) => b - a);
-    margin = u.length > 1 ? u[0] - u[1] : Infinity;   // Infinity = 约束把它压成了单选
-    // 置信度 = σ(ΔU/τ)，不是 softmax 最大值：6 个近似打平的候选里
-    // softmax 最高也就 0.2，会把每一个正常批次都推进复核队列（与 <15% 复核率冲突）。
-    confidence = Number.isFinite(margin) ? clamp(1 / (1 + Math.exp(-margin / CONF_TAU)), 0.5, 0.99) : 0.88;
-    if (zoneGates.length) { decision = 'stop_and_review'; confidence = 0; }
-  }
-  const reasons = [];
-  if (!feas.length) reasons.push('constraint_conflict');
-  if (zoneGates.length) reasons.push('zone_precondition');
-  if (!zoneGates.length && confidence < 0.70) reasons.push('low_confidence');
-  // 约束把候选压到只剩一个、而那一个是高成本动作 → 不能替人决定这笔钱
-  const onlyCostly = !Number.isFinite(margin) && !!best
-    && ((OPTS.find(o => o.id === best.action) || {}).cost || 0) >= 0.20;
-  if (onlyCostly) reasons.push('value_threshold');
+ let decision = 'stop_and_review', confidence = 0, best = null, margin = 0;
+ if (feas.length) {
+ best = feas.slice().sort((a, b) => b.utility - a.utility)[0];
+ decision = best.action;
+ const u = feas.map(o => o.utility).sort((a, b) => b - a);
+ margin = u.length > 1 ? u[0] - u[1] : Infinity; // Infinity = 约束把它压成了单选
+ // 置信度 = σ(ΔU/τ)，不是 softmax 最大值：6 个近似打平的候选里
+ // softmax 最高也就 0.2，会把每一个正常批次都推进复核队列（与 <15% 复核率冲突）。
+ confidence = Number.isFinite(margin) ? clamp(1 / (1 + Math.exp(-margin / CONF_TAU)), 0.5, 0.99) : 0.88;
+ if (zoneGates.length) { decision = 'stop_and_review'; confidence = 0; }
+ }
+ const reasons = [];
+ if (!feas.length) reasons.push('constraint_conflict');
+ if (zoneGates.length) reasons.push('zone_precondition');
+ if (!zoneGates.length && confidence < 0.70) reasons.push('low_confidence');
+ // 约束把候选压到只剩一个、而那一个是高成本动作 → 不能替人决定这笔钱
+ const onlyCostly = !Number.isFinite(margin) && !!best
+ && ((OPTS.find(o => o.id === best.action) || {}).cost || 0) >= 0.20;
+ if (onlyCostly) reasons.push('value_threshold');
 
-  const marginTxt = Number.isFinite(margin) ? `Leading second best ${margin.toFixed(3)}` : "only possible action";
-  const reason = zoneGates.length
-    ? `Process the precondition first: ${zoneGates.join('、')}; no atomization action is recommended at this time, and the judgment will be made after the cooling is restored.`
-    : (!best
-      ? `All ${opts.length} candidate actions violate the hard limit, and the system does not select it by itself; please manually confirm whether the probe is invalid.`
-      : `Suggestion "${best.label}" (${marginTxt}): utility ${best.utility.toFixed(2)}, confidence ${(confidence * 100).toFixed(0)}%.`);
+ const marginTxt = Number.isFinite(margin) ? `ahead of runner-up by ${margin.toFixed(3)}` : 'only action available';
+ const reason = zoneGates.length
+ ? `Clear the preconditions first: ${zoneGates.join(', ')}; no fogging action is advised until it cools and recovers.`
+ : (!best
+ ? `All ${opts.length} candidate actions violate a hard limit, so the system will not choose; a human should confirm whether a probe has failed.`
+ : `Recommend "${best.label}" (${marginTxt}): utility ${best.utility.toFixed(2)}, confidence ${(confidence * 100).toFixed(0)}%.`);
 
-  // 对外输出前把效用与动作后数值四舍五入：JSON 里出现 0.85899999999999 会被当成 bug
-  opts.forEach(o => { o.utility = r3(o.utility); KEYS.forEach(k => { o.post[k] = r3(o.post[k]); }); });
-  return {
-    jev_type: 'choice', decision, confidence: r4(confidence), options: opts,
-    scores: Object.assign(
-      best ? { utility: r3(best.utility), post_ec: r3(best.post.ec), post_ph: r3(best.post.ph) }
-        : { utility: 0, post_ec: r3(cur.ec), post_ph: r3(cur.ph) },
-      { margin: Number.isFinite(margin) ? r3(margin) : null, zone_gates: zoneGates }),
-    human_review: zoneGates.length > 0 || onlyCostly || confidence < 0.70 || !best,
-    review_reasons: reasons, reason: clip(reason)
-  };
+ // 对外输出前把效用与动作后数值四舍五入：JSON 里出现 0.85899999999999 会被当成 bug
+ opts.forEach(o => { o.utility = r3(o.utility); KEYS.forEach(k => { o.post[k] = r3(o.post[k]); }); });
+ return {
+ jev_type: 'choice', decision, confidence: r4(confidence), options: opts,
+ scores: Object.assign(
+ best ? { utility: r3(best.utility), post_ec: r3(best.post.ec), post_ph: r3(best.post.ph) }
+ : { utility: 0, post_ec: r3(cur.ec), post_ph: r3(cur.ph) },
+ { margin: Number.isFinite(margin) ? r3(margin) : null, zone_gates: zoneGates }),
+ human_review: zoneGates.length > 0 || onlyCostly || confidence < 0.70 || !best,
+ review_reasons: reasons, reason: clip(reason)
+ };
 }
 
 /* ============================================================
-   5. 路由与信封
-   ============================================================ */
+ 5. 路由与信封
+ ============================================================ */
 const ROUTES = {
-  intake: 'contamination', aseptic_establishment: 'contamination', callus: 'contamination',
-  proliferation: 'contamination', rooting_check: 'contamination', root_zone_check: 'contamination',
-  rooting: 'readiness', acclimation: 'readiness', rooting_to_aeroponics: 'readiness',
-  aeroponics_nutrition: 'fog_choice', transplant_gate: 'fog_choice', harvest_window: 'fog_choice'
+ intake: 'contamination', aseptic_establishment: 'contamination', callus: 'contamination',
+ proliferation: 'contamination', rooting_check: 'contamination', root_zone_check: 'contamination',
+ rooting: 'readiness', acclimation: 'readiness', rooting_to_aeroponics: 'readiness',
+ aeroponics_nutrition: 'fog_choice', transplant_gate: 'fog_choice', harvest_window: 'fog_choice'
 };
 const SOP = 'coffee-tc-aero-v1.0';
 
 const EVIDENCE_KEYS = ['roots', 'browning', 'shoot_cm', 'leaf_color', 'stomata_wax', 'water_loss_pct'];
 
 function validate(req) {
-  const m = [];
-  ['variety', 'region', 'stage'].forEach(k => { if (!req[k] || typeof req[k] !== 'string') m.push(k); });
-  if (m.length) return Array.from(new Set(m));
-  if (!req.sensors) { m.push('sensors'); return m; }
-  const s = req.sensors;
-  // 必填传感器按判断器区分：组培瓶里没有 EC/pH 探头，
-  // 「全都要」的规则会把真实的无菌检查请求误判成 need_more_info。
-  const judger = ROUTES[req.stage];
-  const need = judger === 'fog_choice' ? ['ec', 'ph', 'vpd', 'temp']
-    : judger === 'contamination' ? ['temp'] : [];
-  need.forEach(k => { if (typeof s[k] !== 'number' || isNaN(s[k])) m.push('sensors.' + k); });
-  if (judger === 'readiness') {
-    const R = req.reading || {};
-    if (!EVIDENCE_KEYS.some(k => typeof R[k] === 'number' && !isNaN(R[k]))) m.push('reading(roots/browning/…)');
-  }
-  return Array.from(new Set(m));
+ const m = [];
+ ['variety', 'region', 'stage'].forEach(k => { if (!req[k] || typeof req[k] !== 'string') m.push(k); });
+ if (m.length) return Array.from(new Set(m));
+ if (!req.sensors) { m.push('sensors'); return m; }
+ const s = req.sensors;
+ // 必填传感器按判断器区分：组培瓶里没有 EC/pH 探头，
+ // 「全都要」的规则会把真实的无菌检查请求误判成 need_more_info。
+ const judger = ROUTES[req.stage];
+ const need = judger === 'fog_choice' ? ['ec', 'ph', 'vpd', 'temp']
+ : judger === 'contamination' ? ['temp'] : [];
+ need.forEach(k => { if (typeof s[k] !== 'number' || isNaN(s[k])) m.push('sensors.' + k); });
+ if (judger === 'readiness') {
+ const R = req.reading || {};
+ if (!EVIDENCE_KEYS.some(k => typeof R[k] === 'number' && !isNaN(R[k]))) m.push('reading(roots/browning/…)');
+ }
+ return Array.from(new Set(m));
 }
 
 function decide(req) {
-  const t0 = performance.now();
-  const mode = req.mode === 'shadow' ? 'shadow' : 'live';
-  const missing = validate(req);
-  if (missing.length) {
-    return {
-      http: 200,
-      body: {
-        agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage || null, jev_type: null,
-        decision: 'need_more_info', confidence: null, missing,
-        human_review: true, review_reasons: ['sensor_unhealthy'],
-        reason: "Key fields or sensor readings are missing and no decision is generated by contract.", sop_version: SOP,
-        latency_ms: Math.round(performance.now() - t0), mode
-      }
-    };
-  }
-  const judger = ROUTES[req.stage];
-  if (!judger) {
-    return {
-      http: 200,
-      body: {
-        agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage, jev_type: null,
-        decision: 'need_more_info', confidence: null,
-        missing: ["stage (unmapped judger)"], human_review: true,
-        review_reasons: ['first_time_scene'],
-        reason: "The judger has not yet been bound at this stage and needs to be specified manually.", sop_version: SOP,
-        latency_ms: Math.round(performance.now() - t0), mode
-      }
-    };
-  }
+ const t0 = performance.now();
+ const mode = req.mode === 'shadow' ? 'shadow' : 'live';
+ const missing = validate(req);
+ if (missing.length) {
+ return {
+ http: 200,
+ body: {
+ agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage || null, jev_type: null,
+ decision: 'need_more_info', confidence: null, missing,
+ human_review: true, review_reasons: ['sensor_unhealthy'],
+ reason: 'Key fields or sensor readings are missing and no decision is generated by contract.', sop_version: SOP,
+ latency_ms: Math.round(performance.now() - t0), mode
+ }
+ };
+ }
+ const judger = ROUTES[req.stage];
+ if (!judger) {
+ return {
+ http: 200,
+ body: {
+ agent: 'CoffeeJeV', version: '1.0.0', stage: req.stage, jev_type: null,
+ decision: 'need_more_info', confidence: null,
+ missing: ['stage (unmapped judger)'], human_review: true,
+ review_reasons: ['first_time_scene'],
+ reason: 'The judger has not yet been bound at this stage and needs to be specified manually.', sop_version: SOP,
+ latency_ms: Math.round(performance.now() - t0), mode
+ }
+ };
+ }
 
-  const s = req.sensors, R = req.reading || {}, B = req.batch_history || {}, C = req.costs || {};
-  const defaulted = [];
-  const num = (v, d, name) => { if (typeof v === 'number' && !isNaN(v)) return v; defaulted.push(name); return d; };
-  let verdict, stage = req.stage;
+ const s = req.sensors, R = req.reading || {}, B = req.batch_history || {}, C = req.costs || {};
+ const defaulted = [];
+ const num = (v, d, name) => { if (typeof v === 'number' && !isNaN(v)) return v; defaulted.push(name); return d; };
+ let verdict, stage = req.stage;
 
-  if (judger === 'contamination') {
-    verdict = judgeContamination({
-      pRaw: num(R.vision_p, 0.25, 'reading.vision_p'),
-      q: num(R.quality, 0.9, 'reading.quality'),
-      temp: s.temp, rh: num(s.rh, 65, 'sensors.rh'),
-      days: num(s.days_in_culture, 14, 'sensors.days_in_culture'),
-      hist: num(B.contamination_rate, 0.03, 'batch_history.contamination_rate'),
-      cfp: num(C.fp, 40, 'costs.fp'), cfn: num(C.fn, 900, 'costs.fn'),
-      tauMin: num(C.tau_min, 0.15, 'costs.tau_min')
-    });
-  } else if (judger === 'readiness') {
-    const supplied = EVIDENCE_KEYS.filter(k => typeof R[k] === 'number' && !isNaN(R[k])).length;
-    verdict = judgeReadiness({
-      completeness: supplied / EVIDENCE_KEYS.length,
-      roots: num(R.roots, 5, 'reading.roots'),
-      browning: num(R.browning, 20, 'reading.browning'),
-      shoot: num(R.shoot_cm, 3.0, 'reading.shoot_cm'),
-      leaf: num(R.leaf_color, 75, 'reading.leaf_color'),
-      wax: num(R.stomata_wax, 65, 'reading.stomata_wax'),
-      waterLoss: num(R.water_loss_pct, 10, 'reading.water_loss_pct'),
-      cont: num(B.contamination_rate, 0.05, 'batch_history.contamination_rate')
-    });
-  } else {
-    verdict = judgeFog({
-      ec: s.ec, ph: s.ph, vpd: s.vpd, temp: s.temp,
-      do: num(s.do, 6.2, 'sensors.do'),
-      droplet: num(s.droplet_um, 35, 'sensors.droplet_um'),
-      waterTemp: num(s.water_temp, 21, 'sensors.water_temp'),
-      ws: num((req.objective || {}).survival, 0.5, 'objective.survival'),
-      wc: num((req.objective || {}).cost, 0.2, 'objective.cost'),
-      wq: num((req.objective || {}).quality, 0.3, 'objective.quality')
-    });
-  }
+ if (judger === 'contamination') {
+ verdict = judgeContamination({
+ pRaw: num(R.vision_p, 0.25, 'reading.vision_p'),
+ q: num(R.quality, 0.9, 'reading.quality'),
+ temp: s.temp, rh: num(s.rh, 65, 'sensors.rh'),
+ days: num(s.days_in_culture, 14, 'sensors.days_in_culture'),
+ hist: num(B.contamination_rate, 0.03, 'batch_history.contamination_rate'),
+ cfp: num(C.fp, 40, 'costs.fp'), cfn: num(C.fn, 900, 'costs.fn'),
+ tauMin: num(C.tau_min, 0.15, 'costs.tau_min')
+ });
+ } else if (judger === 'readiness') {
+ const supplied = EVIDENCE_KEYS.filter(k => typeof R[k] === 'number' && !isNaN(R[k])).length;
+ verdict = judgeReadiness({
+ completeness: supplied / EVIDENCE_KEYS.length,
+ roots: num(R.roots, 5, 'reading.roots'),
+ browning: num(R.browning, 20, 'reading.browning'),
+ shoot: num(R.shoot_cm, 3.0, 'reading.shoot_cm'),
+ leaf: num(R.leaf_color, 75, 'reading.leaf_color'),
+ wax: num(R.stomata_wax, 65, 'reading.stomata_wax'),
+ waterLoss: num(R.water_loss_pct, 10, 'reading.water_loss_pct'),
+ cont: num(B.contamination_rate, 0.05, 'batch_history.contamination_rate')
+ });
+ } else {
+ verdict = judgeFog({
+ ec: s.ec, ph: s.ph, vpd: s.vpd, temp: s.temp,
+ do: num(s.do, 6.2, 'sensors.do'),
+ droplet: num(s.droplet_um, 35, 'sensors.droplet_um'),
+ waterTemp: num(s.water_temp, 21, 'sensors.water_temp'),
+ ws: num((req.objective || {}).survival, 0.5, 'objective.survival'),
+ wc: num((req.objective || {}).cost, 0.2, 'objective.cost'),
+ wq: num((req.objective || {}).quality, 0.3, 'objective.quality')
+ });
+ }
 
-  const audit_id = LEDGER.append({
-    stage, decision: verdict.decision,
-    conf: verdict.confidence === null ? null : verdict.confidence,
-    human_review: verdict.human_review, src: 'api'
-  });
+ const audit_id = LEDGER.append({
+ stage, decision: verdict.decision,
+ conf: verdict.confidence === null ? null : verdict.confidence,
+ human_review: verdict.human_review, src: 'api'
+ });
 
-  const body = {
-    agent: 'CoffeeJeV', version: '1.0.0', stage, jev_type: verdict.jev_type === 'score' ? 'score' : verdict.jev_type,
-    decision: verdict.decision, confidence: verdict.confidence,
-    scores: verdict.scores,
-    options: verdict.options || [],
-    // 分项得分不是「候选动作」，混进 options 会让下游按动作解析时出错
-    sub_scores: verdict.subs ? verdict.subs.map((v, k) => ({ dim: ['roots', 'browning', 'ratio', 'leaf', 'wax', 'water'][k], score: Math.round(v) })) : undefined,
-    human_review: verdict.human_review,
-    review_reasons: verdict.review_reasons,
-    reason: verdict.reason,
-    sop_version: SOP,
-    evidence_refs: req.image_ref ? [req.image_ref] : [],
-    latency_ms: Math.round(performance.now() - t0),
-    model_ids: judger === 'contamination'
-      ? { vision: 'coffee-contam-v1-int8', calibrator: 't-scale-' + req.variety }
-      : judger === 'readiness'
-        ? { vision: 'coffee-rootseg-v1-int8', calibrator: 't-scale-' + req.variety }
-        : { policy: 'fog-choice-rule-v1', calibrator: 'softmax-beta-6' },
-    audit_id, mode
-  };
-  // 只报「证据类」缺省；成本向量与目标权重是策略配置，不是缺失证据
-  const evDefaulted = defaulted.filter(k => !/^(costs|objective)\./.test(k));
-  if (evDefaulted.length) body.defaulted = evDefaulted;
-  if (mode === 'shadow') { body.would_decide = verdict.decision; body.executed = false; }
-  return { http: 200, body };
+ const body = {
+ agent: 'CoffeeJeV', version: '1.0.0', stage, jev_type: verdict.jev_type === 'score' ? 'score' : verdict.jev_type,
+ decision: verdict.decision, confidence: verdict.confidence,
+ scores: verdict.scores,
+ options: verdict.options || [],
+ // 分项得分不是「候选动作」，混进 options 会让下游按动作解析时出错
+ sub_scores: verdict.subs ? verdict.subs.map((v, k) => ({ dim: ['roots', 'browning', 'ratio', 'leaf', 'wax', 'water'][k], score: Math.round(v) })) : undefined,
+ human_review: verdict.human_review,
+ review_reasons: verdict.review_reasons,
+ reason: verdict.reason,
+ sop_version: SOP,
+ evidence_refs: req.image_ref ? [req.image_ref] : [],
+ latency_ms: Math.round(performance.now() - t0),
+ model_ids: judger === 'contamination'
+ ? { vision: 'coffee-contam-v1-int8', calibrator: 't-scale-' + req.variety }
+ : judger === 'readiness'
+ ? { vision: 'coffee-rootseg-v1-int8', calibrator: 't-scale-' + req.variety }
+ : { policy: 'fog-choice-rule-v1', calibrator: 'softmax-beta-6' },
+ audit_id, mode
+ };
+ // 只报「证据类」缺省；成本向量与目标权重是策略配置，不是缺失证据
+ const evDefaulted = defaulted.filter(k => !/^(costs|objective)\./.test(k));
+ if (evDefaulted.length) body.defaulted = evDefaulted;
+ if (mode === 'shadow') { body.would_decide = verdict.decision; body.executed = false; }
+ return { http: 200, body };
 }
 
 /* ============================================================
-   6. 架构探针
-   ============================================================ */
+ 6. 架构探针
+ ============================================================ */
 const LAYERS = [
-  {
-    id: 'L0', name: "Perception and scene", en: 'PERCEPTION', ms: "Sampling 30s/image 5min",
-    sub: "Convert biological states into judgmentable readings - the quality of this layer determines the upper limit of the six layers above",
-    duty: "Collect four types of signals: environment, root zone, plant and batch, and give the credibility of each reading.",
-    comps: ["RGB camera (fixed focus + hood)", "EC / pH / dissolved oxygen / liquid temperature probe", "Temperature and humidity + VPD + PPFD/DLI", "Laser diffraction droplet size", "Pressure and Nozzle Flow", "Microbial rapid test (LFA/portable qPCR)", "LIMS and manual observation recording"],
-    tech: ["Modbus/RS485 → Gateway", "Hikvision/Basler industrial cameras", "Probe double backup + regular standard solution"],
-    budget: [{ k: "Sampling period", v: '30 s' }, { k: "image", v: "5 min/batch" }, { k: "Clock synchronization", v: 'NTP ≤50ms' }],
-    fails: ["pH electrode biofilm → high/low readings", "Condensation on the lens → sharp drop in image quality", "Droplet size drift → the actual root hair area is not sufficiently moistened", "Probe calibration expired and still being reported"],
-    design: ["Each reading has <code>health</code> and <code>calibrated_at</code>", "The key quantity is a dual probe. If the deviation is > the threshold, it is judged to be untrustworthy.", "Images pass through the quality gate before entering inference"]
-  },
-  {
-    id: 'L1', name: "edge runtime", en: 'EDGE RUNTIME', ms: '≤300ms (p95)',
-    sub: "You must be able to judge when the network is disconnected, otherwise there will be no system in rainy season/remote farms",
-    duty: "Complete quality gates, visual reasoning, calibration tables, and strategy decisions locally; only the conclusions and evidence summaries are uploaded.",
-    comps: ["Quality gate (blur/condensation/occlusion)", "Multi-model inference (INT8)", "Calibration parameter cache", "Local rules and thresholds", "Network disconnection buffer (≥72h)", "Execution result readback"],
-    tech: ['Jetson Orin Nano 8GB', 'Triton / ONNX Runtime', "SQLite local queue", "OTA grayscale upgrade"],
-    budget: [{ k: "reasoning", v: '45–70 ms' }, { k: "end-to-end", v: '≤300 ms' }, { k: "Offline duration", v: '72 h' }],
-    fails: ["Heat dissipation and frequency reduction double the latency", "Batch queue backlog → Decision lag", "Model is inconsistent with calibration parameter version"],
-    design: ["Model and calibration parameters are bound to the same artifact version", "Decision flag <code>deferred_sync</code> during offline period", "Automatically reduce inference frame rate instead of timeout when downclocking"]
-  },
-  {
-    id: 'L2', name: "data backbone", en: 'BACKBONE', ms: "Freshness ≤2s",
-    sub: "There are three types of data storage: time series, image, and genealogy. Don’t try to stuff them into one library.",
-    duty: "Receive telemetry and images, maintain batch pedigrees, and provide features and history to the decision layer.",
-    comps: ['MQTT Broker', "Stream processing (deduplication/alignment/downsampling)", "Timing library", "object storage", "Metadata and Genealogy", "Feature table"],
-    tech: ['EMQX + Redpanda', 'TimescaleDB', "MinIO (local)", "Postgres + recursive CTE"],
-    budget: [{ k: "Telemetry end-to-end", v: '≤2 s' }, { k: "Image upload", v: "asynchronous" }, { k: "Genealogy query", v: '≤50 ms' }],
-    fails: ["Inconsistent timestamps → misaligned features", "Repeated reporting → repeated triggering of decisions", "Lineage missing → isolation radius cannot be calculated"],
-    design: ["Edge time + server time double writing", "Use <code>event_id</code> to remove duplicates idempotently", "Genealogy writing is the same transaction as batch creation"]
-  },
-  {
-    id: 'L3', name: "judgment service", en: 'JUDGMENT', ms: 'p99 180ms',
-    sub: "Seven judges, a set of calibration layers, and a waiver semantics",
-    duty: "Turn features into structured judgments: decisions, confidence, evidence, review marks.",
-    comps: ["contamination Noul (Category 5+1)", "acclimation Score", "Nutritional Mist Choice", "Admission Risk", "Root Zone Anomaly", "Harvest Choice", "Attribution Score", "Calibration layer + conformal waiver + OOD"],
-    tech: ["Triton multi-model", 'Calibration Store', "Feature snapshot (replayable)"],
-    budget: [{ k: "Single judge p99", v: '180 ms' }, { k: "integrated judgment", v: '≤2 s' }, { k: "waiver rate target", v: '<15%' }],
-    fails: ["Calibration parameters out of date → Confidence distortion", "Model version and SOP version mismatch", "OOD threshold is too loose → silent misjudgment"],
-    design: ["The confidence level always outputs the calibrated value.", "When there is no feasible solution, output <code>stop_and_review</code> instead of hard selection", "Each judgment is appended with <code>sop_version</code>"]
-  },
-  {
-    id: 'L4', name: "Choreography and Gates", en: 'ORCHESTRATION', ms: "≤5ms decision additional",
-    sub: "The state machine manages the process, and the strategy engine manages \"who should be woken up\"",
-    duty: "Schedule the judge according to stages, execute the upgrade matrix, and write each decision into the ledger.",
-    comps: ["14 node state machine", "Upgrade strategy engine", "Review queues and SLAs", "Decision Ledger (Hash Chain)", "Shadow mode switch"],
-    tech: ['Temporal', "Postgres append table", "Rules engine (JSON configuration)"],
-    budget: [{ k: "Strategy decision", v: '≤5 ms' }, { k: "Ledger writing", v: '≤20 ms' }, { k: "Upgrade notification", v: '≤60 s' }],
-    fails: ["Conflict between state machine and manual operation → batch state drift", "Review queue backlog → SLA expired", "Shadow mode is skipped → go online without verification"],
-    design: ["Manual operations also use state machines and do not directly modify the database.", "The upgrade notice comes with an evidence package but no conclusion.", "Shadow mode is forced by configuration and cannot be selected by the model."]
-  },
-  {
-    id: 'L5', name: "Execution and review", en: 'ACTUATION + HITL', ms: "Read back 30s",
-    sub: "Decisions without execution are PPT; execution without readback is blindness",
-    duty: "Convert decisions into constrained instructions, verify execution effects, and collect human judgment.",
-    comps: ["Command gateway (limited by PLC)", "ACK and readback check", "Automatic rollback", "Review console", "Mobile inspection"],
-    tech: ['OPC-UA / Modbus TCP', "PLC hard limit", "React console"],
-    budget: [{ k: "Issuance of instructions", v: '≤200 ms' }, { k: "Read back confirmation", v: '30 s' }, { k: "rollback", v: '≤60 s' }],
-    fails: ["Pump runs dry → system mistakenly thinks it has been executed", "Sensor and actuator have the same fault source", "The rollback condition is not clearly defined → oscillates back and forth"],
-    design: ["Each instruction declares the desired state and tolerance", "Deviations exceeding tolerance are automatically rolled back and downgraded to manual", "Shock detection: two rollbacks within 15 minutes will result in locking"]
-  },
-  {
-    id: 'L6', name: "Learning and Governance", en: 'LEARNING', ms: "Zhou level",
-    sub: "The tag is 45 days late, so the loop closure must be asynchronous",
-    duty: "Settle delayed tags, maintain calibrations, monitor drift, manage shadows and promotions, and share across venues without sharing raw data.",
-    comps: ["Delay label settlement", "Calibration Fitting and ECE Monitoring", "Drift detection", "shadow contrast", "Model registry and model card", "Federated aggregation (optional)"],
-    tech: ['Airflow / Temporal', 'Flower', "MLflow or self-built registry"],
-    budget: [{ k: "Label billing", v: "daily" }, { k: "Calibration refitting", v: "weekly" }, { k: "Promotion review", v: "quarterly" }],
-    fails: ["Tag settlement leak → sample permanently pending", "Promotion based on accuracy only → Calibration degradation", "Federated aggregation introduces backdoors or noise"],
-    design: ["Three conditions for promotion: net income / ECE / review consistency rate", "Each model comes with a model card and applicable boundaries.", "Federation only aggregates gradients and statistics"]
-  }
+ {
+ id: 'L0', name: 'Perception and scene', en: 'PERCEPTION', ms: 'Sampling 30s/image 5min',
+ sub: 'Convert biological states into judgmentable readings - the quality of this layer determines the upper limit of the six layers above',
+ duty: 'Collect four types of signals: environment, root zone, plant and batch, and give the credibility of each reading.',
+ comps: ['RGB camera (fixed focus + hood)', 'EC / pH / dissolved oxygen / liquid temperature probe', 'Temperature and humidity + VPD + PPFD/DLI', 'Laser diffraction droplet size', 'Pressure and Nozzle Flow', 'Microbial rapid test (LFA/portable qPCR)', 'LIMS and manual observation recording'],
+ tech: ['Modbus/RS485 → Gateway', 'Hikvision/Basler industrial cameras', 'Probe double backup + regular standard solution'],
+ budget: [{ k: 'Sampling period', v: '30 s' }, { k: 'image', v: '5 min/batch' }, { k: 'Clock synchronization', v: 'NTP ≤50ms' }],
+ fails: ['pH electrode biofilm → high/low readings', 'Condensation on the lens → sharp drop in image quality', 'Droplet size drift → the actual root hair area is not sufficiently moistened', 'Probe calibration expired and still being reported'],
+ design: ['Each reading has <code>health</code> and <code>calibrated_at</code>', 'The key quantity is a dual probe. If the deviation is > the threshold, it is judged to be untrustworthy.', 'Images pass through the quality gate before entering inference']
+ },
+ {
+ id: 'L1', name: 'edge runtime', en: 'EDGE RUNTIME', ms: '≤300ms (p95)',
+ sub: 'You must be able to judge when the network is disconnected, otherwise there will be no system in rainy season/remote farms',
+ duty: 'Complete quality gates, visual reasoning, calibration tables, and strategy decisions locally; only the conclusions and evidence summaries are uploaded.',
+ comps: ['Quality gate (blur/condensation/occlusion)', 'Multi-model inference (INT8)', 'Calibration parameter cache', 'Local rules and thresholds', 'Network disconnection buffer (≥72h)', 'Execution result readback'],
+ tech: ['Jetson Orin Nano 8GB', 'Triton / ONNX Runtime', 'SQLite local queue', 'OTA grayscale upgrade'],
+ budget: [{ k: 'reasoning', v: '45–70 ms' }, { k: 'end-to-end', v: '≤300 ms' }, { k: 'Offline duration', v: '72 h' }],
+ fails: ['Heat dissipation and frequency reduction double the latency', 'Batch queue backlog → Decision lag', 'Model is inconsistent with calibration parameter version'],
+ design: ['Model and calibration parameters are bound to the same artifact version', 'Decision flag <code>deferred_sync</code> during offline period', 'Automatically reduce inference frame rate instead of timeout when downclocking']
+ },
+ {
+ id: 'L2', name: 'data backbone', en: 'BACKBONE', ms: 'Freshness ≤2s',
+ sub: 'There are three types of data storage: time series, image, and genealogy. Don’t try to stuff them into one library.',
+ duty: 'Receive telemetry and images, maintain batch pedigrees, and provide features and history to the decision layer.',
+ comps: ['MQTT Broker', 'Stream processing (deduplication/alignment/downsampling)', 'Timing library', 'object storage', 'Metadata and Genealogy', 'Feature table'],
+ tech: ['EMQX + Redpanda', 'TimescaleDB', 'MinIO (local)', 'Postgres + recursive CTE'],
+ budget: [{ k: 'Telemetry end-to-end', v: '≤2 s' }, { k: 'Image upload', v: 'asynchronous' }, { k: 'Genealogy query', v: '≤50 ms' }],
+ fails: ['Inconsistent timestamps → misaligned features', 'Repeated reporting → repeated triggering of decisions', 'Lineage missing → isolation radius cannot be calculated'],
+ design: ['Edge time + server time double writing', 'Use <code>event_id</code> to remove duplicates idempotently', 'Genealogy writing is the same transaction as batch creation']
+ },
+ {
+ id: 'L3', name: 'judgment service', en: 'JUDGMENT', ms: 'p99 180ms',
+ sub: 'Seven judges, a set of calibration layers, and a waiver semantics',
+ duty: 'Turn features into structured judgments: decisions, confidence, evidence, review marks.',
+ comps: ['contamination Noul (Category 5+1)', 'acclimation Score', 'Nutritional Mist Choice', 'Admission Risk', 'Root Zone Anomaly', 'Harvest Choice', 'Attribution Score', 'Calibration layer + conformal waiver + OOD'],
+ tech: ['Triton multi-model', 'Calibration Store', 'Feature snapshot (replayable)'],
+ budget: [{ k: 'Single judge p99', v: '180 ms' }, { k: 'integrated judgment', v: '≤2 s' }, { k: 'waiver rate target', v: '<15%' }],
+ fails: ['Calibration parameters out of date → Confidence distortion', 'Model version and SOP version mismatch', 'OOD threshold is too loose → silent misjudgment'],
+ design: ['The confidence level always outputs the calibrated value.', 'When there is no feasible solution, output <code>stop_and_review</code> instead of hard selection', 'Each judgment is appended with <code>sop_version</code>']
+ },
+ {
+ id: 'L4', name: 'Choreography and Gates', en: 'ORCHESTRATION', ms: '≤5 ms decision overhead',
+ sub: 'the state machine owns the process, the policy engine owns who gets woken',
+ duty: 'Dispatch judgers by stage, run the escalation matrix, and write every decision to the ledger.',
+ comps: ['14-node state machine', 'escalation policy engine', 'review queue and SLA', 'decision ledger (hash chain)', 'shadow-mode switch'],
+ tech: ['Temporal', 'Postgres append table', 'Rules engine (JSON configuration)'],
+ budget: [{ k: 'Strategy decision', v: '≤5 ms' }, { k: 'Ledger writing', v: '≤20 ms' }, { k: 'Upgrade notification', v: '≤60 s' }],
+ fails: ['Conflict between state machine and manual operation → batch state drift', 'Review queue backlog → SLA expired', 'Shadow mode is skipped → go online without verification'],
+ design: ['Manual operations also use state machines and do not directly modify the database.', 'The upgrade notice comes with an evidence package but no conclusion.', 'Shadow mode is forced by configuration and cannot be selected by the model.']
+ },
+ {
+ id: 'L5', name: 'Execution and review', en: 'ACTUATION + HITL', ms: 'Read back 30s',
+ sub: 'Decisions without execution are PPT; execution without readback is blindness',
+ duty: 'Convert decisions into constrained instructions, verify execution effects, and collect human judgment.',
+ comps: ['Command gateway (limited by PLC)', 'ACK and readback check', 'Automatic rollback', 'Review console', 'Mobile inspection'],
+ tech: ['OPC-UA / Modbus TCP', 'PLC hard limit', 'React console'],
+ budget: [{ k: 'Issuance of instructions', v: '≤200 ms' }, { k: 'Read back confirmation', v: '30 s' }, { k: 'rollback', v: '≤60 s' }],
+ fails: ['Pump runs dry → system mistakenly thinks it has been executed', 'Sensor and actuator have the same fault source', 'The rollback condition is not clearly defined → oscillates back and forth'],
+ design: ['Each instruction declares the desired state and tolerance', 'Deviations exceeding tolerance are automatically rolled back and downgraded to manual', 'Shock detection: two rollbacks within 15 minutes will result in locking']
+ },
+ {
+ id: 'L6', name: 'Learning and Governance', en: 'LEARNING', ms: 'Zhou level',
+ sub: 'The tag is 45 days late, so the loop closure must be asynchronous',
+ duty: 'Settle delayed tags, maintain calibrations, monitor drift, manage shadows and promotions, and share across venues without sharing raw data.',
+ comps: ['Delay label settlement', 'Calibration Fitting and ECE Monitoring', 'Drift detection', 'shadow contrast', 'Model registry and model card', 'Federated aggregation (optional)'],
+ tech: ['Airflow / Temporal', 'Flower', 'MLflow or self-built registry'],
+ budget: [{ k: 'Label billing', v: 'daily' }, { k: 'Calibration refitting', v: 'weekly' }, { k: 'Promotion review', v: 'quarterly' }],
+ fails: ['Tag settlement leak → sample permanently pending', 'Promotion based on accuracy only → Calibration degradation', 'Federated aggregation introduces backdoors or noise'],
+ design: ['Three conditions for promotion: net income / ECE / review consistency rate', 'Each model comes with a model card and applicable boundaries.', 'Federation only aggregates gradients and statistics']
+ }
 ];
 
 function renderLayers() {
-  const list = $('#layers');
-  list.innerHTML = LAYERS.map((L, k) => `
-    <button class="layer${k === 0 ? ' active' : ''}" data-layer="${k}">
-      <span class="lidx">${L.id}</span>
-      <span class="lname">${L.name}<small>${L.en}</small></span>
-      <span class="lms">${L.ms}</span>
-    </button>`).join('');
-  list.addEventListener('click', e => {
-    const b = e.target.closest('.layer'); if (!b) return;
-    $$('.layer', list).forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    showLayer(+b.dataset.layer);
-  });
-  showLayer(0);
+ const list = $('#layers');
+ list.innerHTML = LAYERS.map((L, k) => `
+ <button class="layer${k === 0 ? ' active' : ''}" data-layer="${k}">
+ <span class="lidx">${L.id}</span>
+ <span class="lname">${L.name}<small>${L.en}</small></span>
+ <span class="lms">${L.ms}</span>
+ </button>`).join('');
+ list.addEventListener('click', e => {
+ const b = e.target.closest('.layer'); if (!b) return;
+ $$('.layer', list).forEach(x => x.classList.remove('active'));
+ b.classList.add('active');
+ showLayer(+b.dataset.layer);
+ });
+ showLayer(0);
 }
 
 function showLayer(k) {
-  const L = LAYERS[k];
-  $('#ldetail').innerHTML = `<div class="ldh"><h4>${L.name}</h4><span class="pill info">${L.id}</span><span class="pill gray">${L.ms}</span></div>
-    <div class="ldsub">${L.sub}</div>
-    <div class="ldblock" style="margin-bottom:12px"><div class="bk">Responsibilities</div><div style="font-size:13px;color:#c2cbd6">${L.duty}</div></div>
-    <div class="ldgrid">
-      <div class="ldblock"><div class="bk">Component</div><ul>${L.comps.map(c =>`<li>${c}</li>`).join('')}</ul></div>
-      <div class="ldblock"><div class="bk">Technical selection</div><ul>${L.tech.map(c =>`<li>${c}</li>`).join('')}</ul></div>
-      <div class="ldblock"><div class="bk">Latency/Capacity Budget</div><ul>${L.budget.map(b =>`<li>${b.k}：<b style="color:#a9f3d8">${b.v}</b></li>`).join('')}</ul></div>
-      <div class="ldblock warn"><div class="bk">Failure mode</div><ul>${L.fails.map(c =>`<li>${c}</li>`).join('')}</ul></div>
-      <div class="ldblock wide"><div class="bk">Key design decisions</div><ul>${L.design.map(c =>`<li>${c}</li>`).join('')}</ul></div>
-    </div>`;
+ const L = LAYERS[k];
+ $('#ldetail').innerHTML = `
+ <div class="ldh"><h4>${L.name}</h4><span class="pill info">${L.id}</span><span class="pill gray">${L.ms}</span></div>
+ <div class="ldsub">${L.sub}</div>
+ <div class="ldblock" style="margin-bottom:12px"><div class="bk">Responsibilities</div><div style="font-size:13px;color:#c2cbd6">${L.duty}</div></div>
+ <div class="ldgrid">
+ <div class="ldblock"><div class="bk">Components</div><ul>${L.comps.map(c => `<li>${c}</li>`).join('')}</ul></div>
+ <div class="ldblock"><div class="bk">Technology</div><ul>${L.tech.map(c => `<li>${c}</li>`).join('')}</ul></div>
+ <div class="ldblock"><div class="bk">Latency / capacity budget</div><ul>${L.budget.map(b => `<li>${b.k}：<b style="color:#a9f3d8">${b.v}</b></li>`).join('')}</ul></div>
+ <div class="ldblock warn"><div class="bk">Failure modes</div><ul>${L.fails.map(c => `<li>${c}</li>`).join('')}</ul></div>
+ <div class="ldblock wide"><div class="bk">Key design decisions</div><ul>${L.design.map(c => `<li>${c}</li>`).join('')}</ul></div>
+ </div>`;
 }
 
 /* ============================================================
-   7. 决策地图
-   ============================================================ */
+ 7. 决策地图
+ ============================================================ */
 const NODES = [
-  { id: 1, name: "Germplasm/lot access", jev: 'choice + risk', stage: 'intake', star: 0,
-    inputs: "Variety and source, quarantine certificate, authorization mark, batch historical contamination rate",
-    outputs: 'accept / quarantine / reject',
-    rules: "Historical contamination rate >0.10 → quarantine; source lacks quarantine certificate → reject",
-    esc: "New varieties, missing authorization marks, cross-border seedling transfer",
-    metric: "Contamination rate 30 days after admission" },
-  { id: 2, name: "Aseptic establishment of explants", jev: "noul (category 5+1)", stage: 'aseptic_establishment', star: 0,
-    inputs: "Culture bottle image, temperature and humidity, passage days, batch prior",
-    outputs: 'continue / review_microscopy / isolate_and_sample',
-    rules: "τ_cost = C_FP/(C_FP+C_FN) (typically 0.04–0.10) and the lower operating limit τ_min, whichever is greater, the default value is 0.15",
-    esc: "Confidence <0.70, image quality <0.55 (OOD)",
-    metric: "Contamination missed detection rate (the most expensive indicator)" },
-  { id: 3, name: "Callus/embryogenesis", jev: 'score', stage: 'callus', star: 0,
-    inputs: "Shape, color, growth rate, hormone ratio",
-    outputs: "Embryogenic potential 0–100 → proceed / delay / discard",
-    rules: "<40 Deprecated; 40–60 Review (the paragraph with the strongest reliance on morphological experience)",
-    esc: "Score falls between 40–60 and has dropped for two consecutive generations",
-    metric: "Embryonic transformation rate" },
-  { id: 4, name: "Proliferation", jev: 'choice', stage: 'proliferation', star: 0,
-    inputs: "Proliferation coefficient, vitrification rate, hormone concentration, number of passages",
-    outputs: 'subculture / reduce_hormone / discard',
-    rules: "Multiplication coefficient of two consecutive generations <2 → reduce_hormone",
-    esc: "Vitrification rate >20%, abnormal for two consecutive generations",
-    metric: "Multiplication coefficient and vitrification rate" },
-  { id: 5, name: "root", jev: 'noul + score', stage: 'rooting', star: 0,
-    inputs: "Root number, root color, callus volume, root tip image",
-    outputs: 'rooted / adjust_medium / discard',
-    rules: "The number of roots is ≥3 and root tip browning <30% is qualified.",
-    esc: "Record of odor or sudden increase in browning in the root zone",
-    metric: "Rooting pass rate" },
-  { id: 6, name: "Seedling Refining/acclimation Readiness", jev: 'score', stage: 'acclimation', star: 1,
-    inputs: "Root number, browning, plant height, leaf color, stomata/waxiness, water loss test",
-    outputs: 'transplant_ready (≥80) / delay_adjust (60–79) / continue_acclimation (<60)',
-    rules: "Hard gate: number of roots <3 → ≤55; browning >60 → ≤60; contamination p≥0.5 → ≤40",
-    esc: "Score 60–80 (border zone), confidence <0.70",
-    metric: "Downstream transplant survival rate (back-calibrated with 45-day tag)" },
-  { id: 7, name: "Aeroponics transplanting gate", jev: 'choice', stage: 'transplant_gate', star: 1,
-    inputs: "readiness, bacterial test results, root mass integrity, slot location and environment matching",
-    outputs: 'transplant_now / delay_3_7d / isolate_first / discard',
-    rules: "Transplantation is irreversible → default human_review=true, AI only sorts but does not release",
-    esc: "Any first transplant, any contamination positive",
-    metric: "Survival rate 30 days after transplanting" },
-  { id: 8, name: "Nutritional mist formula", jev: 'choice', stage: 'aeroponics_nutrition', star: 1,
-    inputs: "EC, pH, VPD, DO, droplet size, liquid temperature, electricity price",
-    outputs: 'sop_baseline / lower_ec / raise_do / adjust_ph / dry_back / flush_reservoir',
-    rules: "Hard limit: EC 0.8–2.0, pH 5.3–6.4, DO ≥5, root temperature ≤26",
-    esc: "All candidates are infeasible → stop_and_review; confidence <0.70",
-    metric: "Root tip health + kWh/plant" },
-  { id: 9, name: "Root zone exception", jev: 'noul + anomaly', stage: 'root_zone_check', star: 0,
-    inputs: "Root tip image, odor record, DO, microbial quick test",
-    outputs: 'normal / warn / stop_fog / isolate',
-    rules: "Unsupervised anomaly classification and supervised classification are dual-track, and if there is any inconsistency, it will be reviewed.",
-    esc: "Suspected pathogen (bacterial/fungal dichotomy error is extremely costly)",
-    metric: "Number of hours from first discovery to disposal" },
-  { id: 10, name: "Plant type/flowering", jev: 'score', stage: 'flowering', star: 0,
-    inputs: "Plant type, leaf color, number of flower buds, temperature and light accumulation",
-    outputs: "Health 0–100 + flower promotion priority",
-    rules: "When multiple goals conflict (output vs quality), the Pareto set is output, without hard selection.",
-    esc: "Multiple goals conflict and the flower promotion plan will deviate from the SOP",
-    metric: "Flower bud synchronization rate" },
-  { id: 11, name: "harvest window", jev: 'choice', stage: 'harvest_window', star: 0,
-    inputs: "Brix, ripeness, cupping trends, contract delivery",
-    outputs: 'harvest_now / delay / split_harvest',
-    rules: "Only window sorting is done, the final rating is determined by the cupping officer",
-    esc: "Contract quality disputes and mixed procurement across batches",
-    metric: "Cupping consistency (deviation from promised batch)" },
-  { id: 12, name: "Batch isolation radius", jev: 'choice', stage: 'quarantine', star: 0,
-    inputs: "Genealogy diagram, contamination categories, shelves and slots, time windows",
-    outputs: 'single_tray / 1–3 shelves / whole_room',
-    rules: "Obtain the candidate radius according to the lineage diagram BFS, and then select the minimum effective radius according to the loss function",
-    esc: "Any contamination event must manually confirm the radius",
-    metric: "Secondary diffusion rate (number of new disks added after quarantine)" },
-  { id: 13, name: "Energy consumption/load scheduling", jev: 'choice', stage: 'power_dispatch', star: 0,
-    inputs: "Time-of-use electricity price, pump unit load, weather forecast, inventory and delivery date",
-    outputs: 'run_normal / shift_peak / reduce_duty',
-    rules: "The cost vector explicitly includes kWh; the penalty term is the growth rate penalty",
-    esc: "Peak cutting will affect the promised delivery date",
-    metric: "Combined index of kWh/plant and growth rate" },
-  { id: 14, name: "Batch review attribution", jev: 'score', stage: 'retro_review', star: 0,
-    inputs: "Survival rate, contamination rate, energy consumption, unit cost, review records",
-    outputs: "Root cause ranking + model/threshold update recommendations",
-    rules: "Distinguish between \"model error\" and \"SOP error\" - this is the most common misattribution",
-    esc: "Data drifts and worsens in the same direction for three consecutive weeks",
-    metric: "Review coverage and recommendation adoption rate" }
+ { id: 1, name: 'Germplasm/lot access', jev: 'choice + risk', stage: 'intake', star: 0,
+ inputs: 'Variety and source, quarantine certificate, authorization mark, batch historical contamination rate',
+ outputs: 'accept / quarantine / reject',
+ rules: 'Historical contamination rate >0.10 → quarantine; source lacks quarantine certificate → reject',
+ esc: 'New varieties, missing authorization marks, cross-border seedling transfer',
+ metric: 'Contamination rate 30 days after admission' },
+ { id: 2, name: 'Aseptic establishment of explants', jev: 'noul (category 5+1)', stage: 'aseptic_establishment', star: 0,
+ inputs: 'Culture bottle image, temperature and humidity, passage days, batch prior',
+ outputs: 'continue / review_microscopy / isolate_and_sample',
+ rules: 'τ_cost = C_FP/(C_FP+C_FN) (typically 0.04–0.10) and the lower operating limit τ_min, whichever is greater, the default value is 0.15',
+ esc: 'Confidence <0.70, image quality <0.55 (OOD)',
+ metric: 'Contamination missed detection rate (the most expensive indicator)' },
+ { id: 3, name: 'Callus/embryogenesis', jev: 'score', stage: 'callus', star: 0,
+ inputs: 'Shape, color, growth rate, hormone ratio',
+ outputs: 'Embryogenic potential 0–100 → proceed / delay / discard',
+ rules: '<40 Deprecated; 40–60 Review (the paragraph with the strongest reliance on morphological experience)',
+ esc: 'Score falls between 40–60 and has dropped for two consecutive generations',
+ metric: 'Embryonic transformation rate' },
+ { id: 4, name: 'Proliferation', jev: 'choice', stage: 'proliferation', star: 0,
+ inputs: 'Proliferation coefficient, vitrification rate, hormone concentration, number of passages',
+ outputs: 'subculture / reduce_hormone / discard',
+ rules: 'Multiplication coefficient of two consecutive generations <2 → reduce_hormone',
+ esc: 'Vitrification rate >20%, abnormal for two consecutive generations',
+ metric: 'Multiplication coefficient and vitrification rate' },
+ { id: 5, name: 'root', jev: 'noul + score', stage: 'rooting', star: 0,
+ inputs: 'Root number, root color, callus volume, root tip image',
+ outputs: 'rooted / adjust_medium / discard',
+ rules: 'The number of roots is ≥3 and root tip browning <30% is qualified.',
+ esc: 'Record of odor or sudden increase in browning in the root zone',
+ metric: 'Rooting pass rate' },
+ { id: 6, name: 'Seedling Refining/acclimation Readiness', jev: 'score', stage: 'acclimation', star: 1,
+ inputs: 'Root number, browning, plant height, leaf color, stomata/waxiness, water loss test',
+ outputs: 'transplant_ready (≥80) / delay_adjust (60–79) / continue_acclimation (<60)',
+ rules: 'Hard gate: number of roots <3 → ≤55; browning >60 → ≤60; contamination p≥0.5 → ≤40',
+ esc: 'Score 60–80 (border zone), confidence <0.70',
+ metric: 'Downstream transplant survival rate (back-calibrated with 45-day tag)' },
+ { id: 7, name: 'Aeroponics transplanting gate', jev: 'choice', stage: 'transplant_gate', star: 1,
+ inputs: 'readiness, bacterial test results, root mass integrity, slot location and environment matching',
+ outputs: 'transplant_now / delay_3_7d / isolate_first / discard',
+ rules: 'Transplantation is irreversible → default human_review=true, AI only sorts but does not release',
+ esc: 'Any first transplant, any contamination positive',
+ metric: 'Survival rate 30 days after transplanting' },
+ { id: 8, name: 'Nutritional mist formula', jev: 'choice', stage: 'aeroponics_nutrition', star: 1,
+ inputs: 'EC, pH, VPD, DO, droplet size, liquid temperature, electricity price',
+ outputs: 'sop_baseline / lower_ec / raise_do / adjust_ph / dry_back / flush_reservoir',
+ rules: 'Hard limit: EC 0.8–2.0, pH 5.3–6.4, DO ≥5, root temperature ≤26',
+ esc: 'All candidates are infeasible → stop_and_review; confidence <0.70',
+ metric: 'Root tip health + kWh/plant' },
+ { id: 9, name: 'Root zone exception', jev: 'noul + anomaly', stage: 'root_zone_check', star: 0,
+ inputs: 'Root tip image, odor record, DO, microbial quick test',
+ outputs: 'normal / warn / stop_fog / isolate',
+ rules: 'unsupervised anomaly score and supervised classification run in parallel; disagreement goes to review',
+ esc: 'Suspected pathogen (bacterial/fungal dichotomy error is extremely costly)',
+ metric: 'Number of hours from first discovery to disposal' },
+ { id: 10, name: 'Plant type/flowering', jev: 'score', stage: 'flowering', star: 0,
+ inputs: 'Plant type, leaf color, number of flower buds, temperature and light accumulation',
+ outputs: 'Health 0–100 + flower promotion priority',
+ rules: 'When multiple goals conflict (output vs quality), the Pareto set is output, without hard selection.',
+ esc: 'Multiple goals conflict and the flower promotion plan will deviate from the SOP',
+ metric: 'Flower bud synchronization rate' },
+ { id: 11, name: 'harvest window', jev: 'choice', stage: 'harvest_window', star: 0,
+ inputs: 'Brix, ripeness, cupping trends, contract delivery',
+ outputs: 'harvest_now / delay / split_harvest',
+ rules: 'Only window sorting is done, the final rating is determined by the cupping officer',
+ esc: 'Contract quality disputes and mixed procurement across batches',
+ metric: 'Cupping consistency (deviation from promised batch)' },
+ { id: 12, name: 'Batch isolation radius', jev: 'choice', stage: 'quarantine', star: 0,
+ inputs: 'Genealogy diagram, contamination categories, shelves and slots, time windows',
+ outputs: 'single_tray / 1–3 shelves / whole_room',
+ rules: 'Obtain the candidate radius according to the lineage diagram BFS, and then select the minimum effective radius according to the loss function',
+ esc: 'Any contamination event must manually confirm the radius',
+ metric: 'Secondary diffusion rate (number of new disks added after quarantine)' },
+ { id: 13, name: 'Energy consumption/load scheduling', jev: 'choice', stage: 'power_dispatch', star: 0,
+ inputs: 'Time-of-use electricity price, pump unit load, weather forecast, inventory and delivery date',
+ outputs: 'run_normal / shift_peak / reduce_duty',
+ rules: 'The cost vector explicitly includes kWh; the penalty term is the growth rate penalty',
+ esc: 'Peak cutting will affect the promised delivery date',
+ metric: 'Combined index of kWh/plant and growth rate' },
+ { id: 14, name: 'Batch review attribution', jev: 'score', stage: 'retro_review', star: 0,
+ inputs: 'Survival rate, contamination rate, energy consumption, unit cost, review records',
+ outputs: 'Root cause ranking + model/threshold update recommendations',
+ rules: ' - this is the most common misattribution',
+ esc: 'Data drifts and worsens in the same direction for three consecutive weeks',
+ metric: 'Review coverage and recommendation adoption rate' }
 ];
 
 function renderChain() {
-  const box = $('#chainbox');
-  box.innerHTML = NODES.map(n => `
-    <button class="node${n.star ? ' star' : ''}" data-node="${n.id - 1}">
-      <span class="dot"></span>
-      <span class="ni">${String(n.id).padStart(2, '0')}${n.star ? ' ★' : ''}</span>
-      <span class="nt">${n.name}</span>
-      <span class="nj">${n.jev}</span>
-    </button>`).join('');
-  box.addEventListener('click', e => {
-    const b = e.target.closest('.node'); if (!b) return;
-    $$('.node', box).forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    showNode(+b.dataset.node);
-  });
-  showNode(5);
+ const box = $('#chainbox');
+ box.innerHTML = NODES.map(n => `
+ <button class="node${n.star ? ' star' : ''}" data-node="${n.id - 1}">
+ <span class="dot"></span>
+ <span class="ni">${String(n.id).padStart(2, '0')}${n.star ? ' ★' : ''}</span>
+ <span class="nt">${n.name}</span>
+ <span class="nj">${n.jev}</span>
+ </button>`).join('');
+ box.addEventListener('click', e => {
+ const b = e.target.closest('.node'); if (!b) return;
+ $$('.node', box).forEach(x => x.classList.remove('active'));
+ b.classList.add('active');
+ showNode(+b.dataset.node);
+ });
+ showNode(5);
 }
 
 function showNode(k) {
-  const n = NODES[k];
-  $$('#chainbox .node').forEach(x => x.classList.toggle('active', +x.dataset.node === k));
-  $('#nodedetail').innerHTML = `<div class="ndh">
-      <span class="pill info">Node ${String(n.id).padStart(2, '0')}</span>
-      <h4>${n.name}</h4>
-      <span class="pill vio">${n.jev}</span>
-      <code>${n.stage}</code>
-      ${n.star ? "<span class=\"pill warn\">Key gate</span>" : ''}
-    </div>
-    <div class="ndgrid">
-      <div class="ndcell"><div class="nk">Input</div><div class="nv">${n.inputs}</div></div>
-      <div class="ndcell"><div class="nk">Output enumeration</div><div class="nv">${n.outputs}</div></div>
-      <div class="ndcell"><div class="nk">Criterion/threshold</div><div class="nv">${n.rules}</div></div>
-      <div class="ndcell"><div class="nk">Upgrade artificial conditions</div><div class="nv">${n.esc}</div></div>
-      <div class="ndcell full"><div class="nk">Corresponding business indicators</div><div class="nv">${n.metric}</div></div>
-    </div>`;
+ const n = NODES[k];
+ $$('#chainbox .node').forEach(x => x.classList.toggle('active', +x.dataset.node === k));
+ $('#nodedetail').innerHTML = `
+ <div class="ndh">
+ <span class="pill info">Node ${String(n.id).padStart(2, '0')}</span>
+ <h4>${n.name}</h4>
+ <span class="pill vio">${n.jev}</span>
+ <code>${n.stage}</code>
+ ${n.star ? '<span class="pill warn">Critical gate</span>' : ''}
+ </div>
+ <div class="ndgrid">
+ <div class="ndcell"><div class="nk">Input</div><div class="nv">${n.inputs}</div></div>
+ <div class="ndcell"><div class="nk">Output enum</div><div class="nv">${n.outputs}</div></div>
+ <div class="ndcell"><div class="nk">Criterion / threshold</div><div class="nv">${n.rules}</div></div>
+ <div class="ndcell"><div class="nk">Escalate to a human when</div><div class="nv">${n.esc}</div></div>
+ <div class="ndcell full"><div class="nk">Business metric</div><div class="nv">${n.metric}</div></div>
+ </div>`;
 }
 
 /* ============================================================
-   8. 实验室
-   ============================================================ */
+ 8. 实验室
+ ============================================================ */
 const LABTABS = $('#labtabs');
 LABTABS && LABTABS.addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  $$('button', LABTABS).forEach(x => x.classList.remove('on'));
-  b.classList.add('on');
-  $$('[data-panel]').forEach(p => { p.style.display = p.dataset.panel === b.dataset.tab ? '' : 'none'; });
-  runAll();
+ const b = e.target.closest('button'); if (!b) return;
+ $$('button', LABTABS).forEach(x => x.classList.remove('on'));
+ b.classList.add('on');
+ $$('[data-panel]').forEach(p => { p.style.display = p.dataset.panel === b.dataset.tab ? '' : 'none'; });
+ runAll();
 });
 
 const val = id => parseFloat($('#' + id).value);
 const DEFAULTS = {};
 
 function snapDefaults() {
-  $$('input[type=range], input[type=number]').forEach(i => {
-    if (i.id) DEFAULTS[i.id] = i.value;
-  });
+ $$('input[type=range], input[type=number]').forEach(i => {
+ if (i.id) DEFAULTS[i.id] = i.value;
+ });
 }
 
 function runA() {
-  const i = {
-    pRaw: val('a-p'), q: val('a-q'), temp: val('a-t'), rh: val('a-rh'),
-    days: val('a-d'), hist: val('a-hist'), cfp: val('a-fp'), cfn: val('a-fn'), tauMin: val('a-tm')
-  };
-  $('#a-pv').textContent = i.pRaw.toFixed(2);
-  $('#a-qv').textContent = i.q.toFixed(2);
-  $('#a-tv').textContent = i.temp.toFixed(1);
-  $('#a-rhv').textContent = Math.round(i.rh);
-  $('#a-dv').textContent = i.days;
-  $('#a-histv').textContent = i.hist.toFixed(3);
-  $('#a-fpv').textContent = '$' + i.cfp;
-  $('#a-fnv').textContent = '$' + money(i.cfn);
-  $('#a-tmv').textContent = i.tauMin.toFixed(2);
+ const i = {
+ pRaw: val('a-p'), q: val('a-q'), temp: val('a-t'), rh: val('a-rh'),
+ days: val('a-d'), hist: val('a-hist'), cfp: val('a-fp'), cfn: val('a-fn'), tauMin: val('a-tm')
+ };
+ $('#a-pv').textContent = i.pRaw.toFixed(2);
+ $('#a-qv').textContent = i.q.toFixed(2);
+ $('#a-tv').textContent = i.temp.toFixed(1);
+ $('#a-rhv').textContent = Math.round(i.rh);
+ $('#a-dv').textContent = i.days;
+ $('#a-histv').textContent = i.hist.toFixed(3);
+ $('#a-fpv').textContent = '$' + i.cfp;
+ $('#a-fnv').textContent = '$' + money(i.cfn);
+ $('#a-tmv').textContent = i.tauMin.toFixed(2);
 
-  const r = judgeContamination(i);
-  const tagMap = { continue: ['ok', "release"], review_microscopy: ['warn', "Review"], isolate_and_sample: ['bad', "Dispose"] };
-  const [cls, txt] = tagMap[r.decision];
-  $('#a-tag').className = 'pill ' + cls;
-  $('#a-tag').textContent = txt;
-  $('#a-dec').textContent = r.decision;
-  $('#a-reason').textContent = r.reason;
-  $('#a-mp').textContent = (r.p * 100).toFixed(1) + '%';
-  $('#a-mtc').textContent = (r.tauCost * 100).toFixed(1) + '%';
-  $('#a-mthi').textContent = (r.tauHi * 100).toFixed(1) + '%';
-  $('#a-mtlo').textContent = (r.tauLo * 100).toFixed(1) + '%';
-  $('#a-mc').textContent = r.confidence.toFixed(2);
-  $('#a-mood').innerHTML = r.ood ? "<span style=\"color:#ff8f9b\">Yes</span>" : "No";
-  $('#a-verdict').className = 'verdict' + (r.decision === 'isolate_and_sample' ? ' bad' : r.decision === 'review_microscopy' ? ' warn' : '');
+ const r = judgeContamination(i);
+ const tagMap = { continue: ['ok', 'release'], review_microscopy: ['warn', 'Review'], isolate_and_sample: ['bad', 'Dispose'] };
+ const [cls, txt] = tagMap[r.decision];
+ $('#a-tag').className = 'pill ' + cls;
+ $('#a-tag').textContent = txt;
+ $('#a-dec').textContent = r.decision;
+ $('#a-reason').textContent = r.reason;
+ $('#a-mp').textContent = (r.p * 100).toFixed(1) + '%';
+ $('#a-mtc').textContent = (r.tauCost * 100).toFixed(1) + '%';
+ $('#a-mthi').textContent = (r.tauHi * 100).toFixed(1) + '%';
+ $('#a-mtlo').textContent = (r.tauLo * 100).toFixed(1) + '%';
+ $('#a-mc').textContent = r.confidence.toFixed(2);
+ $('#a-mood').innerHTML = r.ood ? '<span style="color:#ff8f9b">yes</span>' : 'no';
+ $('#a-verdict').className = 'verdict' + (r.decision === 'isolate_and_sample' ? ' bad' : r.decision === 'review_microscopy' ? ' warn' : '');
 
-  const lo = r.tauLo * 100, hi = r.tauHi * 100, p = r.p * 100;
-  const bar = $('#a-bar');
-  const zones = [[0, lo, "release"], [lo, hi, "Review"], [hi, 100, "Dispose"]];
-  const labels = zones.filter(z => (z[1] - z[0]) >= 16)
-    .map(z => `<span class="zt" style="left:${z[0] + (z[1] - z[0]) / 2}%">${z[2]}</span>`).join('');
-  bar.innerHTML = `
-    <div class="z z1" style="width:${lo}%"></div>
-    <div class="z z2" style="width:${hi - lo}%"></div>
-    <div class="z z3" style="width:${100 - hi}%"></div>
-    <div class="mk" style="left:${clamp(p, 0, 100)}%"></div>
-    ${labels}`;
+ const lo = r.tauLo * 100, hi = r.tauHi * 100, p = r.p * 100;
+ const bar = $('#a-bar');
+ const zones = [[0, lo, 'release'], [lo, hi, 'Review'], [hi, 100, 'Dispose']];
+ const labels = zones.filter(z => (z[1] - z[0]) >= 16)
+ .map(z => `<span class="zt" style="left:${z[0] + (z[1] - z[0]) / 2}%">${z[2]}</span>`).join('');
+ bar.innerHTML = `
+ <div class="z z1" style="width:${lo}%"></div>
+ <div class="z z2" style="width:${hi - lo}%"></div>
+ <div class="z z3" style="width:${100 - hi}%"></div>
+ <div class="mk" style="left:${clamp(p, 0, 100)}%"></div>
+ ${labels}`;
 
-  put($('#a-json'), {
-    agent: 'CoffeeJeV', stage: 'aseptic_establishment', jev_type: r.jev_type,
-    decision: r.decision, confidence: r.confidence, scores: r.scores,
-    human_review: r.human_review, review_reasons: r.review_reasons,
-    reason: r.reason, sop_version: SOP
-  });
-  return r;
+ put($('#a-json'), {
+ agent: 'CoffeeJeV', stage: 'aseptic_establishment', jev_type: r.jev_type,
+ decision: r.decision, confidence: r.confidence, scores: r.scores,
+ human_review: r.human_review, review_reasons: r.review_reasons,
+ reason: r.reason, sop_version: SOP
+ });
+ return r;
 }
 
 function runB() {
-  const i = {
-    roots: val('b-roots'), browning: val('b-brown'), shoot: val('b-shoot'),
-    leaf: val('b-leaf'), wax: val('b-wax'), waterLoss: val('b-water'), cont: val('b-cont')
-  };
-  $('#b-rootsv').textContent = i.roots;
-  $('#b-brownv').textContent = i.browning;
-  $('#b-shootv').textContent = i.shoot.toFixed(1);
-  $('#b-leafv').textContent = i.leaf;
-  $('#b-waxv').textContent = i.wax;
-  $('#b-waterv').textContent = i.waterLoss.toFixed(1);
-  $('#b-contv').textContent = i.cont.toFixed(2);
+ const i = {
+ roots: val('b-roots'), browning: val('b-brown'), shoot: val('b-shoot'),
+ leaf: val('b-leaf'), wax: val('b-wax'), waterLoss: val('b-water'), cont: val('b-cont')
+ };
+ $('#b-rootsv').textContent = i.roots;
+ $('#b-brownv').textContent = i.browning;
+ $('#b-shootv').textContent = i.shoot.toFixed(1);
+ $('#b-leafv').textContent = i.leaf;
+ $('#b-waxv').textContent = i.wax;
+ $('#b-waterv').textContent = i.waterLoss.toFixed(1);
+ $('#b-contv').textContent = i.cont.toFixed(2);
 
-  const r = judgeReadiness(i);
-  $('#b-score').textContent = r.score;
-  const tagMap = { transplant_ready: ['ok', "Can be transplanted"], delay_adjust: ['warn', "Delay 3–7 days"], continue_acclimation: ['bad', "Continue to domesticate"] };
-  const [cls, txt] = tagMap[r.decision];
-  $('#b-tag').className = 'pill ' + cls;
-  $('#b-tag').textContent = txt;
-  $('#b-reason').textContent = r.reason;
-  $('#b-mk').style.left = clamp(r.score, 0, 100) + '%';
-  $('#b-verdict').className = 'verdict' + (r.decision === 'continue_acclimation' ? ' bad' : r.decision === 'delay_adjust' ? ' warn' : '');
-  $('#b-conf').textContent = "Confidence" + r.confidence.toFixed(2);
+ const r = judgeReadiness(i);
+ $('#b-score').textContent = r.score;
+ const tagMap = { transplant_ready: ['ok', 'Can be transplanted'], delay_adjust: ['warn', 'Delay 3–7 days'], continue_acclimation: ['bad', 'Continue to domesticate'] };
+ const [cls, txt] = tagMap[r.decision];
+ $('#b-tag').className = 'pill ' + cls;
+ $('#b-tag').textContent = txt;
+ $('#b-reason').textContent = r.reason;
+ $('#b-mk').style.left = clamp(r.score, 0, 100) + '%';
+ $('#b-verdict').className = 'verdict' + (r.decision === 'continue_acclimation' ? ' bad' : r.decision === 'delay_adjust' ? ' warn' : '');
+ $('#b-conf').textContent = 'Confidence' + r.confidence.toFixed(2);
 
-  const names = ["Number of roots", "Root tip browning", "Plant height/root number ratio", "leaf color", "Stomatal/Waxy", "Water loss test"];
-  const gates = [i.roots < 3, i.browning > 60, false, false, false, false];
-  $('#b-subs').innerHTML = names.map((n, k) => `
-    <div class="sub${gates[k] ? ' gate' : ''}">
-      <span class="sn">${n}${gates[k] ? ' ⚠' : ''}</span>
-      <span class="st"><span class="sf" style="width:${clamp(r.subs[k], 0, 100)}%"></span></span>
-      <span class="sv">${Math.round(r.subs[k])}</span>
-    </div>`).join('');
+ const names = ['Number of roots', 'Root tip browning', 'Plant height/root number ratio', 'leaf color', 'Stomatal/Waxy', 'Water loss test'];
+ const gates = [i.roots < 3, i.browning > 60, false, false, false, false];
+ $('#b-subs').innerHTML = names.map((n, k) => `
+ <div class="sub${gates[k] ? ' gate' : ''}">
+ <span class="sn">${n}${gates[k] ? ' ⚠' : ''}</span>
+ <span class="st"><span class="sf" style="width:${clamp(r.subs[k], 0, 100)}%"></span></span>
+ <span class="sv">${Math.round(r.subs[k])}</span>
+ </div>`).join('');
 
-  put($('#b-json'), {
-    agent: 'CoffeeJeV', stage: 'acclimation', jev_type: r.jev_type,
-    decision: r.decision, confidence: r.confidence, scores: r.scores,
-    caps_applied: r.caps, human_review: r.human_review,
-    review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
-  });
-  return r;
+ put($('#b-json'), {
+ agent: 'CoffeeJeV', stage: 'acclimation', jev_type: r.jev_type,
+ decision: r.decision, confidence: r.confidence, scores: r.scores,
+ caps_applied: r.caps, human_review: r.human_review,
+ review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
+ });
+ return r;
 }
 
 function runC() {
-  const i = {
-    ec: val('c-ec'), ph: val('c-ph'), vpd: val('c-vpd'), temp: val('c-temp'),
-    do: val('c-do'), droplet: val('c-drop'), waterTemp: val('c-wt'),
-    ws: val('c-ws'), wc: val('c-wc'), wq: val('c-wq')
-  };
-  $('#c-ecv').textContent = i.ec.toFixed(2);
-  $('#c-phv').textContent = i.ph.toFixed(2);
-  $('#c-vpdv').textContent = i.vpd.toFixed(2);
-  $('#c-tempv').textContent = i.temp.toFixed(1);
-  $('#c-dov').textContent = i.do.toFixed(1);
-  $('#c-dropv').textContent = i.droplet;
-  $('#c-wtv').textContent = i.waterTemp.toFixed(1);
-  $('#c-wsv').textContent = i.ws.toFixed(2);
-  $('#c-wcv').textContent = i.wc.toFixed(2);
-  $('#c-wqv').textContent = i.wq.toFixed(2);
+ const i = {
+ ec: val('c-ec'), ph: val('c-ph'), vpd: val('c-vpd'), temp: val('c-temp'),
+ do: val('c-do'), droplet: val('c-drop'), waterTemp: val('c-wt'),
+ ws: val('c-ws'), wc: val('c-wc'), wq: val('c-wq')
+ };
+ $('#c-ecv').textContent = i.ec.toFixed(2);
+ $('#c-phv').textContent = i.ph.toFixed(2);
+ $('#c-vpdv').textContent = i.vpd.toFixed(2);
+ $('#c-tempv').textContent = i.temp.toFixed(1);
+ $('#c-dov').textContent = i.do.toFixed(1);
+ $('#c-dropv').textContent = i.droplet;
+ $('#c-wtv').textContent = i.waterTemp.toFixed(1);
+ $('#c-wsv').textContent = i.ws.toFixed(2);
+ $('#c-wcv').textContent = i.wc.toFixed(2);
+ $('#c-wqv').textContent = i.wq.toFixed(2);
 
-  const r = judgeFog(i);
-  $('#c-dec').textContent = r.decision;
-  $('#c-reason').textContent = r.reason;
-  const bad = r.decision === 'stop_and_review';
-  $('#c-tag').className = 'pill ' + (bad ? 'bad' : 'ok');
-  $('#c-tag').textContent = bad ? "No feasible solution" : 'choice';
-  $('#c-verdict').className = 'verdict' + (bad ? ' bad' : '');
+ const r = judgeFog(i);
+ $('#c-dec').textContent = r.decision;
+ $('#c-reason').textContent = r.reason;
+ const bad = r.decision === 'stop_and_review';
+ $('#c-tag').className = 'pill ' + (bad ? 'bad' : 'ok');
+ $('#c-tag').textContent = bad ? 'No feasible solution' : 'choice';
+ $('#c-verdict').className = 'verdict' + (bad ? ' bad' : '');
 
-  const rows = r.options.map(o => `<tr style="${o.action === r.decision ? 'background:rgba(0,196,140,.09)' : ''}">
-      <td><b>${o.label}</b><br><span style="font-family:var(--mono);font-size:10px;color:var(--dim2)">${o.action}</span></td>
-      <td>${o.feasible ? "<span class=\"pill ok\">Doable</span>" : "<span class=\"pill bad\">Not feasible</span><br><span style=\"font-size:10px;color:#ff8f9b\">" + o.violations.join('<br>') + '</span>'}</td>
-      <td class="mono">${o.utility.toFixed(3)}</td>
-      <td class="mono">${(o.p * 100).toFixed(1)}%</td>
-      <td class="mono" style="font-size:10.5px;color:var(--dim)">${o.components.survival.toFixed(2)} / ${o.components.cost.toFixed(2)} / ${o.components.quality.toFixed(2)}</td>
-    </tr>`).join('');
-  $('#c-opts').innerHTML = `<thead><tr><th>Action</th><th>Constraint</th><th>Utility</th><th>Probability</th><th>Survival/Cost/Quality</th></tr></thead><tbody>${rows}</tbody>`;
+ const rows = r.options.map(o => `
+ <tr style="${o.action === r.decision ? 'background:rgba(0,196,140,.09)' : ''}">
+ <td><b>${o.label}</b><br><span style="font-family:var(--mono);font-size:10px;color:var(--dim2)">${o.action}</span></td>
+ <td>${o.feasible ? '<span class="pill ok">feasible</span>' : '<span class="pill bad">infeasible</span><br><span style="font-size:10px;color:#ff8f9b">' + o.violations.join('<br>') + '</span>'}</td>
+ <td class="mono">${o.utility.toFixed(3)}</td>
+ <td class="mono">${(o.p * 100).toFixed(1)}%</td>
+ <td class="mono" style="font-size:10.5px;color:var(--dim)">${o.components.survival.toFixed(2)} / ${o.components.cost.toFixed(2)} / ${o.components.quality.toFixed(2)}</td>
+ </tr>`).join('');
+ $('#c-opts').innerHTML = `<thead><tr><th>Action</th><th>Constraints</th><th>Utility</th><th>Probability</th><th>Survival / cost / quality</th></tr></thead><tbody>${rows}</tbody>`;
 
-  put($('#c-json'), {
-    agent: 'CoffeeJeV', stage: 'aeroponics_nutrition', jev_type: r.jev_type,
-    decision: r.decision, confidence: r.confidence, scores: r.scores,
-    options: r.options.map(o => ({ action: o.action, feasible: o.feasible, utility: r3(o.utility), p: r4(o.p), violations: o.violations })),
-    human_review: r.human_review, review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
-  });
-  return r;
+ put($('#c-json'), {
+ agent: 'CoffeeJeV', stage: 'aeroponics_nutrition', jev_type: r.jev_type,
+ decision: r.decision, confidence: r.confidence, scores: r.scores,
+ options: r.options.map(o => ({ action: o.action, feasible: o.feasible, utility: r3(o.utility), p: r4(o.p), violations: o.violations })),
+ human_review: r.human_review, review_reasons: r.review_reasons, reason: r.reason, sop_version: SOP
+ });
+ return r;
 }
 
 const RUN = { A: runA, B: runB, C: runC };
 function runAll() {
-  const active = $('.lab:not([style*="display:none"])');
-  if (active) RUN[active.dataset.panel]();
+ const active = $('.lab:not([style*="display:none"])');
+ if (active) RUN[active.dataset.panel]();
 }
 
 $$('#lab input[type=range]').forEach(inp => inp.addEventListener('input', runAll));
 
 $$('[data-reset]').forEach(b => b.addEventListener('click', () => {
-  const p = b.dataset.reset;
-  $$('.lab[data-panel="' + p + '"] input[type=range]').forEach(inp => { if (DEFAULTS[inp.id]) inp.value = DEFAULTS[inp.id]; });
-  runAll();
+ const p = b.dataset.reset;
+ $$('.lab[data-panel="' + p + '"] input[type=range]').forEach(inp => { if (DEFAULTS[inp.id]) inp.value = DEFAULTS[inp.id]; });
+ runAll();
 }));
 
 $$('[data-log]').forEach(b => b.addEventListener('click', () => {
-  const p = b.dataset.log;
-  const r = RUN[p]();
-  const stageMap = { A: 'aseptic_establishment', B: 'acclimation', C: 'aeroponics_nutrition' };
-  LEDGER.append({ stage: stageMap[p], decision: r.decision, conf: r.confidence, human_review: r.human_review, src: 'lab' });
-  b.textContent = "Credited ✓";
-  setTimeout(() => { b.textContent = "Record in decision ledger"; }, 1400);
+ const p = b.dataset.log;
+ const r = RUN[p]();
+ const stageMap = { A: 'aseptic_establishment', B: 'acclimation', C: 'aeroponics_nutrition' };
+ LEDGER.append({ stage: stageMap[p], decision: r.decision, conf: r.confidence, human_review: r.human_review, src: 'lab' });
+ b.textContent = 'Credited ✓';
+ setTimeout(() => { b.textContent = 'Record in decision ledger'; }, 1400);
 }));
 
 /* ============================================================
-   9. Playground
-   ============================================================ */
+ 9. Playground
+ ============================================================ */
 const PRESETS = {
-  root: {
-    variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'rooting_to_aeroponics',
-    sensors: { ec: 1.2, ph: 5.8, vpd: 0.9, temp: 24, rh: 68, days_in_culture: 21 },
-    image_ref: 's3://farm01/tray/AP-0713/2026-11-01T09-12.jpg',
-    reading: { roots: 7, browning: 28, shoot_cm: 3.4, leaf_color: 76, stomata_wax: 62, water_loss_pct: 11.2 },
-    batch_history: { contamination_rate: 0.03 },
-    costs: { fp: 40, fn: 900 },
-    objective: { survival: 0.5, cost: 0.2, quality: 0.3 }
-  },
-  aseptic: {
-    variety: 'Arabica-Geisha', region: 'Yunnan-PuEr-01', stage: 'aseptic_establishment',
-    sensors: { ec: 1.1, ph: 5.9, vpd: 0.7, temp: 25.5, rh: 74, days_in_culture: 12 },
-    image_ref: 's3://farm01/vessel/TC-118/2026-11-01T08-40.jpg',
-    reading: { vision_p: 0.38, quality: 0.52 },
-    batch_history: { contamination_rate: 0.06 },
-    costs: { fp: 25, fn: 1200 }
-  },
-  fog: {
-    variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'aeroponics_nutrition',
-    sensors: { ec: 1.85, ph: 6.1, vpd: 1.35, temp: 26.5, rh: 62, do: 5.4, droplet_um: 48, water_temp: 23.5 },
-    batch_history: { contamination_rate: 0.02 },
-    objective: { survival: 0.6, cost: 0.25, quality: 0.15 }
-  },
-  bad: { variety: 'Arabica-Caturra', stage: 'aeroponics_nutrition', sensors: { ec: 1.4, ph: 5.8 } }
+ root: {
+ variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'rooting_to_aeroponics',
+ sensors: { ec: 1.2, ph: 5.8, vpd: 0.9, temp: 24, rh: 68, days_in_culture: 21 },
+ image_ref: 's3://farm01/tray/AP-0713/2026-11-01T09-12.jpg',
+ reading: { roots: 7, browning: 28, shoot_cm: 3.4, leaf_color: 76, stomata_wax: 62, water_loss_pct: 11.2 },
+ batch_history: { contamination_rate: 0.03 },
+ costs: { fp: 40, fn: 900 },
+ objective: { survival: 0.5, cost: 0.2, quality: 0.3 }
+ },
+ aseptic: {
+ variety: 'Arabica-Geisha', region: 'Yunnan-PuEr-01', stage: 'aseptic_establishment',
+ sensors: { ec: 1.1, ph: 5.9, vpd: 0.7, temp: 25.5, rh: 74, days_in_culture: 12 },
+ image_ref: 's3://farm01/vessel/TC-118/2026-11-01T08-40.jpg',
+ reading: { vision_p: 0.38, quality: 0.52 },
+ batch_history: { contamination_rate: 0.06 },
+ costs: { fp: 25, fn: 1200 }
+ },
+ fog: {
+ variety: 'Arabica-Caturra', region: 'Yunnan-PuEr-01', stage: 'aeroponics_nutrition',
+ sensors: { ec: 1.85, ph: 6.1, vpd: 1.35, temp: 26.5, rh: 62, do: 5.4, droplet_um: 48, water_temp: 23.5 },
+ batch_history: { contamination_rate: 0.02 },
+ objective: { survival: 0.6, cost: 0.25, quality: 0.15 }
+ },
+ bad: { variety: 'Arabica-Caturra', stage: 'aeroponics_nutrition', sensors: { ec: 1.4, ph: 5.8 } }
 };
 let currentPreset = 'root';
 const reqbox = $('#reqbox');
 
 function loadPreset(k) {
-  currentPreset = k;
-  reqbox.value = JSON.stringify(PRESETS[k], null, 2);
-  const _re = $('#reqerr'); if (_re) _re.textContent = '';
-  $$('#presets button').forEach(b => b.classList.toggle('on', b.dataset.preset === k));
+ currentPreset = k;
+ reqbox.value = JSON.stringify(PRESETS[k], null, 2);
+ const _re = $('#reqerr'); if (_re) _re.textContent = '';
+ $$('#presets button').forEach(b => b.classList.toggle('on', b.dataset.preset === k));
 }
 $$('#presets button').forEach(b => b.addEventListener('click', () => loadPreset(b.dataset.preset)));
 loadPreset('root');
 
 $('#fmtapi').addEventListener('click', () => {
-  try { reqbox.value = JSON.stringify(JSON.parse(reqbox.value), null, 2); const _re = $('#reqerr'); if (_re) _re.textContent = ''; }
-  catch (e) { $('#reqerr').textContent = "⚠ JSON syntax error:" + e.message; }
+ try { reqbox.value = JSON.stringify(JSON.parse(reqbox.value), null, 2); const _re = $('#reqerr'); if (_re) _re.textContent = ''; }
+ catch (e) { $('#reqerr').textContent = '⚠ JSON syntax error:' + e.message; }
 });
 
 $('#runapi') && $('#runapi').addEventListener('click', () => {
-  let req;
-  try { req = JSON.parse(reqbox.value); }
-  catch (e) { $('#reqerr').textContent = "⚠ JSON syntax error:" + e.message; return; }
-  const _re = $('#reqerr'); if (_re) _re.textContent = '';
-  if ($('#shadow').checked) req.mode = 'shadow';
-  const t0 = performance.now();
-  const out = decide(req);
-  const wall = Math.max(0.4, performance.now() - t0);
-  const body = out.body;
+ let req;
+ try { req = JSON.parse(reqbox.value); }
+ catch (e) { $('#reqerr').textContent = '⚠ JSON syntax error:' + e.message; return; }
+ const _re = $('#reqerr'); if (_re) _re.textContent = '';
+ if ($('#shadow').checked) req.mode = 'shadow';
+ const t0 = performance.now();
+ const out = decide(req);
+ const wall = Math.max(0.4, performance.now() - t0);
+ const body = out.body;
 
-  $('#respcode').className = 'pill ' + (body.decision === 'need_more_info' ? 'warn' : body.decision === 'stop_and_review' ? 'bad' : 'ok');
-  $('#respcode').textContent = 'HTTP ' + out.http;
+ $('#respcode').className = 'pill ' + (body.decision === 'need_more_info' ? 'warn' : body.decision === 'stop_and_review' ? 'bad' : 'ok');
+ $('#respcode').textContent = 'HTTP ' + out.http;
 
-  const meta = [
-    ['latency', wall.toFixed(1) + ' ms'],
-    ['mode', body.mode],
-    ['jev', body.jev_type || '—'],
-    ['human_review', body.human_review ? 'true' : 'false'],
-  ];
-  if (body.audit_id) meta.push(['audit', body.audit_id]);
-  if (body.defaulted) meta.push(['defaulted', body.defaulted.length + "item"]);
-  $('#respmeta').innerHTML = meta.map(([k, v]) =>
-    `<span class="rm${(k === 'human_review' && v === 'true') ? ' warn' : (k === 'mode' && v === 'shadow') ? ' warn' : ''}">${k}: <b style="color:#dbe3ec">${v}</b></span>`).join('');
+ const meta = [
+ ['latency', wall.toFixed(1) + ' ms'],
+ ['mode', body.mode],
+ ['jev', body.jev_type || '—'],
+ ['human_review', body.human_review ? 'true' : 'false'],
+ ];
+ if (body.audit_id) meta.push(['audit', body.audit_id]);
+ if (body.defaulted) meta.push(['defaulted', body.defaulted.length + 'item']);
+ $('#respmeta').innerHTML = meta.map(([k, v]) =>
+ `<span class="rm${(k === 'human_review' && v === 'true') ? ' warn' : (k === 'mode' && v === 'shadow') ? ' warn' : ''}">${k}: <b style="color:#dbe3ec">${v}</b></span>`).join('');
 
-  put($('#respbox'), body);
+ put($('#respbox'), body);
 });
 
 /* ============================================================
-   10. 复核队列
-   ============================================================ */
+ 10. 复核队列
+ ============================================================ */
 $$('#queue .card').forEach(card => {
-  $$('button[data-act]', card).forEach(btn => btn.addEventListener('click', () => {
-    const act = btn.dataset.act;
-    const label = { accept: "Adopt AI", override: "Change the sentence and release", evidence: "Request for supplementary certificate" }[act];
-    const state = $('.rv-state', card);
-    state.textContent = label;
-    state.className = 'pill rv-state ' + (act === 'accept' ? 'ok' : act === 'override' ? 'bad' : 'warn');
-    $$('button[data-act]', card).forEach(b => { b.disabled = true; b.style.opacity = '.45'; });
-    LEDGER.append({
-      stage: card.dataset.stage,
-      decision: act === 'accept' ? 'reviewer_accept' : act === 'override' ? 'reviewer_override' : 'reviewer_need_evidence',
-      conf: null, human_review: true, src: 'hitl'
-    });
-  }));
+ $$('button[data-act]', card).forEach(btn => btn.addEventListener('click', () => {
+ const act = btn.dataset.act;
+ const label = { accept: 'Adopt AI', override: 'Change the sentence and release', evidence: 'Request for supplementary certificate' }[act];
+ const state = $('.rv-state', card);
+ state.textContent = label;
+ state.className = 'pill rv-state ' + (act === 'accept' ? 'ok' : act === 'override' ? 'bad' : 'warn');
+ $$('button[data-act]', card).forEach(b => { b.disabled = true; b.style.opacity = '.45'; });
+ LEDGER.append({
+ stage: card.dataset.stage,
+ decision: act === 'accept' ? 'reviewer_accept' : act === 'override' ? 'reviewer_override' : 'reviewer_need_evidence',
+ conf: null, human_review: true, src: 'hitl'
+ });
+ }));
 });
 $('#verify') && $('#verify').addEventListener('click', () => {
-  const ok = LEDGER.verify();
-  const f = $('#chain-flag');
-  f.textContent = ok ? `The chain is complete · ${LEDGER.entries.length}` : "Chain exception (breakpoint exists)";
-  f.className = 'pill ' + (ok ? 'ok' : 'bad');
-  if (!LEDGER.entries.length) { f.textContent = "Empty chain"; f.className = 'pill gray'; }
+ const ok = LEDGER.verify();
+ const f = $('#chain-flag');
+ f.textContent = ok ? `Chain intact · ${LEDGER.entries.length} entries` : 'Chain exception (breakpoint exists)';
+ f.className = 'pill ' + (ok ? 'ok' : 'bad');
+ if (!LEDGER.entries.length) { f.textContent = 'Empty chain'; f.className = 'pill gray'; }
 });
 
 /* ============================================================
-   11. 经济性计算器
-   ============================================================ */
+ 11. 经济性计算器
+ ============================================================ */
 const ECON_IDS = ['e-n', 'e-v', 'e-c0', 'e-c1', 'e-s0', 'e-s1', 'e-capex', 'e-opex', 'e-d'];
 function runEcon() {
-  const N = parseFloat($('#e-n').value) || 0;
-  const v = parseFloat($('#e-v').value) || 0;
-  const c0 = clamp((parseFloat($('#e-c0').value) || 0) / 100, 0, 1);
-  const c1 = clamp((parseFloat($('#e-c1').value) || 0) / 100, 0, 1);
-  const s0 = clamp((parseFloat($('#e-s0').value) || 0) / 100, 0, 1);
-  const s1 = clamp((parseFloat($('#e-s1').value) || 0) / 100, 0, 1);
-  const capex = parseFloat($('#e-capex').value) || 0;
-  const opex = parseFloat($('#e-opex').value) || 0;
-  const D = parseFloat($('#e-d').value) || 1;
+ const N = parseFloat($('#e-n').value) || 0;
+ const v = parseFloat($('#e-v').value) || 0;
+ const c0 = clamp((parseFloat($('#e-c0').value) || 0) / 100, 0, 1);
+ const c1 = clamp((parseFloat($('#e-c1').value) || 0) / 100, 0, 1);
+ const s0 = clamp((parseFloat($('#e-s0').value) || 0) / 100, 0, 1);
+ const s1 = clamp((parseFloat($('#e-s1').value) || 0) / 100, 0, 1);
+ const capex = parseFloat($('#e-capex').value) || 0;
+ const opex = parseFloat($('#e-opex').value) || 0;
+ const D = parseFloat($('#e-d').value) || 1;
 
-  const loss0 = c0 + (1 - c0) * (1 - s0);
-  const loss1 = c1 + (1 - c1) * (1 - s1);
-  const base = N * v * loss0, target = N * v * loss1;
-  const gain = base - target;
-  const net = gain - opex;                       // 年度现金流
-  const pay = net > 0 ? capex / (net / 12) : Infinity;
-  const cpd = (capex / 3 + opex) / (D * 365);    // 三年摊销 + 年运维
-  const pp = N > 0 ? gain / N : 0;
-  const roi = capex > 0 ? net / capex : 0;
+ const loss0 = c0 + (1 - c0) * (1 - s0);
+ const loss1 = c1 + (1 - c1) * (1 - s1);
+ const base = N * v * loss0, target = N * v * loss1;
+ const gain = base - target;
+ const net = gain - opex; // 年度现金流
+ const pay = net > 0 ? capex / (net / 12) : Infinity;
+ const cpd = (capex / 3 + opex) / (D * 365); // 三年摊销 + 年运维
+ const pp = N > 0 ? gain / N : 0;
+ const roi = capex > 0 ? net / capex : 0;
 
-  $('#e-gain').textContent = '$' + money(gain);
-  $('#e-pay').textContent = isFinite(pay) ? pay.toFixed(1) + "moon" : "Not getting back money";
-  $('#e-net').textContent = (net < 0 ? '−$' : '$') + money(Math.abs(net));
-  $('#e-cpd').textContent = '$' + cpd.toFixed(3);
-  $('#e-pp').textContent = '$' + pp.toFixed(3);
-  $('#e-roi').textContent = isFinite(roi) ? (roi * 100).toFixed(0) + '%' : '—';
+ $('#e-gain').textContent = '$' + money(gain);
+ $('#e-pay').textContent = isFinite(pay) ? pay.toFixed(1) + ' mo' : 'no payback';
+ $('#e-net').textContent = (net < 0 ? '−$' : '$') + money(Math.abs(net));
+ $('#e-cpd').textContent = '$' + cpd.toFixed(3);
+ $('#e-pp').textContent = '$' + pp.toFixed(3);
+ $('#e-roi').textContent = isFinite(roi) ? (roi * 100).toFixed(0) + '%' : '—';
 
-  $('#e-formula').textContent =
-    `Loss rate (baseline) = ${c0.toFixed(2)} + (1−${c0.toFixed(2)})×(1−${s0.toFixed(2)}) = ${loss0.toFixed(3)}\n` +
-    `Loss rate (target) = ${c1.toFixed(2)} + (1−${c1.toFixed(2)})×(1−${s1.toFixed(2)}) = ${loss1.toFixed(3)}\n` +
-    `Annual recovery = ${money(N)}×${v}×(${loss0.toFixed(3)}−${loss1.toFixed(3)}) = $${money(gain)}\n` +
-    `Annual net cash flow = $${money(gain)} − Operation and maintenance $${money(opex)} = $${money(net)}\n` +
-    `Payback period = one-time $${money(capex)} ÷ (${money(net)}/12) = ${isFinite(pay) ? pay.toFixed(1) + "moon" : "Not getting back money"}\n` +
-    `Single decision cost = ($${money(capex)}/3 + $${money(opex)}) ÷ (${D}×365) = $${cpd.toFixed(3)}`;
+ $('#e-formula').textContent =
+ `loss rate (baseline) = ${c0.toFixed(2)} + (1−${c0.toFixed(2)})×(1−${s0.toFixed(2)}) = ${loss0.toFixed(3)}\n` +
+ `loss rate (target) = ${c1.toFixed(2)} + (1−${c1.toFixed(2)})×(1−${s1.toFixed(2)}) = ${loss1.toFixed(3)}\n` +
+ `annual recovery = ${money(N)}×${v}×(${loss0.toFixed(3)}−${loss1.toFixed(3)}) = $${money(gain)}\n` +
+ `annual net cash flow = $${money(gain)} − opex $${money(opex)} = $${money(net)}\n` +
+ `payback = one-off $${money(capex)} ÷ (${money(net)}/12) = ${isFinite(pay) ? pay.toFixed(1) + ' months' : 'never pays back'}\n` +
+ `cost per decision = ($${money(capex)}/3 + $${money(opex)}) ÷ (${D}×365) = $${cpd.toFixed(3)}`;
 
-  let txt;
-  if (!isFinite(pay)) txt = `The annual loss recovered ($${money(gain)}) is not enough to pay for the annual operation and maintenance ($${money(opex)}), and the payback period is infinite. The correct action at this scale is to only do "shadow + ledger", and use 3 months to accumulate data to prove that the loss rate can really be reduced, and then talk about equipment.`;
-  else if (pay <= 12) txt = `The payback period is ${pay.toFixed(1)} months, and the cost will be paid back within one year. It is recommended to directly purchase edge boxes based on the T1 single-farm topology, and first pass through the two judges of contamination Noul and acclimation Score.`;
-  else if (pay <= 24) txt = `The payback period is ${pay.toFixed(1)} months, which is within the acceptable range. It is recommended to put the contamination Noul first (the losses are the most discrete and easily attributable), and put the acclimation score and nutrient mist Choice in the second phase.`;
-  else if (pay <= 36) txt = `The payback period is ${pay.toFixed(1)} months, which is quite long. A more cost-effective approach is to use T2 area sharing: use the edge box of the adjacent field, only do the labeling and review manpower, and reduce the one-time investment to 1/3.`;
-  else txt = `The payback period is ${pay.toFixed(1)} months, self-build is not recommended. At first, just do shadow operation, or build equipment with neighboring sites.`;
-  $('#e-verdict').textContent = txt;
+ let txt;
+ if (!isFinite(pay)) txt = `The annual recovery ($${money(gain)}) does not cover even the annual opex ($${money(opex)}), so payback is infinite. At this scale the right move is shadow mode plus the ledger only: spend three months proving the loss rate really falls, and argue about hardware later.`;
+ else if (pay <= 12) txt = `Payback ${pay.toFixed(1)} months, inside a year. Buy the edge box for a T1 single-farm topology and take the contamination Noul and acclimatisation Score judgers all the way through first.`;
+ else if (pay <= 24) txt = `Payback ${pay.toFixed(1)} months, an acceptable range. Start with contamination Noul (the most variable loss, easiest to attribute) and put acclimatisation Score and nutrient-fog Choice into phase two.`;
+ else if (pay <= 36) txt = `Payback ${pay.toFixed(1)} months, on the long side. The better route is T2 regional sharing: use a neighbour's edge box, contribute only labelling and review labour, and cut the one-off spend to a third.`;
+ else txt = `Payback ${pay.toFixed(1)} months; self-build is not advised. Run shadow mode only, or share equipment with a neighbouring farm.`;
+ $('#e-verdict').textContent = txt;
 }
 ECON_IDS.forEach(id => { const el = $('#' + id); if (el) el.addEventListener('input', runEcon); });
 
 /* ============================================================
-   12. 导航 / 复制 / 启动
-   ============================================================ */
+ 12. 导航 / 复制 / 启动
+ ============================================================ */
 $$('.navitem').forEach(b => b.addEventListener('click', () => {
-  const el = document.getElementById(b.dataset.sec);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+ const el = document.getElementById(b.dataset.sec);
+ if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }));
 
 const secs = $$('section.sec');
 const io = new IntersectionObserver(es => {
-  es.forEach(e => {
-    if (e.isIntersecting) {
-      const id = e.target.id;
-      $$('.navitem').forEach(b => b.classList.toggle('active', b.dataset.sec === id));
-    }
-  });
+ es.forEach(e => {
+ if (e.isIntersecting) {
+ const id = e.target.id;
+ $$('.navitem').forEach(b => b.classList.toggle('active', b.dataset.sec === id));
+ }
+ });
 }, { rootMargin: '-40% 0px -55% 0px' });
 secs.forEach(s => io.observe(s));
 
 $$('.cp').forEach(b => b.addEventListener('click', () => {
-  const el = document.getElementById(b.dataset.copy);
-  const text = el.textContent;
-  const done = () => { b.textContent = "Copied"; setTimeout(() => { b.textContent = "Copy"; }, 1200); };
-  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(done);
-  else {
-    const ta = document.createElement('textarea');
-    ta.value = text; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); } catch (e) { }
-    document.body.removeChild(ta); done();
-  }
+ const el = document.getElementById(b.dataset.copy);
+ const text = el.textContent;
+ const done = () => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1200); };
+ if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done).catch(done);
+ else {
+ const ta = document.createElement('textarea');
+ ta.value = text; document.body.appendChild(ta); ta.select();
+ try { document.execCommand('copy'); } catch (e) { }
+ document.body.removeChild(ta); done();
+ }
 }));
 
 [snapDefaults, renderLayers, renderChain, runA, runB, runC, runEcon, renderLedger]
-  .forEach(function (fn) { try { fn(); } catch (e) { console.warn('skip', e.message); } });
+ .forEach(function (fn) { try { fn(); } catch (e) { console.warn('skip', e.message); } });
 const _re = $('#reqerr'); if (_re) _re.textContent = '';
 
 </script>
+
+<script>
+/* English lives in its own page tree: /spec/en/…
+ Legacy ?lang=en links are redirected there so shared URLs keep working. */
+(function () {
+ var q = new URLSearchParams(location.search).get('lang');
+ if (q === 'en') {
+ var id = location.pathname.split('/').pop();
+ location.replace('en/' + (id || 'index.html'));
+ }
+})();
+</script>
+
 <script src="/lang.js"></script>
 </body>
 </html>
