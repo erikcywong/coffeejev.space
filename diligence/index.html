@@ -23,7 +23,15 @@
   h1{font-size:clamp(28px,4vw,40px);font-weight:850;letter-spacing:-1.2px;line-height:1.15;margin-bottom:12px}
   h1 em{font-style:normal;background:linear-gradient(96deg,#00c48c,#7fe0b6 60%,#8b6cff);-webkit-background-clip:text;background-clip:text;color:transparent}
   .lede{color:#b9c2ce;max-width:70ch;font-size:15px}
-  h2{font-size:16px;font-weight:750;margin:34px 0 12px;letter-spacing:-.2px}
+  
+
+
+
+
+
+
+
+h2{font-size:16px;font-weight:750;margin:34px 0 12px;letter-spacing:-.2px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:15px 16px;display:flex;flex-direction:column;gap:7px}
   .card:hover{border-color:rgba(0,196,140,.35);background:var(--card2)}
@@ -88,7 +96,52 @@
     是邀请。
   </p>
 
-  <h2>七份材料</h2>
+  <style id="zc-film-css">
+.zc-film{max-width:980px;margin:0 auto 40px}
+.zc-film-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.zc-film-k{font-family:var(--mono,ui-monospace);font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:#3fe0b0}
+.zc-film-switch{display:flex;background:#0c1015;border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:2px}
+.zc-film-switch button{border:0;background:none;color:#8d97a5;font:inherit;font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:999px;cursor:pointer}
+.zc-film-switch button.on{background:rgba(0,196,140,.16);color:#a9f3d8}
+.zc-film video{width:100%;display:block;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#000;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.zc-film-cap{font-size:12.5px;color:#8d97a5;line-height:1.7;margin-top:10px}
+@media (max-width:900px){.zc-film{margin-bottom:28px}}
+</style>
+  <section class="zc-film" id="film">
+    <div class="zc-film-head">
+      <div class="zc-film-k">Section film · 4 beats · Diligence pack</div>
+      <div class="zc-film-switch" id="filmSwitch">
+        <button data-lang="zh" class="on">中文</button>
+        <button data-lang="en" class="">English</button>
+      </div>
+    </div>
+    <video id="filmVideo" controls playsinline preload="metadata" poster="../media/section-diligence-zh.jpg">
+      <source id="filmSrc" src="../media/section-diligence-zh.mp4" type="video/mp4">
+    </video>
+    <p class="zc-film-cap" id="filmCap">四拍说明尽调包：为什么给证据而不是 demo、七份材料分别能回答什么、我们主动标出的脆弱假设，以及技术尽调与决策者各自该看什么。</p>
+  </section>
+<script>
+(function(){
+  var v = document.getElementById('filmVideo');
+  var src = document.getElementById('filmSrc');
+  var cap = document.getElementById('filmCap');
+  var caps = { zh: '四拍说明尽调包：为什么给证据而不是 demo、七份材料分别能回答什么、我们主动标出的脆弱假设，以及技术尽调与决策者各自该看什么。', en: 'Four beats on the diligence pack: why evidence rather than a demo, what each of the seven documents answers, the assumptions we label ourselves, and what technical diligence and the decision maker should each read.' };
+  var posters = { zh: '../media/section-diligence-zh.jpg', en: '../media/section-diligence-en.jpg' };
+  document.getElementById('filmSwitch').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    var l = b.dataset.lang, t = v.currentTime, playing = !v.paused;
+    Array.prototype.forEach.call(this.querySelectorAll('button'), function(x){ x.classList.toggle('on', x===b); });
+    src.src = '../media/section-diligence-'+l+'.mp4';
+    v.poster = posters[l]; cap.innerHTML = caps[l];
+    v.load(); v.addEventListener('loadedmetadata', function once(){
+      v.removeEventListener('loadedmetadata', once); v.currentTime = Math.min(t, v.duration-0.2);
+      if(playing) v.play();
+    });
+  });
+})();
+</script>
+
+<h2>七份材料</h2>
   <div class="grid">
     <div class="card">
       <div class="n">01 · SPEC</div>
